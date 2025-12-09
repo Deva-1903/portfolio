@@ -1,0 +1,198 @@
+{
+  "header": {
+    "name": "Deva Anand",
+    "nameAudio": "dhe-va a-nand",
+    "tagline": "I design systems that make ML actually scale.",
+    "profileImage": "../assets/img.jpeg",
+    "socialLinks": [
+      {
+        "platform": "twitter",
+        "url": "https://x.com/devaaa_19",
+        "icon": "fab fa-twitter iico"
+      },
+      {
+        "platform": "github",
+        "url": "https://github.com/Deva-1903",
+        "icon": "fab fa-github iico"
+      },
+      {
+        "platform": "linkedin",
+        "url": "https://www.linkedin.com/in/devaaa/",
+        "icon": "fab fa-linkedin iico"
+      },
+      {
+        "platform": "medium",
+        "url": "https://medium.com/@devaaa",
+        "icon": "fab fa-medium iico"
+      },
+      {
+        "platform": "resume",
+        "url": "https://drive.google.com/file/d/17-XZG8N6dKCJL85KPQw45zXk94lcC1pK/view?usp=sharing",
+        "icon": "fa-solid fa-file iico-resume"
+      }
+    ]
+  },
+  "info": {
+    "lastUpdated": "2025-12-09"
+  },
+  "about": {
+    "title": "about me",
+    "paragraphs": [
+      "Hey, I'm Deva - a software engineer and MS CS student at UMass Amherst, focusing on Machine Learning Systems, Distributed Systems, and high-performance backends. I care about making ML models not just accurate, but deployable, efficient, and scalable in the real world.",
+      "Before grad school, I worked as a backend engineer, building APIs, data pipelines, and production systems. These days I'm deep into questions like: how do we train and serve models faster? how do we use resources smarter? how do we keep systems simple while everything around them gets more complex?",
+      "Beyond code, I enjoy teaching and mentoring students, lifting at the gym, exploring photography and videography, and tinkering with photo/video editing. I'm also into psychology, stoicism, and how people interact with technology.",
+      "I'm always up to collaborate on ML systems, backend optimization, and research-y projects around infrastructure and LLMs. Hit me up at <a href=\"mailto:devaanand@umass.edu\">devaanand@umass.edu</a> or <a href=\"mailto:devaags999@gmail.com\">devaags999@gmail.com</a>."
+    ]
+  },
+  "history": {
+    "entries": [
+      {
+        "timespan": "2025 - 2027",
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/UMass_Amherst_athletics_logo.svg/1200px-UMass_Amherst_athletics_logo.svg.png",
+        "description": "Pursuing my <strong>Master of Science in Computer Science</strong> at the University of Massachusetts Amherst, trying to turn my obsession with ML systems into useful research and real-world impact."
+      },
+      {
+        "timespan": "2023 - 2025",
+        "logo": "https://images.squarespace-cdn.com/content/v1/587b44e1d1758e3ceffe18c6/1596580033188-H1B3JYJN0ZMPFA19BFP7/wysa+logo.png",
+        "description": "<strong>Backend Engineer at Wysa</strong>. Worked on scalable mental health tooling, including customizable NHS eTriage systems integrated with Mayden’s iaptus platform, contributing to revenue and impact at clinical scale.<br /><br />Built a full-stack annotation tool from scratch for the AI team, replacing manual sheet-based workflows and saving over 100 hours of manual work per month. Also fixed 20+ security vulnerabilities from VAPT reports, hardening core systems and reducing potential attack surface."
+      },
+      {
+        "timespan": "2022 - 2023",
+        "logo": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+        "description": "<strong>Open Source Contributor & Freelancer</strong>. Developed a full-featured gym website and management system using the MERN stack, with authentication, membership management, and payment flows that streamlined day-to-day operations.<br /><br />Automated payment-triggered email notifications and periodic background jobs, cutting the client’s manual workload significantly. Contributed to multiple open-source projects (like LinkFree, FreeHit, and ProjectsHut), adding new features and improving both backend and frontend codebases."
+      },
+      {
+        "timespan": "2022 - 2023",
+        "logo": "https://cariogrowth.com/wp-content/uploads/brizy/imgs/New-logo-555x569x0x4x555x562x1693786811.png",
+        "description": "<strong>Backend Developer Intern at Cario Growth Services Pvt. Ltd.</strong> Built and maintained over 20 API endpoints in Node.js and Fastify, with solid database integrations for the core product.<br /><br />Integrated LLMs to power an auto-commenting feature, improving the contextual quality of responses in chat. Helped migrate core services to Fastify and gradually move codebases from JavaScript to TypeScript, improving maintainability and type safety."
+      },
+      {
+        "timespan": "2019 - 2023",
+        "logo": "https://upload.wikimedia.org/wikipedia/en/6/60/Vels_University_logo.png",
+        "description": "<strong>B.E. in Computer Science and Engineering</strong> at Vels Institute of Science, Technology and Advanced Studies, Chennai. This is where I properly fell in love with CS from ML and AI to Distributed and Cloud Computing and decided to double down on systems and ML as my long-term path."
+      }
+    ]
+  },
+  "writing": {
+    "title": "writing",
+    "subtitle": "I occasionally write on medium and X",
+    "articles": [
+      {
+        "date": "Dec 2025",
+        "title": "why doesn't the database just auto-create all the indexes for me",
+        "url": "https://x.com/devaaa_19/status/1989919776458903873?s=20"
+      },
+      {
+        "date": "Dec 2022",
+        "title": "Northern lights: how do they form?",
+        "url": "https://medium.com/@devaaa/northern-lights-how-do-they-form-2a7562f64ac3"
+      }
+    ],
+    "contentLink": {
+      "text": "→ my content suggestions",
+      "url": "content.html"
+    }
+  },
+  "projects": {
+    "title": "projects",
+    "items": [
+      {
+        "name": "Spark ETL Optimization",
+        "url": "https://github.com/Deva-1903/Spark-ETL-Optimization",
+        "image": "https://images.seeklogo.com/logo-png/34/1/apache-spark-logo-png_seeklogo-349535.png",
+        "description": "is a performance deep-dive on the NYC TLC taxi dataset, where I start from a naive Apache Spark ETL pipeline and iteratively optimize partitioning, column pruning, precomputed fields, and skew handling to reduce runtime, tail latency, and resource usage."
+      },
+      {
+        "name": "kg-rag",
+        "url": "https://github.com/Deva-1903/kg-rag",
+        "image": "https://opengraph.githubassets.com/1/Deva-1903/kg-rag",
+        "description": "is an experimental vanilla RAG pipeline on HotpotQA, combining FAISS-based retrieval, cross-encoder reranking, and GPT-based answer generation, with basic EM evaluation to understand how each component affects multi-hop QA performance."
+      },
+      {
+        "name": "Team Sonare - Sign ↔ Speech (Offline)",
+        "url": "https://github.com/Deva-1903/Qualcomm-Sep25-Team-Sonare",
+        "image": "https://opengraph.githubassets.com/1/Deva-1903/Qualcomm-Sep25-Team-Sonare",
+        "description": "is a fully offline, privacy-preserving Sign ↔ Speech translator built for the Qualcomm Hackathon 2025 with Team Sonare, using an Electron + React UI, MediaPipe gesture tracking, a FastAPI backend, and whisper.cpp to run the entire pipeline locally on edge devices."
+      },
+      {
+        "name": "Underdogs Fitness Platform",
+        "url": "https://github.com/Deva-1903/backend_underdogs",
+        "image": "https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png",
+        "description": "is a full-stack gym management system built as a freelance project, with separate backend and frontend repos, handling member onboarding, plans, payments, and day-to-day operations using a clean API-first architecture."
+      },
+      {
+        "name": "Alzheimer’s Disease Classification",
+        "url": "https://github.com/Deva-1903/Alzheimer-s-Disease-Classification-",
+        "image": "https://opengraph.githubassets.com/1/Deva-1903/Alzheimer-s-Disease-Classification-",
+        "description": "is a deep learning project for classifying Alzheimer’s disease from medical imaging, exploring different architectures, training setups, and evaluation metrics as part of my undergrad capstone project, which was later published in an IEEE conference."
+      },
+      {
+        "name": "Goalsetter App",
+        "url": "https://github.com/Deva-1903/Goalsetter-app",
+        "image": "https://opengraph.githubassets.com/1/Deva-1903/Goalsetter-app",
+        "description": "is a MERN + Redux app for setting, tracking, and managing personal goals, featuring authentication, CRUD workflows, and a simple dashboard to keep long-term goals organized."
+      },
+      {
+        "name": "Tinder Clone",
+        "url": "https://github.com/Deva-1903/Tinder-Clone",
+        "image": "https://static.dezeen.com/uploads/2017/08/tinder-redesign-graphics_dezeen_sq-1.jpg",
+        "description": "is a Tinder-inspired MERN stack clone that experiments with swipe-style interactions, matchmaking logic, and real-time updates using a modern React + Node.js setup."
+      }
+    ]
+  },
+  "publications": {
+    "title": "publications",
+    "items": [
+      {
+        "title": "Deep Learning-Based Alzheimer's Disease Classification using Transfer Learning and Data Augmentation",
+        "url": "https://ieeexplore.ieee.org/document/10205760",
+        "venue": "2023 3rd International Conference on Intelligent Technologies (CONIT)",
+        "authors": "Deva Anand; P. Sheela Gowr; S. Logesh; S. M. Anand"
+      }
+    ]
+  },
+  "misc": {
+    "title": "updates",
+    "items": [
+      {
+        "date": "Dec 2025",
+        "description": "Started The Inheritance Games, first real dive into fiction, let's see how that goes.",
+        "url": "https://www.goodreads.com/series/282828-the-inheritance-games",
+        "linkText": "The Inheritance Games"
+      },
+      {
+        "date": "Nov 2025",
+        "description": "Posted my first reel after moving to the US, first snowfall at UMass Amherst and it somehow hit ~7k views.",
+        "url": "https://www.instagram.com/reel/DRz0KJZjsZc/",
+        "linkText": "first reel"
+      },
+      {
+        "date": "Aug 2025",
+        "description": "Moved to United States of America 🇺🇸 for my MS in CS at UMass Amherst. Excited for the journey ahead!",
+        "url": "https://www.umass.edu/",
+        "linkText": "UMass Amherst"
+      }
+    ]
+  },
+  "contact": {
+    "title": "contact",
+    "description": "Working on something interesting? Say hi and tell me about it.",
+    "placeholders": {
+      "name": "Name",
+      "email": "Email",
+      "message": "Message"
+    },
+    "submitButton": "Send",
+    "submitButtonSending": "Sending...",
+    "messages": {
+      "fillAllFields": "Please fill in all the fields.",
+      "invalidEmail": "Looks like that email isn’t valid.",
+      "success": "Thanks for reaching out! I’ll get back to you soon.",
+      "error": "Hmm, something went wrong. Please try again or email me directly."
+    }
+  },
+  "footer": {
+    "attribution": "Layout inspired by <a href=\"https://karpathy.ai/\" style=\"color: var(--text-muted); transition: color 0.3s ease;\">Andrej Karpathy's</a> portfolio.",
+    "tagline": "Simple, sharp, and intentional."
+  }
+}

@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Deva Anand</title>
+    <link rel="stylesheet" type="text/css" href="./styles/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <!-- Inline script to apply theme immediately for Safari compatibility -->
+    <script>
+      (function () {
+        try {
+          var theme = localStorage.getItem("theme") || "light";
+          var html = document.documentElement;
+          html.setAttribute("data-theme", theme);
+          if (theme === "dark") {
+            html.classList.add("dark-theme");
+            html.classList.remove("light-theme");
+          } else {
+            html.classList.add("light-theme");
+            html.classList.remove("dark-theme");
+          }
+          // Also apply to body when it's available
+          if (document.body) {
+            if (theme === "dark") {
+              document.body.classList.add("dark-theme");
+              document.body.classList.remove("light-theme");
+            } else {
+              document.body.classList.add("light-theme");
+              document.body.classList.remove("dark-theme");
+            }
+          }
+        } catch (e) {
+          // Fallback if localStorage is not available
+        }
+      })();
+    </script>
+  </head>
+
+  <body>
+    <!-- Dark Mode Toggle -->
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+      <svg
+        class="theme-toggle-icon"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <circle class="sun" cx="12" cy="12" r="5"></circle>
+        <path
+          class="sun"
+          d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"
+        ></path>
+        <path
+          class="moon"
+          d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
+          style="display: none"
+        ></path>
+      </svg>
+    </button>
+
+    <!-- Info Icon with Tooltip -->
+    <button class="info-toggle" id="infoToggle" aria-label="Last updated info">
+      <svg
+        class="info-icon"
+        fill="currentColor"
+        version="1.1"
+        id="Capa_1"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        width="800px"
+        height="800px"
+        viewBox="0 0 32 32"
+        xml:space="preserve"
+      >
+        <g>
+          <path
+            d="M17.962,24.725l1.806,0.096v2.531h-7.534v-2.406l1.045-0.094c0.568-0.063,0.916-0.254,0.916-1.014v-8.801
+		c0-0.699-0.188-0.92-0.791-0.92l-1.106-0.062v-2.626h5.666L17.962,24.725L17.962,24.725z M15.747,4.648
+		c1.394,0,2.405,1.047,2.405,2.374c0,1.331-1.014,2.313-2.438,2.313c-1.454,0-2.404-0.982-2.404-2.313
+		C13.31,5.695,14.26,4.648,15.747,4.648z M16,32C7.178,32,0,24.822,0,16S7.178,0,16,0c8.82,0,16,7.178,16,16S24.82,32,16,32z M16,3
+		C8.832,3,3,8.832,3,16s5.832,13,13,13s13-5.832,13-13S23.168,3,16,3z"
+          />
+        </g>
+      </svg>
+      <div class="info-tooltip">
+        <span class="info-tooltiptext" id="lastUpdated"></span>
+      </div>
+    </button>
+
+    <div id="dhead" class="container">
+      <div class="row">
+        <div id="dpic">
+          <img src="" class="ppic" id="profileImage" />
+        </div>
+        <div id="ddesc">
+          <h1
+            class="pronunciation-tooltip"
+            id="userName"
+            data-pronunciation=""
+          ></h1>
+          <h2 id="userTagline"></h2>
+          <div id="dico"></div>
+        </div>
+      </div>
+    </div>
+
+    <hr />
+
+    <div id="bio" class="container" style="display: none"></div>
+
+    <div id="about" class="container">
+      <div class="ctitle" id="aboutTitle"></div>
+      <div class="about-content" id="aboutContent"></div>
+    </div>
+
+    <div id="history" class="container"></div>
+
+    <div class="writing-section">
+      <div class="container" id="writingContainer"></div>
+    </div>
+
+    <div id="pet-projects" class="container"></div>
+
+    <div class="container" id="publicationsContainer"></div>
+
+    <div class="container" id="miscContainer"></div>
+
+    <div id="contact" class="container">
+      <div class="ctitle" id="contactTitle"></div>
+      <div class="contact-content">
+        <p id="contactDescription"></p>
+        <form id="contactForm" class="contact-form">
+          <input type="text" id="name" placeholder="" required />
+          <input type="email" id="email" placeholder="" required />
+          <textarea id="message" placeholder="" rows="4" required></textarea>
+          <button type="submit" id="submitBtn"></button>
+        </form>
+        <div id="formStatus" style="display: none; margin-top: 10px"></div>
+      </div>
+    </div>
+
+    <br /><br /><br /><br />
+
+    <!-- Content Loading Script -->
+    <script type="text/javascript">
+      let siteContent = null;
+
+      // Load content from JSON
+      async function loadContent() {
+        try {
+          const response = await fetch("./content/content.json");
+          siteContent = await response.json();
+          populateContent();
+        } catch (error) {
+          console.error("Failed to load content:", error);
+        }
+      }
+
+      // Populate all sections with content from JSON
+      function populateContent() {
+        if (!siteContent) return;
+
+        // Header
+        document.getElementById("profileImage").src =
+          siteContent.header.profileImage;
+        document.getElementById("userName").textContent =
+          siteContent.header.name;
+        document
+          .getElementById("userName")
+          .setAttribute("data-pronunciation", siteContent.header.nameAudio);
+        document.getElementById("userTagline").textContent =
+          siteContent.header.tagline;
+
+        const socialLinks = document.getElementById("dico");
+        socialLinks.innerHTML = siteContent.header.socialLinks
+          .map(
+            (link) => `<a href="${link.url}"><i class="${link.icon}"></i></a>`
+          )
+          .join("");
+
+        // Last Updated
+        document.getElementById(
+          "lastUpdated"
+        ).textContent = `Last updated: ${siteContent.info.lastUpdated}`;
+
+        // About
+        document.getElementById("aboutTitle").textContent =
+          siteContent.about.title;
+        document.getElementById("aboutContent").innerHTML =
+          siteContent.about.paragraphs.map((p) => `<p>${p}</p>`).join("");
+
+        // History
+        const historyContainer = document.getElementById("history");
+        historyContainer.innerHTML = siteContent.history.entries
+          .map(
+            (entry) => `
+        <div class="entry row">
+          <div class="timespan">${entry.timespan}</div>
+          <div class="ico">
+            <div class="entry-dot"></div>
+            <img src="${entry.logo}" />
+          </div>
+          <div class="desc">${entry.description}</div>
+        </div>
+      `
+          )
+          .join("");
+
+        // Writing
+        const writingContainer = document.getElementById("writingContainer");
+        writingContainer.innerHTML = `
+        <div class="ctitle">${siteContent.writing.title}</div>
+        <div>${siteContent.writing.subtitle}</div>
+        <ul class="nodot">
+          ${siteContent.writing.articles
+            .map(
+              (article) =>
+                `<li>${article.date} <a href="${article.url}">${article.title}</a></li>`
+            )
+            .join("")}
+        </ul>
+        <p style="margin-top: 20px; font-size: 14px;">
+          <a href="${
+            siteContent.writing.contentLink.url
+          }" style="color: var(--text-muted); text-decoration: none;">
+            ${siteContent.writing.contentLink.text}
+          </a>
+        </p>
+      `;
+
+        // Projects
+        const projectsContainer = document.getElementById("pet-projects");
+        const displayedProjects = siteContent.projects.items.slice(0, 7);
+        projectsContainer.innerHTML = `
+        <div class="ctitle">${siteContent.projects.title}</div>
+        ${displayedProjects
+          .map(
+            (project) => `
+          <div class="project">
+            <div class="pico"><img src="${project.image}" style="max-width: 64px;" /></div>
+            <div class="pdesc"><a href="${project.url}">${project.name}</a> ${project.description}</div>
+            <div class="pend"></div>
+          </div>
+        `
+          )
+          .join("")}
+        <p style="margin-top: 20px; font-size: 14px;"><a href="projects.html" style="color: var(--text-muted); text-decoration: none;">→ view all my projects</a></p>
+      `;
+
+        // Publications
+        const publicationsContainer = document.getElementById(
+          "publicationsContainer"
+        );
+        publicationsContainer.innerHTML = `
+        <div class="ctitle">${siteContent.publications.title}</div>
+        ${siteContent.publications.items
+          .map(
+            (item) => `
+          <div class="pub">
+            <div class="pub-title">${
+              item.url ? `<a href="${item.url}">${item.title}</a>` : item.title
+            }</div>
+            <div class="pub-venue">${item.venue}</div>
+            <div class="pub-authors">${item.authors}</div>
+          </div>
+        `
+          )
+          .join("")}
+      `;
+
+        // Misc
+        const miscContainer = document.getElementById("miscContainer");
+        miscContainer.innerHTML = `
+        <div class="ctitle">${siteContent.misc.title}</div>
+        ${siteContent.misc.items
+          .map(
+            (item) => {
+              let description = item.description || "";
+              // If there's a URL and linkText, replace linkText with a link
+              if (item.url && item.url.trim() !== "" && item.linkText) {
+                const linkRegex = new RegExp(`(${item.linkText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+                description = description.replace(linkRegex, `<a href="${item.url}" target="_blank" rel="noopener">$1</a>`);
+              } else if (item.url && item.url.trim() !== "") {
+                // If there's a URL but no linkText, make the whole description a link
+                description = `<a href="${item.url}" target="_blank" rel="noopener">${description}</a>`;
+              }
+              return `
+          <div class="misc-item">
+            <strong>${item.date}</strong> - ${description}
+          </div>
+        `;
+            }
+          )
+          .join("")}
+      `;
+
+        // Contact
+        document.getElementById("contactTitle").textContent =
+          siteContent.contact.title;
+        document.getElementById("contactDescription").textContent =
+          siteContent.contact.description;
+        document.getElementById("name").placeholder =
+          siteContent.contact.placeholders.name;
+        document.getElementById("email").placeholder =
+          siteContent.contact.placeholders.email;
+        document.getElementById("message").placeholder =
+          siteContent.contact.placeholders.message;
+        document.getElementById("submitBtn").textContent =
+          siteContent.contact.submitButton;
+
+        // Footer
+        document.getElementById("footer").innerHTML = `
+        ${siteContent.footer.attribution}
+        <div>${siteContent.footer.tagline}</div>
+      `;
+      }
+
+      // Load content on page load
+      loadContent();
+    </script>
+
+    <!-- Contact Form Functionality with Web3Forms -->
+    <script type="text/javascript">
+      document
+        .getElementById("contactForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          const submitBtn = document.getElementById("submitBtn");
+          const formStatus = document.getElementById("formStatus");
+          const name = document.getElementById("name").value.trim();
+          const email = document.getElementById("email").value.trim();
+          const message = document.getElementById("message").value.trim();
+
+          // Clear previous messages
+          formStatus.textContent = "";
+          formStatus.className = "";
+          formStatus.style.display = "none";
+
+          // Basic validation
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!name || !email || !message) {
+            formStatus.textContent =
+              siteContent?.contact.messages.fillAllFields ||
+              "Please fill in all fields.";
+            formStatus.className = "error";
+            formStatus.style.display = "block";
+            return;
+          }
+
+          if (!emailRegex.test(email)) {
+            formStatus.textContent =
+              siteContent?.contact.messages.invalidEmail ||
+              "Please enter a valid email address.";
+            formStatus.className = "error";
+            formStatus.style.display = "block";
+            return;
+          }
+
+          // Disable submit button
+          submitBtn.disabled = true;
+          const originalButtonText = submitBtn.textContent;
+          submitBtn.textContent =
+            siteContent?.contact.submitButtonSending || "Sending...";
+
+          try {
+            // Prepare form data
+            const formData = {
+              name: name,
+              email: email,
+              message: message,
+            };
+
+            // Submit to our serverless function (keeps access key secure)
+            const response = await fetch("/api/contact", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(formData),
+            });
+
+            const result = await response.json();
+
+            if (response.ok && result.success) {
+              // Success
+              formStatus.textContent =
+                siteContent?.contact.messages.success ||
+                "Message sent successfully! I'll get back to you soon.";
+              formStatus.className = "success";
+              formStatus.style.display = "block";
+              document.getElementById("contactForm").reset();
+
+              // Hide success message after 5 seconds
+              setTimeout(() => {
+                formStatus.style.display = "none";
+              }, 5000);
+            } else {
+              // Error from API
+              throw new Error(
+                result.error || result.message || "Submission failed"
+              );
+            }
+          } catch (error) {
+            // Error
+            formStatus.textContent =
+              siteContent?.contact.messages.error ||
+              "Failed to send message. Please try again or email me directly.";
+            formStatus.className = "error";
+            formStatus.style.display = "block";
+            console.error("Contact form error:", error);
+          } finally {
+            // Re-enable submit button
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalButtonText;
+          }
+        });
+    </script>
+
+    <!-- attempt hiding from spambots :p -->
+    <script type="text/javascript">
+      const rot13 = (message) => {
+        const alpha =
+          "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLM";
+        return message.replace(
+          /[a-z]/gi,
+          (letter) => alpha[alpha.indexOf(letter) + 13]
+        );
+      };
+      var e_is_shown = false;
+      document.getElementById("iemail").addEventListener("click", function () {
+        let demail = document.getElementById("demail");
+        let msg =
+          "naqerj.xnecngul" +
+          "@" +
+          "tznvy.pbz<oe>V'z fbeel ohg V trg jnl gbb zhpu rznvy naq vg vf birejuryzvat. V bayl znantr gb ercyl gb ~1% bs vg, naq vs jr qba'g xabj rnpu bgure crefbanyyl, vg vf n ybg pybfre gb 0%. Cyrnfr qba'g \"gnxr lbhe fubg\", naq fbeel :(";
+        demail.innerHTML = rot13(msg);
+        demail.style.opacity = e_is_shown ? 0 : 1;
+        e_is_shown = !e_is_shown;
+      });
+    </script>
+
+    <!-- Dark Mode Toggle Functionality -->
+    <script type="text/javascript">
+      // Dark mode toggle functionality with Safari compatibility
+      const themeToggle = document.getElementById("themeToggle");
+      const sunElements = document.querySelectorAll(".sun");
+      const moonElement = document.querySelector(".moon");
+
+      // Check for saved theme preference or default to light mode
+      let currentTheme;
+      try {
+        currentTheme = localStorage.getItem("theme") || "light";
+      } catch (e) {
+        // Fallback if localStorage is not available
+        currentTheme = "light";
+      }
+
+      // Apply theme with Safari compatibility
+      function applyTheme(theme) {
+        // Set the attribute on html
+        document.documentElement.setAttribute("data-theme", theme);
+
+        // Set classes on both html and body for maximum Safari compatibility
+        const htmlEl = document.documentElement;
+        const bodyEl = document.body;
+
+        if (theme === "dark") {
+          htmlEl.classList.add("dark-theme");
+          htmlEl.classList.remove("light-theme");
+          if (bodyEl) {
+            bodyEl.classList.add("dark-theme");
+            bodyEl.classList.remove("light-theme");
+          }
+        } else {
+          htmlEl.classList.add("light-theme");
+          htmlEl.classList.remove("dark-theme");
+          if (bodyEl) {
+            bodyEl.classList.add("light-theme");
+            bodyEl.classList.remove("dark-theme");
+          }
+        }
+
+        // Multiple force reflows for Safari - this is crucial
+        void htmlEl.offsetHeight;
+        if (bodyEl) {
+          void bodyEl.offsetHeight;
+        }
+
+        // Use requestAnimationFrame to ensure changes are applied
+        requestAnimationFrame(() => {
+          void htmlEl.offsetHeight;
+          if (bodyEl) {
+            void bodyEl.offsetHeight;
+          }
+        });
+
+        // Save to localStorage
+        try {
+          localStorage.setItem("theme", theme);
+        } catch (e) {
+          console.warn("Could not save theme preference");
+        }
+      }
+
+      // Update toggle icon based on current theme
+      function updateToggleIcon(theme) {
+        if (theme === "dark") {
+          sunElements.forEach((el) => (el.style.display = "none"));
+          moonElement.style.display = "block";
+        } else {
+          sunElements.forEach((el) => (el.style.display = "block"));
+          moonElement.style.display = "none";
+        }
+      }
+
+      // Initialize theme and icon state
+      // Ensure theme is applied on DOM ready for Safari
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", function () {
+          applyTheme(currentTheme);
+          updateToggleIcon(currentTheme);
+        });
+      } else {
+        applyTheme(currentTheme);
+        updateToggleIcon(currentTheme);
+      }
+
+      // Toggle theme
+      themeToggle.addEventListener("click", function () {
+        const currentTheme =
+          document.documentElement.getAttribute("data-theme") || 
+          (document.documentElement.classList.contains("dark-theme") ? "dark" : "light");
+        const newTheme = currentTheme === "dark" ? "light" : "dark";
+
+        applyTheme(newTheme);
+        updateToggleIcon(newTheme);
+      });
+
+      // Info icon tooltip is handled via CSS hover
+    </script>
+
+    <footer
+      id="footer"
+      style="
+        text-align: center;
+        padding: 20px 0;
+        color: var(--text-muted);
+        font-size: 0.9em;
+        border-top: 1px solid var(--border-light);
+        margin-top: 40px;
+        transition: color 0.3s ease, border-color 0.3s ease;
+      "
+    ></footer>
+  </body>
+</html>

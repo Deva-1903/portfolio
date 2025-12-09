@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>All Projects - Deva Anand</title>
+    <link rel="stylesheet" type="text/css" href="./styles/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <!-- Inline script to apply theme immediately for Safari compatibility -->
+    <script>
+      (function () {
+        try {
+          var theme = localStorage.getItem("theme") || "light";
+          var html = document.documentElement;
+          html.setAttribute("data-theme", theme);
+          if (theme === "dark") {
+            html.classList.add("dark-theme");
+            html.classList.remove("light-theme");
+          } else {
+            html.classList.add("light-theme");
+            html.classList.remove("dark-theme");
+          }
+        } catch (e) {
+          // Fallback if localStorage is not available
+        }
+      })();
+    </script>
+  </head>
+
+  <body>
+    <!-- Dark Mode Toggle -->
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+      <svg
+        class="theme-toggle-icon"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <circle class="sun" cx="12" cy="12" r="5"></circle>
+        <path
+          class="sun"
+          d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"
+        ></path>
+        <path
+          class="moon"
+          d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
+          style="display: none"
+        ></path>
+      </svg>
+    </button>
+
+    <div class="container" style="margin-top: 60px;">
+      <p style="margin-bottom: 30px;">
+        <a href="index.html" style="color: var(--text-muted); text-decoration: none; font-size: 14px;">← back to home</a>
+      </p>
+      <div id="all-projects" class="container"></div>
+    </div>
+
+    <!-- Content Loading Script -->
+    <script type="text/javascript">
+      let siteContent = null;
+
+      // Load content from JSON
+      async function loadContent() {
+        try {
+          const response = await fetch("./content/content.json");
+          siteContent = await response.json();
+          populateProjects();
+        } catch (error) {
+          console.error("Failed to load content:", error);
+        }
+      }
+
+      // Populate all projects
+      function populateProjects() {
+        if (!siteContent) return;
+
+        const projectsContainer = document.getElementById("all-projects");
+        projectsContainer.innerHTML = `
+        <div class="ctitle">${siteContent.projects.title}</div>
+        ${siteContent.projects.items
+          .map(
+            (project) => `
+          <div class="project">
+            <div class="pico"><img src="${project.image}" style="max-width: 64px;" /></div>
+            <div class="pdesc"><a href="${project.url}">${project.name}</a> ${project.description}</div>
+            <div class="pend"></div>
+          </div>
+        `
+          )
+          .join("")}
+      `;
+      }
+
+      // Load content on page load
+      loadContent();
+    </script>
+
+    <!-- Dark Mode Toggle Functionality -->
+    <script type="text/javascript">
+      // Dark mode toggle functionality with Safari compatibility
+      const themeToggle = document.getElementById("themeToggle");
+      const sunElements = document.querySelectorAll(".sun");
+      const moonElement = document.querySelector(".moon");
+
+      // Check for saved theme preference or default to light mode
+      let currentTheme;
+      try {
+        currentTheme = localStorage.getItem("theme") || "light";
+      } catch (e) {
+        // Fallback if localStorage is not available
+        currentTheme = "light";
+      }
+
+      // Apply theme with Safari compatibility
+      function applyTheme(theme) {
+        // Set the attribute on html
+        document.documentElement.setAttribute("data-theme", theme);
+
+        // Set classes on both html and body for maximum Safari compatibility
+        const htmlEl = document.documentElement;
+        const bodyEl = document.body;
+
+        if (theme === "dark") {
+          htmlEl.classList.add("dark-theme");
+          htmlEl.classList.remove("light-theme");
+          bodyEl.classList.add("dark-theme");
+          bodyEl.classList.remove("light-theme");
+        } else {
+          htmlEl.classList.add("light-theme");
+          htmlEl.classList.remove("dark-theme");
+          bodyEl.classList.add("light-theme");
+          bodyEl.classList.remove("dark-theme");
+        }
+
+        // Multiple force reflows for Safari - this is crucial
+        void htmlEl.offsetHeight;
+        void bodyEl.offsetHeight;
+
+        // Use requestAnimationFrame to ensure changes are applied
+        requestAnimationFrame(() => {
+          void htmlEl.offsetHeight;
+        });
+
+        // Save to localStorage
+        try {
+          localStorage.setItem("theme", theme);
+        } catch (e) {
+          console.warn("Could not save theme preference");
+        }
+      }
+
+      // Update toggle icon based on current theme
+      function updateToggleIcon(theme) {
+        if (theme === "dark") {
+          sunElements.forEach((el) => (el.style.display = "none"));
+          moonElement.style.display = "block";
+        } else {
+          sunElements.forEach((el) => (el.style.display = "block"));
+          moonElement.style.display = "none";
+        }
+      }
+
+      // Initialize theme and icon state
+      // Ensure theme is applied on DOM ready for Safari
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", function () {
+          applyTheme(currentTheme);
+          updateToggleIcon(currentTheme);
+        });
+      } else {
+        applyTheme(currentTheme);
+        updateToggleIcon(currentTheme);
+      }
+
+      // Toggle theme
+      themeToggle.addEventListener("click", function () {
+        const currentTheme =
+          document.documentElement.getAttribute("data-theme");
+        const newTheme = currentTheme === "dark" ? "light" : "dark";
+
+        applyTheme(newTheme);
+        updateToggleIcon(newTheme);
+      });
+    </script>
+  </body>
+</html>
+
