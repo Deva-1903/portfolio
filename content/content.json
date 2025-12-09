@@ -58,13 +58,13 @@
               "title": "PhD-level courses",
               "courses": [
                 {
-                  "code": "COMPSCI 685",
-                  "name": "Natural Language Processing",
+                  "code": "COMPSCI 689",
+                  "name": "Advanced Machine Learning",
                   "current": true
                 },
                 {
-                  "code": "COMPSCI 689",
-                  "name": "Advanced Machine Learning",
+                  "code": "COMPSCI 685",
+                  "name": "Advanced Natural Language Processing",
                   "current": true
                 }
               ]
