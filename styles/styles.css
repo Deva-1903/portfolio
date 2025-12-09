@@ -600,6 +600,20 @@ hr {
   color: var(--text-secondary);
 }
 
+.entry-coursework {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid var(--border-light);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.entry-coursework .semester-title {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
 .desc a {
   color: var(--accent-blue);
   text-decoration: none;
@@ -702,6 +716,108 @@ hr {
   .about-content p {
     font-size: 15px;
     line-height: 1.6;
+  }
+}
+
+/* Coursework Section */
+#coursework {
+  margin-bottom: 50px;
+}
+
+.coursework-content {
+  padding: 0;
+}
+
+.semester {
+  margin-bottom: 30px;
+}
+
+.semester:last-child {
+  margin-bottom: 0;
+}
+
+.semester-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  text-transform: lowercase;
+  letter-spacing: 0.5px;
+}
+
+.entry-coursework .semester-title {
+  font-size: 15px;
+  margin-bottom: 10px;
+}
+
+.course-category {
+  margin-bottom: 20px;
+}
+
+.course-category:last-child {
+  margin-bottom: 0;
+}
+
+.category-title {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  font-style: italic;
+}
+
+.entry-coursework .category-title {
+  font-size: 13px;
+  margin-bottom: 5px;
+}
+
+.course-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.course-item {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  padding: 3px 0;
+  transition: color 0.3s ease;
+}
+
+.entry-coursework .course-item {
+  font-size: 14px;
+  line-height: 1.6;
+  padding: 2px 0;
+}
+
+.course-code {
+  font-weight: 500;
+  color: var(--text-primary);
+  font-size: 15px;
+}
+
+.phd-indicator {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.current-badge {
+  color: var(--accent-blue);
+  font-weight: 500;
+  margin-left: 4px;
+}
+
+@media (max-width: 768px) {
+  .course-item {
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .course-code {
+    font-size: 14px;
   }
 }
 

@@ -205,18 +205,50 @@
         // History
         const historyContainer = document.getElementById("history");
         historyContainer.innerHTML = siteContent.history.entries
-          .map(
-            (entry) => `
+          .map((entry) => {
+            let courseworkHTML = "";
+            if (entry.coursework) {
+              // Collect all courses with their level
+              const allCourses = [];
+              entry.coursework.categories.forEach((category) => {
+                const isPhD = category.title.toLowerCase().includes("phd");
+                category.courses.forEach((course) => {
+                  allCourses.push({
+                    ...course,
+                    isPhD: isPhD,
+                  });
+                });
+              });
+
+              const coursesList = allCourses
+                .map((course) => {
+                  const courseText = `<span class="course-code">${course.code}</span>: ${course.name}`;
+                  return course.isPhD
+                    ? `${courseText} <span class="phd-indicator">(PhD)</span>`
+                    : courseText;
+                })
+                .join(", ");
+
+              courseworkHTML = `
+          <div class="entry-coursework">
+            <span class="semester-title">${entry.coursework.semester}</span> — ${coursesList}
+          </div>
+        `;
+            }
+            return `
         <div class="entry row">
           <div class="timespan">${entry.timespan}</div>
           <div class="ico">
             <div class="entry-dot"></div>
             <img src="${entry.logo}" />
           </div>
-          <div class="desc">${entry.description}</div>
+          <div class="desc">
+            ${entry.description}
+            ${courseworkHTML}
+          </div>
         </div>
-      `
-          )
+      `;
+          })
           .join("");
 
         // Writing
