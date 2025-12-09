@@ -108,6 +108,7 @@
             data-pronunciation=""
           ></h1>
           <h2 id="userTagline"></h2>
+          <div id="userLocation"></div>
           <div id="dico"></div>
         </div>
       </div>
@@ -179,11 +180,14 @@
           .setAttribute("data-pronunciation", siteContent.header.nameAudio);
         document.getElementById("userTagline").textContent =
           siteContent.header.tagline;
+        document.getElementById("userLocation").textContent =
+          siteContent.header.location;
 
         const socialLinks = document.getElementById("dico");
         socialLinks.innerHTML = siteContent.header.socialLinks
           .map(
-            (link) => `<a href="${link.url}"><i class="${link.icon}"></i></a>`
+            (link) =>
+              `<a href="${link.url}" target="_blank" rel="noopener noreferrer"><i class="${link.icon}"></i></a>`
           )
           .join("");
 
@@ -224,7 +228,7 @@
           ${siteContent.writing.articles
             .map(
               (article) =>
-                `<li>${article.date} <a href="${article.url}">${article.title}</a></li>`
+                `<li>${article.date} <a href="${article.url}" target="_blank" rel="noopener noreferrer">${article.title}</a></li>`
             )
             .join("")}
         </ul>
@@ -247,7 +251,7 @@
             (project) => `
           <div class="project">
             <div class="pico"><img src="${project.image}" style="max-width: 64px;" /></div>
-            <div class="pdesc"><a href="${project.url}">${project.name}</a> ${project.description}</div>
+            <div class="pdesc"><a href="${project.url}" target="_blank" rel="noopener noreferrer">${project.name}</a> ${project.description}</div>
             <div class="pend"></div>
           </div>
         `
@@ -267,7 +271,9 @@
             (item) => `
           <div class="pub">
             <div class="pub-title">${
-              item.url ? `<a href="${item.url}">${item.title}</a>` : item.title
+              item.url
+                ? `<a href="${item.url}" target="_blank" rel="noopener noreferrer">${item.title}</a>`
+                : item.title
             }</div>
             <div class="pub-venue">${item.venue}</div>
             <div class="pub-authors">${item.authors}</div>
@@ -282,24 +288,28 @@
         miscContainer.innerHTML = `
         <div class="ctitle">${siteContent.misc.title}</div>
         ${siteContent.misc.items
-          .map(
-            (item) => {
-              let description = item.description || "";
-              // If there's a URL and linkText, replace linkText with a link
-              if (item.url && item.url.trim() !== "" && item.linkText) {
-                const linkRegex = new RegExp(`(${item.linkText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-                description = description.replace(linkRegex, `<a href="${item.url}" target="_blank" rel="noopener">$1</a>`);
-              } else if (item.url && item.url.trim() !== "") {
-                // If there's a URL but no linkText, make the whole description a link
-                description = `<a href="${item.url}" target="_blank" rel="noopener">${description}</a>`;
-              }
-              return `
+          .map((item) => {
+            let description = item.description || "";
+            // If there's a URL and linkText, replace linkText with a link
+            if (item.url && item.url.trim() !== "" && item.linkText) {
+              const linkRegex = new RegExp(
+                `(${item.linkText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`,
+                "gi"
+              );
+              description = description.replace(
+                linkRegex,
+                `<a href="${item.url}" target="_blank" rel="noopener noreferrer">$1</a>`
+              );
+            } else if (item.url && item.url.trim() !== "") {
+              // If there's a URL but no linkText, make the whole description a link
+              description = `<a href="${item.url}" target="_blank" rel="noopener noreferrer">${description}</a>`;
+            }
+            return `
           <div class="misc-item">
             <strong>${item.date}</strong> - ${description}
           </div>
         `;
-            }
-          )
+          })
           .join("")}
       `;
 
@@ -538,8 +548,10 @@
       // Toggle theme
       themeToggle.addEventListener("click", function () {
         const currentTheme =
-          document.documentElement.getAttribute("data-theme") || 
-          (document.documentElement.classList.contains("dark-theme") ? "dark" : "light");
+          document.documentElement.getAttribute("data-theme") ||
+          (document.documentElement.classList.contains("dark-theme")
+            ? "dark"
+            : "light");
         const newTheme = currentTheme === "dark" ? "light" : "dark";
 
         applyTheme(newTheme);

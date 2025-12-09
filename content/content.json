@@ -3,6 +3,7 @@
     "name": "Deva Anand",
     "nameAudio": "dhe-va a-nand",
     "tagline": "I design systems that make ML actually scale.",
+    "location": "📍 Amherst, MA, USA",
     "profileImage": "../assets/img.jpeg",
     "socialLinks": [
       {
@@ -192,7 +193,7 @@
     }
   },
   "footer": {
-    "attribution": "Layout inspired by <a href=\"https://karpathy.ai/\" style=\"color: var(--text-muted); transition: color 0.3s ease;\">Andrej Karpathy's</a> portfolio.",
+    "attribution": "Layout inspired by <a href=\"https://karpathy.ai/\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color: var(--text-muted); transition: color 0.3s ease;\">Andrej Karpathy's</a> portfolio.",
     "tagline": "Simple, sharp, and intentional."
   }
 }
