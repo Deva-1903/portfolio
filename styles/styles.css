@@ -1212,3 +1212,82 @@ button:focus {
   background: rgba(231, 76, 60, 0.1);
   color: var(--accent-red);
 }
+
+/* ============================================
+   UMASS AMHERST WEB RING STYLES
+   ============================================ */
+
+.umass-webring {
+  display: none;
+  margin: 30px auto;
+  padding: 20px 0;
+  border-top: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--border-light);
+  max-width: 1000px;
+}
+
+.webring-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.webring-link {
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 14px;
+  padding: 8px 16px;
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  background: var(--bg-secondary);
+}
+
+.webring-link:hover {
+  color: var(--accent-blue);
+  border-color: var(--accent-blue);
+  background: var(--bg-tertiary);
+  transform: translateY(-1px);
+}
+
+.webring-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.webring-logo {
+  display: inline-block;
+  text-decoration: none;
+  transition: transform 0.3s ease;
+}
+
+.webring-logo:hover {
+  transform: scale(1.05);
+}
+
+.webring-button {
+  image-rendering: auto;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+  image-rendering: -webkit-optimize-contrast;
+  display: block;
+  width: 88px;
+  height: 31px;
+  border: none;
+}
+
+/* Responsive adjustments for webring */
+@media (max-width: 768px) {
+  .webring-container {
+    gap: 15px;
+    flex-direction: column;
+  }
+
+  .webring-link {
+    font-size: 13px;
+    padding: 6px 12px;
+  }
+}

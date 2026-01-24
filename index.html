@@ -593,6 +593,66 @@
       // Info icon tooltip is handled via CSS hover
     </script>
 
+    <!-- UMass Amherst Web Ring Integration -->
+    <script type="text/javascript">
+      const WEBRING_USERNAME = 'devaanand19';
+      const WEBRING_API_URL = `https://umaring.mkr.cx/${WEBRING_USERNAME}`;
+
+      async function loadWebring() {
+        // Skip if username is not set
+        if (WEBRING_USERNAME === 'YOUR_USERNAME') {
+          return;
+        }
+
+        try {
+          const response = await fetch(WEBRING_API_URL);
+          if (!response.ok) {
+            throw new Error('Failed to fetch webring data');
+          }
+          
+          const data = await response.json();
+          
+          // Update previous link
+          const prevLink = document.getElementById('webring-prev');
+          if (data.prev && prevLink) {
+            prevLink.href = data.prev.url;
+            prevLink.textContent = `← ${data.prev.name}`;
+            prevLink.style.display = 'inline-block';
+            prevLink.title = `Previous: ${data.prev.name}`;
+          }
+          
+          // Update next link
+          const nextLink = document.getElementById('webring-next');
+          if (data.next && nextLink) {
+            nextLink.href = data.next.url;
+            nextLink.textContent = `${data.next.name} →`;
+            nextLink.style.display = 'inline-block';
+            nextLink.title = `Next: ${data.next.name}`;
+          }
+          
+          // Show webring container
+          const webringContainer = document.getElementById('umass-webring');
+          if (webringContainer) {
+            webringContainer.style.display = 'block';
+          }
+        } catch (error) {
+          console.error('Failed to load webring:', error);
+          // Hide webring on error
+          const webringContainer = document.getElementById('umass-webring');
+          if (webringContainer) {
+            webringContainer.style.display = 'none';
+          }
+        }
+      }
+
+      // Load webring on page load
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", loadWebring);
+      } else {
+        loadWebring();
+      }
+    </script>
+
     <footer
       id="footer"
       style="
@@ -605,5 +665,26 @@
         transition: color 0.3s ease, border-color 0.3s ease;
       "
     ></footer>
+
+    <!-- UMass Amherst Web Ring -->
+    <div id="umass-webring" class="umass-webring">
+      <div class="webring-container">
+        <a id="webring-prev" href="#" class="webring-link webring-prev" style="display: none;">
+          ← Prev
+        </a>
+        <div class="webring-info">
+          <a href="https://umaring.mkr.cx/" target="_blank" rel="noopener noreferrer" class="webring-logo">
+            <img 
+              src="https://umaring.mkr.cx/button.png" 
+              alt="UMass Amherst Web Ring" 
+              class="webring-button"
+            />
+          </a>
+        </div>
+        <a id="webring-next" href="#" class="webring-link webring-next" style="display: none;">
+          Next →
+        </a>
+      </div>
+    </div>
   </body>
 </html>
