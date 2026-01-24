@@ -128,6 +128,12 @@
     "title": "projects",
     "items": [
       {
+        "name": "Spend - AI Expense Tracker",
+        "url": "https://github.com/Deva-1903/Expense-Tracker",
+        "image": "https://opengraph.githubassets.com/1/Deva-1903/Expense-Tracker",
+        "description": "is a zero-friction personal finance tool that uses AI to parse natural language inputs (e.g., 'chipotle $14') into structured expenses, featuring income tracking, monthly budgets, and recurring bills, built with React, FastAPI, and Supabase."
+      },
+      {
         "name": "Spark ETL Optimization",
         "url": "https://github.com/Deva-1903/Spark-ETL-Optimization",
         "image": "https://images.seeklogo.com/logo-png/34/1/apache-spark-logo-png_seeklogo-349535.png",
