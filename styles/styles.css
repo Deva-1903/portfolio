@@ -1219,10 +1219,8 @@ button:focus {
 
 .umass-webring {
   display: none;
-  margin: 30px auto;
+  margin: 10px auto 30px;
   padding: 20px 0;
-  border-top: 1px solid var(--border-light);
-  border-bottom: 1px solid var(--border-light);
   max-width: 1000px;
 }
 
@@ -1269,14 +1267,17 @@ button:focus {
 }
 
 .webring-button {
-  image-rendering: auto;
-  image-rendering: crisp-edges;
-  image-rendering: pixelated;
-  image-rendering: -webkit-optimize-contrast;
   display: block;
-  width: 88px;
   height: 31px;
+  width: auto;
+  max-width: 250px;
   border: none;
+  background: transparent;
+  transition: opacity 0.3s ease;
+}
+
+.webring-button:hover {
+  opacity: 0.8;
 }
 
 /* Responsive adjustments for webring */
