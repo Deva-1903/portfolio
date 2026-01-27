@@ -1235,8 +1235,8 @@ button:focus {
 .webring-link {
   color: var(--text-primary);
   text-decoration: none;
-  font-size: 14px;
-  padding: 8px 16px;
+  font-size: 13px;
+  padding: 7px 14px;
   border: 1px solid var(--border-light);
   border-radius: 4px;
   transition: all 0.3s ease;
@@ -1267,10 +1267,13 @@ button:focus {
 }
 
 .webring-button {
+  image-rendering: auto;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+  image-rendering: -webkit-optimize-contrast;
   display: block;
+  width: 88px;
   height: 31px;
-  width: auto;
-  max-width: 250px;
   border: none;
   background: transparent;
   transition: opacity 0.3s ease;
