@@ -208,32 +208,39 @@
           .map((entry) => {
             let courseworkHTML = "";
             if (entry.coursework) {
-              // Collect all courses with their level
-              const allCourses = [];
-              entry.coursework.categories.forEach((category) => {
-                const isPhD = category.title.toLowerCase().includes("phd");
-                category.courses.forEach((course) => {
-                  allCourses.push({
-                    ...course,
-                    isPhD: isPhD,
+              // Handle both array format (multiple semesters) and object format (single semester)
+              const courseworkArray = Array.isArray(entry.coursework) 
+                ? entry.coursework 
+                : [entry.coursework];
+              
+              courseworkHTML = courseworkArray.map((semesterData) => {
+                // Collect all courses with their level
+                const allCourses = [];
+                semesterData.categories.forEach((category) => {
+                  const isPhD = category.title.toLowerCase().includes("phd");
+                  category.courses.forEach((course) => {
+                    allCourses.push({
+                      ...course,
+                      isPhD: isPhD,
+                    });
                   });
                 });
-              });
 
-              const coursesList = allCourses
-                .map((course) => {
-                  const courseText = `<span class="course-code">${course.code}</span>: ${course.name}`;
-                  return course.isPhD
-                    ? `${courseText} <span class="phd-indicator">(PhD)</span>`
-                    : courseText;
-                })
-                .join(", ");
+                const coursesList = allCourses
+                  .map((course) => {
+                    const courseText = `<span class="course-code">${course.code}</span>: ${course.name}`;
+                    return course.isPhD
+                      ? `${courseText} <span class="phd-indicator">(PhD)</span>`
+                      : courseText;
+                  })
+                  .join(", ");
 
-              courseworkHTML = `
+                return `
           <div class="entry-coursework">
-            <span class="semester-title">${entry.coursework.semester}</span> — ${coursesList}
+            <span class="semester-title">${semesterData.semester}</span> — ${coursesList}
           </div>
         `;
+              }).join("");
             }
             return `
         <div class="entry row">

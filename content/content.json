@@ -34,7 +34,7 @@
     ]
   },
   "info": {
-    "lastUpdated": "2025-12-09"
+    "lastUpdated": "2026-02-08"
   },
   "about": {
     "title": "about me",
@@ -51,36 +51,63 @@
         "timespan": "2025 - 2027",
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/UMass_Amherst_athletics_logo.svg/1200px-UMass_Amherst_athletics_logo.svg.png",
         "description": "Pursuing my <strong>Master of Science in Computer Science</strong> at the University of Massachusetts Amherst, trying to turn my obsession with ML systems into useful research and real-world impact.",
-        "coursework": {
-          "semester": "fall 2025",
-          "categories": [
-            {
-              "title": "PhD-level courses",
-              "courses": [
-                {
-                  "code": "COMPSCI 689",
-                  "name": "Advanced Machine Learning",
-                  "current": true
-                },
-                {
-                  "code": "COMPSCI 685",
-                  "name": "Advanced Natural Language Processing",
-                  "current": true
-                }
-              ]
-            },
-            {
-              "title": "Master's level courses",
-              "courses": [
-                {
-                  "code": "COMPSCI 532",
-                  "name": "Systems for Data Science",
-                  "current": true
-                }
-              ]
-            }
-          ]
-        }
+        "coursework": [
+          {
+            "semester": "fall 2025",
+            "categories": [
+              {
+                "title": "PhD-level courses",
+                "courses": [
+                  {
+                    "code": "COMPSCI 689",
+                    "name": "Advanced Machine Learning",
+                    "current": true
+                  },
+                  {
+                    "code": "COMPSCI 685",
+                    "name": "Advanced Natural Language Processing",
+                    "current": true
+                  }
+                ]
+              },
+              {
+                "title": "Master's level courses",
+                "courses": [
+                  {
+                    "code": "COMPSCI 532",
+                    "name": "Systems for Data Science",
+                    "current": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "semester": "spring 2026",
+            "categories": [
+              {
+                "title": "PhD-level courses",
+                "courses": [
+                  {
+                    "code": "COMPSCI 690PF",
+                    "name": "Performance Engineering",
+                    "current": true
+                  },
+                  {
+                    "code": "COMPSCI 651",
+                    "name": "Optimization in CS",
+                    "current": true
+                  },
+                  {
+                    "code": "COMPSCI 602",
+                    "name": "Research Methods/Empirical CS",
+                    "current": true
+                  }
+                ]
+              }
+            ]
+          }
+        ]
       },
       {
         "timespan": "2023 - 2025",
