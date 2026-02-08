@@ -136,6 +136,11 @@
     "subtitle": "I occasionally write on medium and X",
     "articles": [
       {
+        "date": "Jan 2026",
+        "title": "The \"Middleman\" Trap: A Better Way to Handle File Uploads",
+        "url": "https://medium.com/@devaaa/the-middleman-trap-a-better-way-to-handle-file-uploads"
+      },
+      {
         "date": "Dec 2025",
         "title": "why doesn't the database just auto-create all the indexes for me",
         "url": "https://x.com/devaaa_19/status/1989919776458903873?s=20"
