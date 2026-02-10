@@ -39,10 +39,10 @@
   "about": {
     "title": "about me",
     "paragraphs": [
-      "Hey, I'm Deva - a software engineer and MS CS student at UMass Amherst, focusing on Machine Learning Systems, Distributed Systems, and high-performance backends. I care about making ML models not just accurate, but deployable, efficient, and scalable in the real world.",
-      "Before grad school, I worked as a backend engineer, building APIs, data pipelines, and production systems. These days I'm deep into questions like: how do we train and serve models faster? how do we use resources smarter? how do we keep systems simple while everything around them gets more complex?",
-      "Beyond code, I enjoy teaching and mentoring students, lifting at the gym, exploring photography and videography, and tinkering with photo/video editing. I'm also into psychology, stoicism, and how people interact with technology.",
-      "I'm always up to collaborate on ML systems, backend optimization, and research-y projects around infrastructure and LLMs. Hit me up at <a href=\"mailto:devaanand@umass.edu\">devaanand@umass.edu</a> or <a href=\"mailto:devaags999@gmail.com\">devaags999@gmail.com</a>."
+      "I'm Deva - an ML Systems Researcher and MS CS student at UMass Amherst. I work on <strong>Algorithm-System Co-Design</strong>, co-optimizing neural architectures and inference engines to handle the \"unknown compute\" of agentic workflows.",
+      "Right now, I am tackling the bottlenecks of modern reasoning models from three angles: designing SLO-aware schedulers to manage variable compute loads, optimizing adaptive memory systems for long-context retrieval, and building runtime guardrails to ensure safety during speculative decoding.",
+      "Before grad school, I engineered production backends and data pipelines. Today, I apply those reliability principles to solve the Memory Wall and scheduling challenges of serving Large Language Models.",
+        "I'm always open to collaboration on LLM serving, agentic infrastructure, and system-aware ML. Hit me up at: <a href=\"mailto:devaanand@umass.edu\">devaanand@umass.edu</a>"
     ]
   },
   "history": {
