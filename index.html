@@ -96,32 +96,27 @@
       </div>
     </button>
 
-    <div id="dhead" class="container">
-      <div class="row">
-        <div id="dpic">
-          <img src="" class="ppic" id="profileImage" />
-        </div>
-        <div id="ddesc">
+    <div id="hero" class="container hero-section">
+      <div class="hero-grid" id="about">
+        <div class="hero-left">
           <h1
             class="pronunciation-tooltip"
             id="userName"
             data-pronunciation=""
           ></h1>
-          <h2 id="userTagline"></h2>
           <div id="userLocation"></div>
+          <div class="about-content" id="aboutContent"></div>
+        </div>
+        <div class="hero-right">
+          <div id="dpic">
+            <img src="" class="ppic" id="profileImage" />
+          </div>
           <div id="dico"></div>
         </div>
       </div>
     </div>
 
-    <hr />
-
     <div id="bio" class="container" style="display: none"></div>
-
-    <div id="about" class="container">
-      <div class="ctitle" id="aboutTitle"></div>
-      <div class="about-content" id="aboutContent"></div>
-    </div>
 
     <div id="history" class="container"></div>
 
@@ -135,7 +130,7 @@
 
     <div class="container" id="miscContainer"></div>
 
-    <div id="contact" class="container">
+    <!-- <div id="contact" class="container">
       <div class="ctitle" id="contactTitle"></div>
       <div class="contact-content">
         <p id="contactDescription"></p>
@@ -147,7 +142,7 @@
         </form>
         <div id="formStatus" style="display: none; margin-top: 10px"></div>
       </div>
-    </div>
+    </div> -->
 
     <br /><br /><br /><br />
 
@@ -173,13 +168,16 @@
         // Header
         document.getElementById("profileImage").src =
           siteContent.header.profileImage;
-        document.getElementById("userName").textContent =
-          siteContent.header.name;
+        const nameParts = siteContent.header.name.split(" ");
+        const firstName = nameParts[0];
+        const lastName = nameParts.slice(1).join(" ");
+        document.getElementById("userName").innerHTML =
+          `${firstName} <span class="name-accent">${lastName}</span>`;
         document
           .getElementById("userName")
           .setAttribute("data-pronunciation", siteContent.header.nameAudio);
-        document.getElementById("userTagline").textContent =
-          siteContent.header.tagline;
+        // document.getElementById("userTagline").textContent =
+        //   siteContent.header.tagline;
         document.getElementById("userLocation").textContent =
           siteContent.header.location;
 
@@ -197,8 +195,6 @@
         ).textContent = `Last updated: ${siteContent.info.lastUpdated}`;
 
         // About
-        document.getElementById("aboutTitle").textContent =
-          siteContent.about.title;
         document.getElementById("aboutContent").innerHTML =
           siteContent.about.paragraphs.map((p) => `<p>${p}</p>`).join("");
 
@@ -352,19 +348,19 @@
           .join("")}
       `;
 
-        // Contact
-        document.getElementById("contactTitle").textContent =
-          siteContent.contact.title;
-        document.getElementById("contactDescription").textContent =
-          siteContent.contact.description;
-        document.getElementById("name").placeholder =
-          siteContent.contact.placeholders.name;
-        document.getElementById("email").placeholder =
-          siteContent.contact.placeholders.email;
-        document.getElementById("message").placeholder =
-          siteContent.contact.placeholders.message;
-        document.getElementById("submitBtn").textContent =
-          siteContent.contact.submitButton;
+        // Contact (commented out)
+        // document.getElementById("contactTitle").textContent =
+        //   siteContent.contact.title;
+        // document.getElementById("contactDescription").textContent =
+        //   siteContent.contact.description;
+        // document.getElementById("name").placeholder =
+        //   siteContent.contact.placeholders.name;
+        // document.getElementById("email").placeholder =
+        //   siteContent.contact.placeholders.email;
+        // document.getElementById("message").placeholder =
+        //   siteContent.contact.placeholders.message;
+        // document.getElementById("submitBtn").textContent =
+        //   siteContent.contact.submitButton;
 
         // Footer
         document.getElementById("footer").innerHTML = `
@@ -377,103 +373,17 @@
       loadContent();
     </script>
 
-    <!-- Contact Form Functionality with Web3Forms -->
+    <!-- Contact Form Functionality (commented out) -->
+    <!--
     <script type="text/javascript">
       document
         .getElementById("contactForm")
         .addEventListener("submit", async function (e) {
           e.preventDefault();
-
-          const submitBtn = document.getElementById("submitBtn");
-          const formStatus = document.getElementById("formStatus");
-          const name = document.getElementById("name").value.trim();
-          const email = document.getElementById("email").value.trim();
-          const message = document.getElementById("message").value.trim();
-
-          // Clear previous messages
-          formStatus.textContent = "";
-          formStatus.className = "";
-          formStatus.style.display = "none";
-
-          // Basic validation
-          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-          if (!name || !email || !message) {
-            formStatus.textContent =
-              siteContent?.contact.messages.fillAllFields ||
-              "Please fill in all fields.";
-            formStatus.className = "error";
-            formStatus.style.display = "block";
-            return;
-          }
-
-          if (!emailRegex.test(email)) {
-            formStatus.textContent =
-              siteContent?.contact.messages.invalidEmail ||
-              "Please enter a valid email address.";
-            formStatus.className = "error";
-            formStatus.style.display = "block";
-            return;
-          }
-
-          // Disable submit button
-          submitBtn.disabled = true;
-          const originalButtonText = submitBtn.textContent;
-          submitBtn.textContent =
-            siteContent?.contact.submitButtonSending || "Sending...";
-
-          try {
-            // Prepare form data
-            const formData = {
-              name: name,
-              email: email,
-              message: message,
-            };
-
-            // Submit to our serverless function (keeps access key secure)
-            const response = await fetch("/api/contact", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(formData),
-            });
-
-            const result = await response.json();
-
-            if (response.ok && result.success) {
-              // Success
-              formStatus.textContent =
-                siteContent?.contact.messages.success ||
-                "Message sent successfully! I'll get back to you soon.";
-              formStatus.className = "success";
-              formStatus.style.display = "block";
-              document.getElementById("contactForm").reset();
-
-              // Hide success message after 5 seconds
-              setTimeout(() => {
-                formStatus.style.display = "none";
-              }, 5000);
-            } else {
-              // Error from API
-              throw new Error(
-                result.error || result.message || "Submission failed"
-              );
-            }
-          } catch (error) {
-            // Error
-            formStatus.textContent =
-              siteContent?.contact.messages.error ||
-              "Failed to send message. Please try again or email me directly.";
-            formStatus.className = "error";
-            formStatus.style.display = "block";
-            console.error("Contact form error:", error);
-          } finally {
-            // Re-enable submit button
-            submitBtn.disabled = false;
-            submitBtn.textContent = originalButtonText;
-          }
+          // ... contact form handler
         });
     </script>
+    -->
 
     <!-- attempt hiding from spambots :p -->
     <script type="text/javascript">

@@ -39,10 +39,9 @@
   "about": {
     "title": "about me",
     "paragraphs": [
-      "I'm Deva - an ML Systems Researcher and MS CS student at UMass Amherst. I work on <strong>Algorithm-System Co-Design</strong>, co-optimizing neural architectures and inference engines to handle the \"unknown compute\" of agentic workflows.",
-      "Right now, I am tackling the bottlenecks of modern reasoning models from three angles: designing SLO-aware schedulers to manage variable compute loads, optimizing adaptive memory systems for long-context retrieval, and building runtime guardrails to ensure safety during speculative decoding.",
-      "Before grad school, I engineered production backends and data pipelines. Today, I apply those reliability principles to solve the Memory Wall and scheduling challenges of serving Large Language Models.",
-        "I'm always open to collaboration on LLM serving, agentic infrastructure, and system-aware ML. Hit me up at: <a href=\"mailto:devaanand@umass.edu\">devaanand@umass.edu</a>"
+      "I'm an MS CS student at UMass Amherst. I spent a lot of time in <span class=\"highlight\">ML Systems</span> and Backend Engineering, obsessing over how to make models run faster and cheaper.",
+      "But lately, I've have been more intrested <span class=\"highlight\">AI Safety</span>, <span class=\"highlight\">Mechanistic Interpretability</span>, and <span class=\"highlight\">Causal Reasoning</span>. I want to understand <em>how</em> these black boxes actually \"think\"—specifically looking at <strong>internal circuits for planning</strong> and verifying if agents are using valid logic versus just memorizing correlations.",
+      "I'm always open to chatting about Safety, Interpretability, or building reliable guardrails. Hit me up at: <a href=\"mailto:devaanand@umass.edu\">devaanand@umass.edu</a>"
     ]
   },
   "history": {

@@ -11,6 +11,7 @@
   --text-secondary: #34495e;
   --text-muted: #7f8c8d;
   --text-accent: #95a5a6;
+  --name-accent: #881c1c;
   --border-light: #e8e8e8;
   --border-medium: #bdc3c7;
   --border-card: #e1e8ed;
@@ -30,16 +31,17 @@ html[data-theme="dark"],
 html.dark-theme,
 html.dark-theme body,
 body.dark-theme {
-  --bg-primary: #121212;
-  --bg-secondary: #1e1e1e;
-  --bg-tertiary: #242424;
-  --text-primary: #ffffff;
-  --text-secondary: #e0e0e0;
-  --text-muted: #a0a0a0;
-  --text-accent: #888888;
-  --border-light: #333333;
-  --border-medium: #444444;
-  --border-card: #333333;
+  --bg-primary: #060d1f;
+  --bg-secondary: #0c1530;
+  --bg-tertiary: #111c3a;
+  --text-primary: #e8ecf1;
+  --text-secondary: #c5cdd8;
+  --text-muted: #8899ab;
+  --text-accent: #6b7d92;
+  --name-accent: #64b5f6;
+  --border-light: #152040;
+  --border-medium: #1e2d52;
+  --border-card: #152040;
   --shadow-light: rgba(0, 0, 0, 0.3);
   --shadow-medium: rgba(0, 0, 0, 0.4);
   --shadow-heavy: rgba(0, 0, 0, 0.5);
@@ -54,16 +56,17 @@ body.dark-theme {
 /* Safari-specific dark mode fix - redundant but necessary */
 html.dark-theme,
 html[data-theme="dark"] {
-  --bg-primary: #121212 !important;
-  --bg-secondary: #1e1e1e !important;
-  --bg-tertiary: #242424 !important;
-  --text-primary: #ffffff !important;
-  --text-secondary: #e0e0e0 !important;
-  --text-muted: #a0a0a0 !important;
-  --text-accent: #888888 !important;
-  --border-light: #333333 !important;
-  --border-medium: #444444 !important;
-  --border-card: #333333 !important;
+  --bg-primary: #060d1f !important;
+  --bg-secondary: #0c1530 !important;
+  --bg-tertiary: #111c3a !important;
+  --text-primary: #e8ecf1 !important;
+  --text-secondary: #c5cdd8 !important;
+  --text-muted: #8899ab !important;
+  --text-accent: #6b7d92 !important;
+  --name-accent: #64b5f6 !important;
+  --border-light: #152040 !important;
+  --border-medium: #1e2d52 !important;
+  --border-card: #152040 !important;
   --accent-blue: #64b5f6 !important;
   --accent-blue-dark: #42a5f5 !important;
   --accent-green: #81c784 !important;
@@ -183,19 +186,42 @@ body::before {
   gap: 0 20px;
 }
 
-/* Header Section */
-#dhead {
+/* Hero Section */
+.hero-section {
   margin-top: 40px;
   margin-bottom: 60px;
 }
 
-#dhead .row {
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 50px;
+  align-items: start;
+}
+
+.hero-left {
+  min-width: 0;
+}
+
+.hero-left #userLocation {
+  font-weight: 400;
+  color: var(--text-muted);
+  font-size: 14px;
+  margin: 4px 0 22px 0;
+  letter-spacing: 0.2px;
+}
+
+.hero-right {
   display: flex;
+  flex-direction: column;
   align-items: center;
+  gap: 18px;
+  padding-top: 40px;
+}
+
+.hero-right #dico {
   justify-content: center;
-  gap: 40px;
-  max-width: 800px;
-  margin: 0 auto;
+  gap: 12px;
 }
 
 #dpic {
@@ -205,34 +231,37 @@ body::before {
   flex-shrink: 0;
 }
 
-#ddesc {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  min-width: 0;
-}
-
-@media (max-width: 991px) {
-  #dhead .row {
-    flex-direction: column;
-    text-align: center;
+@media (max-width: 768px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
     gap: 30px;
   }
-  #ddesc {
-    align-items: center;
+
+  .hero-right {
+    order: -1;
+    justify-content: center;
+  }
+
+  .hero-left {
+    text-align: center;
   }
 }
 
 h1 {
-  font-size: 42px;
-  font-weight: 300;
+  font-size: 46px;
+  font-weight: 600;
   padding: 0;
-  margin: 0 0 10px 0;
-  letter-spacing: -0.5px;
+  margin: 0 0 6px 0;
+  letter-spacing: -1px;
   color: var(--text-primary);
   transition: color 0.3s ease;
   position: relative;
+  line-height: 1.1;
+  font-family: "Times New Roman", Times, Georgia, serif;
+}
+
+.name-accent {
+  color: var(--name-accent);
 }
 
 /* Pronunciation Tooltip */
@@ -249,8 +278,8 @@ h1.pronunciation-tooltip::before {
   content: attr(data-pronunciation);
   position: absolute;
   top: 110%;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
+  transform: none;
   background-color: var(--text-primary);
   color: var(--bg-primary);
   padding: 8px 12px;
@@ -269,8 +298,8 @@ h1.pronunciation-tooltip::after {
   content: "";
   position: absolute;
   top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 20px;
+  transform: none;
   border: 5px solid transparent;
   border-bottom-color: var(--text-primary);
   opacity: 0;
@@ -294,40 +323,19 @@ h2 {
   line-height: 1.4;
 }
 
-@media (min-width: 992px) {
-  h2 {
-    max-width: 350px;
-  }
-}
-
-#userLocation {
-  font-weight: 300;
-  color: var(--text-muted);
-  font-size: 16px;
-  padding: 0;
-  margin: 0 0 25px 0;
-  line-height: 1.4;
-  opacity: 0.8;
-}
-
-@media (min-width: 992px) {
-  #userLocation {
-    max-width: 350px;
-  }
-}
-
 #dpic img {
-  width: 200px;
-  height: 200px;
-  border-radius: 8px;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
   object-fit: cover;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 3px solid var(--border-light);
 }
 
 #dpic img:hover {
-  transform: scale(1.05);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  transform: scale(1.03);
+  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.12);
 }
 
 /* Social Icons */
@@ -337,40 +345,34 @@ h2 {
   margin-top: 5px;
 }
 
-@media (max-width: 991px) {
-  #dico {
-    justify-content: center;
-  }
-}
-
 /* Social Media Icons */
 .iico {
-  font-size: 42px;
+  font-size: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-primary);
+  color: var(--text-muted);
   text-decoration: none;
-  transition: all 0.3s ease;
+  transition: color 0.2s ease, transform 0.2s ease;
 }
 
 .iico-resume {
-  font-size: 40px;
+  font-size: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-primary);
+  color: var(--text-muted);
   text-decoration: none;
-  transition: all 0.3s ease;
+  transition: color 0.2s ease, transform 0.2s ease;
 }
 
 .iico-resume:hover {
-  transform: translateY(-3px);
-  color: var(--accent-green);
+  transform: translateY(-2px);
+  color: var(--text-primary);
 }
 
 .iico:hover {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
   color: var(--accent-blue);
 }
 
@@ -693,7 +695,7 @@ hr {
 
 /* About Me Section */
 #about {
-  margin-bottom: 50px;
+  margin-bottom: 0;
 }
 
 .about-content {
@@ -701,15 +703,20 @@ hr {
 }
 
 .about-content p {
-  font-size: 16px;
-  line-height: 1.7;
+  font-size: 15.5px;
+  line-height: 1.75;
   color: var(--text-secondary);
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   transition: color 0.3s ease;
 }
 
 .about-content p:last-child {
   margin-bottom: 0;
+}
+
+.highlight {
+  color: var(--name-accent);
+  font-weight: 500;
 }
 
 @media (max-width: 768px) {
@@ -1019,9 +1026,9 @@ hr {
   }
 
   #dpic img {
-    width: 180px;
-    height: 180px;
-    border-radius: 8px;
+    width: 190px;
+    height: 190px;
+    border-radius: 50%;
     object-fit: cover;
   }
 
