@@ -1,136 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <title>Deva Anand</title>
-    <link rel="stylesheet" type="text/css" href="./styles/styles.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
 
-    <!-- Inline script to apply theme immediately for Safari compatibility -->
-    <script>
-      (function () {
-        try {
-          var theme = localStorage.getItem("theme") || "light";
-          var html = document.documentElement;
-          html.setAttribute("data-theme", theme);
-          if (theme === "dark") {
-            html.classList.add("dark-theme");
-            html.classList.remove("light-theme");
-          } else {
-            html.classList.add("light-theme");
-            html.classList.remove("dark-theme");
-          }
-          // Also apply to body when it's available
-          if (document.body) {
-            if (theme === "dark") {
-              document.body.classList.add("dark-theme");
-              document.body.classList.remove("light-theme");
-            } else {
-              document.body.classList.add("light-theme");
-              document.body.classList.remove("dark-theme");
-            }
-          }
-        } catch (e) {
-          // Fallback if localStorage is not available
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <title>Deva Anand</title>
+  <link rel="stylesheet" type="text/css" href="./styles/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+
+  <!-- Inline script to apply theme immediately for Safari compatibility -->
+  <script>
+    (function () {
+      try {
+        var theme = localStorage.getItem("theme") || "light";
+        var html = document.documentElement;
+        html.setAttribute("data-theme", theme);
+        if (theme === "dark") {
+          html.classList.add("dark-theme");
+          html.classList.remove("light-theme");
+          // Set inline bg for Safari to prevent flash
+          html.style.backgroundColor = "#111b2b";
+        } else {
+          html.classList.add("light-theme");
+          html.classList.remove("dark-theme");
+          html.style.backgroundColor = "#fffbf7";
         }
-      })();
-    </script>
-  </head>
+      } catch (e) {
+        // Fallback if localStorage is not available
+      }
+    })();
+  </script>
+</head>
 
-  <body>
-    <!-- Dark Mode Toggle -->
-    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-      <svg
-        class="theme-toggle-icon"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-      >
-        <circle class="sun" cx="12" cy="12" r="5"></circle>
-        <path
-          class="sun"
-          d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"
-        ></path>
-        <path
-          class="moon"
-          d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
-          style="display: none"
-        ></path>
-      </svg>
-    </button>
+<body>
+  <!-- Minimal Navbar -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <ul class="nav-links">
+        <li class="nav-item"><a href="#about">about</a></li>
+        <li class="nav-item"><a href="#history">experience</a></li>
+        <li class="nav-item"><a href="#pet-projects">projects</a></li>
+        <li class="nav-item"><a href="#writingContainer">writing</a></li>
+        <li class="nav-item"><a href="#publicationsContainer">publications</a></li>
+      </ul>
+    </div>
+  </nav>
 
-    <!-- Info Icon with Tooltip -->
-    <button class="info-toggle" id="infoToggle" aria-label="Last updated info">
-      <svg
-        class="info-icon"
-        fill="currentColor"
-        version="1.1"
-        id="Capa_1"
-        xmlns="http://www.w3.org/2000/svg"
-        xmlns:xlink="http://www.w3.org/1999/xlink"
-        width="800px"
-        height="800px"
-        viewBox="0 0 32 32"
-        xml:space="preserve"
-      >
-        <g>
-          <path
-            d="M17.962,24.725l1.806,0.096v2.531h-7.534v-2.406l1.045-0.094c0.568-0.063,0.916-0.254,0.916-1.014v-8.801
+  <!-- Dark Mode Toggle -->
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+    <svg class="theme-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle class="sun" cx="12" cy="12" r="5"></circle>
+      <path class="sun"
+        d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42">
+      </path>
+      <path class="moon" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" style="display: none"></path>
+    </svg>
+  </button>
+
+  <!-- Info Icon with Tooltip -->
+  <button class="info-toggle" id="infoToggle" aria-label="Last updated info">
+    <svg class="info-icon" fill="currentColor" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
+      xmlns:xlink="http://www.w3.org/1999/xlink" width="800px" height="800px" viewBox="0 0 32 32" xml:space="preserve">
+      <g>
+        <path d="M17.962,24.725l1.806,0.096v2.531h-7.534v-2.406l1.045-0.094c0.568-0.063,0.916-0.254,0.916-1.014v-8.801
 		c0-0.699-0.188-0.92-0.791-0.92l-1.106-0.062v-2.626h5.666L17.962,24.725L17.962,24.725z M15.747,4.648
 		c1.394,0,2.405,1.047,2.405,2.374c0,1.331-1.014,2.313-2.438,2.313c-1.454,0-2.404-0.982-2.404-2.313
 		C13.31,5.695,14.26,4.648,15.747,4.648z M16,32C7.178,32,0,24.822,0,16S7.178,0,16,0c8.82,0,16,7.178,16,16S24.82,32,16,32z M16,3
-		C8.832,3,3,8.832,3,16s5.832,13,13,13s13-5.832,13-13S23.168,3,16,3z"
-          />
-        </g>
-      </svg>
-      <div class="info-tooltip">
-        <span class="info-tooltiptext" id="lastUpdated"></span>
-      </div>
-    </button>
+		C8.832,3,3,8.832,3,16s5.832,13,13,13s13-5.832,13-13S23.168,3,16,3z" />
+      </g>
+    </svg>
+    <div class="info-tooltip">
+      <span class="info-tooltiptext" id="lastUpdated"></span>
+    </div>
+  </button>
 
-    <div id="hero" class="container hero-section">
-      <div class="hero-grid" id="about">
-        <div class="hero-left">
-          <h1
-            class="pronunciation-tooltip"
-            id="userName"
-            data-pronunciation=""
-          ></h1>
-          <div id="userLocation"></div>
-          <div class="about-content" id="aboutContent"></div>
+  <div id="hero" class="container hero-section">
+    <div class="hero-grid" id="about">
+      <div class="hero-left">
+        <h1 class="pronunciation-tooltip" id="userName" data-pronunciation=""></h1>
+        <div id="userLocation"></div>
+        <div class="about-content" id="aboutContent"></div>
+      </div>
+      <div class="hero-right">
+        <div id="dpic">
+          <img src="" class="ppic" id="profileImage" />
         </div>
-        <div class="hero-right">
-          <div id="dpic">
-            <img src="" class="ppic" id="profileImage" />
-          </div>
-          <div id="dico"></div>
-        </div>
+        <div id="dico"></div>
       </div>
     </div>
+  </div>
 
-    <div id="bio" class="container" style="display: none"></div>
+  <div id="bio" class="container" style="display: none"></div>
 
-    <div id="history" class="container"></div>
+  <div id="history" class="container fade-up"></div>
 
-    <div class="writing-section">
-      <div class="container" id="writingContainer"></div>
-    </div>
+  <div class="writing-section">
+    <div class="container fade-up" id="writingContainer"></div>
+  </div>
 
-    <div id="pet-projects" class="container"></div>
+  <div id="pet-projects" class="container"></div>
 
-    <div class="container" id="publicationsContainer"></div>
+  <div class="container fade-up" id="publicationsContainer"></div>
 
-    <div class="container" id="miscContainer"></div>
+  <div class="container fade-up" id="miscContainer"></div>
 
-    <!-- <div id="contact" class="container">
+  <!-- <div id="contact" class="container">
       <div class="ctitle" id="contactTitle"></div>
       <div class="contact-content">
         <p id="contactDescription"></p>
@@ -144,101 +123,123 @@
       </div>
     </div> -->
 
-    <br /><br /><br /><br />
+  <br /><br /><br /><br />
 
-    <!-- Content Loading Script -->
-    <script type="text/javascript">
-      let siteContent = null;
+  <!-- Content Loading Script -->
+  <script type="text/javascript">
+    let siteContent = null;
 
-      // Load content from JSON
-      async function loadContent() {
-        try {
-          const response = await fetch("./content/content.json");
-          siteContent = await response.json();
-          populateContent();
-        } catch (error) {
-          console.error("Failed to load content:", error);
+    // Intersection Observer for fade-up animations
+    function initAnimations() {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        {
+          threshold: 0.1,
+          rootMargin: "0px 0px -50px 0px",
         }
+      );
+
+      document.querySelectorAll(".fade-up").forEach((el) => {
+        observer.observe(el);
+      });
+    }
+
+    // Load content from JSON
+    async function loadContent() {
+      try {
+        const response = await fetch("./content/content.json");
+        siteContent = await response.json();
+        populateContent();
+      } catch (error) {
+        console.error("Failed to load content:", error);
       }
+    }
 
-      // Populate all sections with content from JSON
-      function populateContent() {
-        if (!siteContent) return;
+    // Populate all sections with content from JSON
+    function populateContent() {
+      if (!siteContent) return;
 
-        // Header
-        document.getElementById("profileImage").src =
-          siteContent.header.profileImage;
-        const nameParts = siteContent.header.name.split(" ");
-        const firstName = nameParts[0];
-        const lastName = nameParts.slice(1).join(" ");
-        document.getElementById("userName").innerHTML =
-          `${firstName} <span class="name-accent">${lastName}</span>`;
-        document
-          .getElementById("userName")
-          .setAttribute("data-pronunciation", siteContent.header.nameAudio);
-        // document.getElementById("userTagline").textContent =
-        //   siteContent.header.tagline;
-        document.getElementById("userLocation").textContent =
-          siteContent.header.location;
+      // Header
+      document.getElementById("profileImage").src =
+        siteContent.header.profileImage;
+      const nameParts = siteContent.header.name.split(" ");
+      const firstName = nameParts[0];
+      const lastName = nameParts.slice(1).join(" ");
+      document.getElementById("userName").innerHTML =
+        `${firstName} <span class="name-accent">${lastName}</span>`;
+      document
+        .getElementById("userName")
+        .setAttribute("data-pronunciation", siteContent.header.nameAudio);
+      // document.getElementById("userTagline").textContent =
+      //   siteContent.header.tagline;
+      document.getElementById("userLocation").textContent =
+        siteContent.header.location;
 
-        const socialLinks = document.getElementById("dico");
-        socialLinks.innerHTML = siteContent.header.socialLinks
-          .map(
-            (link) =>
-              `<a href="${link.url}" target="_blank" rel="noopener noreferrer"><i class="${link.icon}"></i></a>`
-          )
-          .join("");
+      const socialLinks = document.getElementById("dico");
+      socialLinks.innerHTML = siteContent.header.socialLinks
+        .map(
+          (link) =>
+            `<a href="${link.url}" target="_blank" rel="noopener noreferrer"><i class="${link.icon}"></i></a>`
+        )
+        .join("");
 
-        // Last Updated
-        document.getElementById(
-          "lastUpdated"
-        ).textContent = `Last updated: ${siteContent.info.lastUpdated}`;
+      // Last Updated
+      document.getElementById(
+        "lastUpdated"
+      ).textContent = `Last updated: ${siteContent.info.lastUpdated}`;
 
-        // About
-        document.getElementById("aboutContent").innerHTML =
-          siteContent.about.paragraphs.map((p) => `<p>${p}</p>`).join("");
+      // About
+      document.getElementById("aboutContent").innerHTML =
+        siteContent.about.paragraphs.map((p) => `<p>${p}</p>`).join("");
 
-        // History
-        const historyContainer = document.getElementById("history");
-        historyContainer.innerHTML = siteContent.history.entries
-          .map((entry) => {
-            let courseworkHTML = "";
-            if (entry.coursework) {
-              // Handle both array format (multiple semesters) and object format (single semester)
-              const courseworkArray = Array.isArray(entry.coursework) 
-                ? entry.coursework 
-                : [entry.coursework];
-              
-              courseworkHTML = courseworkArray.map((semesterData) => {
-                // Collect all courses with their level
-                const allCourses = [];
-                semesterData.categories.forEach((category) => {
-                  const isPhD = category.title.toLowerCase().includes("phd");
-                  category.courses.forEach((course) => {
-                    allCourses.push({
-                      ...course,
-                      isPhD: isPhD,
-                    });
+      // History
+      const historyContainer = document.getElementById("history");
+      historyContainer.innerHTML = siteContent.history.entries
+        .map((entry) => {
+          let courseworkHTML = "";
+          if (entry.coursework) {
+            // Handle both array format (multiple semesters) and object format (single semester)
+            const courseworkArray = Array.isArray(entry.coursework)
+              ? entry.coursework
+              : [entry.coursework];
+
+            courseworkHTML = courseworkArray.map((semesterData) => {
+              // Collect all courses with their level
+              const allCourses = [];
+              semesterData.categories.forEach((category) => {
+                const isPhD = category.title.toLowerCase().includes("phd");
+                category.courses.forEach((course) => {
+                  allCourses.push({
+                    ...course,
+                    isPhD: isPhD,
                   });
                 });
+              });
 
-                const coursesList = allCourses
-                  .map((course) => {
-                    const courseText = `<span class="course-code">${course.code}</span>: ${course.name}`;
-                    return course.isPhD
-                      ? `${courseText} <span class="phd-indicator">(PhD)</span>`
-                      : courseText;
-                  })
-                  .join(", ");
+              const coursesList = allCourses
+                .map((course) => {
+                  const courseText = `<span class="course-code">${course.code}</span>: ${course.name}`;
+                  return course.isPhD
+                    ? `${courseText} <span class="phd-indicator">(PhD)</span>`
+                    : courseText;
+                })
+                .join(", ");
 
-                return `
+              return `
           <div class="entry-coursework">
             <span class="semester-title">${semesterData.semester}</span> — ${coursesList}
           </div>
         `;
-              }).join("");
-            }
-            return `
+            }).join("");
+          }
+          return `
         <div class="entry row">
           <div class="timespan">${entry.timespan}</div>
           <div class="ico">
@@ -251,65 +252,71 @@
           </div>
         </div>
       `;
-          })
-          .join("");
+        })
+        .join("");
 
-        // Writing
-        const writingContainer = document.getElementById("writingContainer");
-        writingContainer.innerHTML = `
+      // Writing
+      const writingContainer = document.getElementById("writingContainer");
+      writingContainer.innerHTML = `
         <div class="ctitle">${siteContent.writing.title}</div>
         <div>${siteContent.writing.subtitle}</div>
         <ul class="nodot">
           ${siteContent.writing.articles
-            .map(
-              (article) =>
-                `<li>${article.date} <a href="${article.url}" target="_blank" rel="noopener noreferrer">${article.title}</a></li>`
-            )
-            .join("")}
+          .map(
+            (article) =>
+              `<li>${article.date} <a href="${article.url}" target="_blank" rel="noopener noreferrer">${article.title}</a></li>`
+          )
+          .join("")}
         </ul>
         <p style="margin-top: 20px; font-size: 14px;">
-          <a href="${
-            siteContent.writing.contentLink.url
-          }" style="color: var(--text-muted); text-decoration: none;">
+          <a href="${siteContent.writing.contentLink.url
+        }" style="color: var(--text-muted); text-decoration: none;">
             ${siteContent.writing.contentLink.text}
           </a>
         </p>
       `;
 
-        // Projects
-        const projectsContainer = document.getElementById("pet-projects");
-        const displayedProjects = siteContent.projects.items.slice(0, 7);
-        projectsContainer.innerHTML = `
-        <div class="ctitle">${siteContent.projects.title}</div>
+      // Projects
+      const projectsContainer = document.getElementById("pet-projects");
+      const displayedProjects = siteContent.projects.items.slice(0, 7);
+      projectsContainer.innerHTML = `
+        <div class="ctitle fade-up">${siteContent.projects.title}</div>
+        <div class="projects-list-horizontal">
         ${displayedProjects
           .map(
-            (project) => `
-          <div class="project">
-            <div class="pico"><img src="${project.image}" style="max-width: 64px;" /></div>
-            <div class="pdesc"><a href="${project.url}" target="_blank" rel="noopener noreferrer">${project.name}</a> ${project.description}</div>
-            <div class="pend"></div>
-          </div>
+            (project, index) => `
+          <a href="${project.url}" target="_blank" rel="noopener noreferrer" class="project-card-horizontal fade-up" style="transition-delay: ${index * 50}ms">
+            <div class="project-h-image-container">
+              <img src="${project.image}" class="project-h-image" onerror="this.style.display='none'" />
+            </div>
+            <div class="project-h-content">
+              <h3 class="project-h-title">${project.name}</h3>
+              <p class="project-h-description">${project.description}</p>
+            </div>
+          </a>
         `
           )
           .join("")}
-        <p style="margin-top: 20px; font-size: 14px;"><a href="projects.html" style="color: var(--text-muted); text-decoration: none;">→ view all my projects</a></p>
+        </div>
+        <p style="margin-top: 30px; font-size: 14px; text-align: center;" class="fade-up">
+          <a href="projects.html" class="view-all-projects">→ view all my projects</a>
+        </p>
       `;
 
-        // Publications
-        const publicationsContainer = document.getElementById(
-          "publicationsContainer"
-        );
-        publicationsContainer.innerHTML = `
+      // Publications
+      const publicationsContainer = document.getElementById(
+        "publicationsContainer"
+      );
+      publicationsContainer.innerHTML = `
         <div class="ctitle">${siteContent.publications.title}</div>
         ${siteContent.publications.items
           .map(
             (item) => `
           <div class="pub">
-            <div class="pub-title">${
-              item.url
+            <div class="pub-title">${item.url
                 ? `<a href="${item.url}" target="_blank" rel="noopener noreferrer">${item.title}</a>`
                 : item.title
-            }</div>
+              }</div>
             <div class="pub-venue">${item.venue}</div>
             <div class="pub-authors">${item.authors}</div>
           </div>
@@ -318,9 +325,9 @@
           .join("")}
       `;
 
-        // Misc
-        const miscContainer = document.getElementById("miscContainer");
-        miscContainer.innerHTML = `
+      // Misc
+      const miscContainer = document.getElementById("miscContainer");
+      miscContainer.innerHTML = `
         <div class="ctitle">${siteContent.misc.title}</div>
         ${siteContent.misc.items
           .map((item) => {
@@ -348,33 +355,36 @@
           .join("")}
       `;
 
-        // Contact (commented out)
-        // document.getElementById("contactTitle").textContent =
-        //   siteContent.contact.title;
-        // document.getElementById("contactDescription").textContent =
-        //   siteContent.contact.description;
-        // document.getElementById("name").placeholder =
-        //   siteContent.contact.placeholders.name;
-        // document.getElementById("email").placeholder =
-        //   siteContent.contact.placeholders.email;
-        // document.getElementById("message").placeholder =
-        //   siteContent.contact.placeholders.message;
-        // document.getElementById("submitBtn").textContent =
-        //   siteContent.contact.submitButton;
+      // Contact (commented out)
+      // document.getElementById("contactTitle").textContent =
+      //   siteContent.contact.title;
+      // document.getElementById("contactDescription").textContent =
+      //   siteContent.contact.description;
+      // document.getElementById("name").placeholder =
+      //   siteContent.contact.placeholders.name;
+      // document.getElementById("email").placeholder =
+      //   siteContent.contact.placeholders.email;
+      // document.getElementById("message").placeholder =
+      //   siteContent.contact.placeholders.message;
+      // document.getElementById("submitBtn").textContent =
+      //   siteContent.contact.submitButton;
 
-        // Footer
-        document.getElementById("footer").innerHTML = `
+      // Footer
+      document.getElementById("footer").innerHTML = `
         ${siteContent.footer.attribution}
         <div>${siteContent.footer.tagline}</div>
       `;
-      }
+    }
 
-      // Load content on page load
-      loadContent();
-    </script>
+    // Load content on page load
+    loadContent().then(() => {
+      // Initialize animations after content is loaded and DOM is populated
+      setTimeout(initAnimations, 100);
+    });
+  </script>
 
-    <!-- Contact Form Functionality (commented out) -->
-    <!--
+  <!-- Contact Form Functionality (commented out) -->
+  <!--
     <script type="text/javascript">
       document
         .getElementById("contactForm")
@@ -385,216 +395,219 @@
     </script>
     -->
 
-    <!-- attempt hiding from spambots :p -->
-    <script type="text/javascript">
-      const rot13 = (message) => {
-        const alpha =
-          "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLM";
-        return message.replace(
-          /[a-z]/gi,
-          (letter) => alpha[alpha.indexOf(letter) + 13]
-        );
-      };
-      var e_is_shown = false;
-      document.getElementById("iemail").addEventListener("click", function () {
-        let demail = document.getElementById("demail");
-        let msg =
-          "naqerj.xnecngul" +
-          "@" +
-          "tznvy.pbz<oe>V'z fbeel ohg V trg jnl gbb zhpu rznvy naq vg vf birejuryzvat. V bayl znantr gb ercyl gb ~1% bs vg, naq vs jr qba'g xabj rnpu bgure crefbanyyl, vg vf n ybg pybfre gb 0%. Cyrnfr qba'g \"gnxr lbhe fubg\", naq fbeel :(";
-        demail.innerHTML = rot13(msg);
-        demail.style.opacity = e_is_shown ? 0 : 1;
-        e_is_shown = !e_is_shown;
-      });
-    </script>
+  <!-- attempt hiding from spambots :p -->
+  <script type="text/javascript">
+    const rot13 = (message) => {
+      const alpha =
+        "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLM";
+      return message.replace(
+        /[a-z]/gi,
+        (letter) => alpha[alpha.indexOf(letter) + 13]
+      );
+    };
+    var e_is_shown = false;
+    document.getElementById("iemail").addEventListener("click", function () {
+      let demail = document.getElementById("demail");
+      let msg =
+        "naqerj.xnecngul" +
+        "@" +
+        "tznvy.pbz<oe>V'z fbeel ohg V trg jnl gbb zhpu rznvy naq vg vf birejuryzvat. V bayl znantr gb ercyl gb ~1% bs vg, naq vs jr qba'g xabj rnpu bgure crefbanyyl, vg vf n ybg pybfre gb 0%. Cyrnfr qba'g \"gnxr lbhe fubg\", naq fbeel :(";
+      demail.innerHTML = rot13(msg);
+      demail.style.opacity = e_is_shown ? 0 : 1;
+      e_is_shown = !e_is_shown;
+    });
+  </script>
 
-    <!-- Dark Mode Toggle Functionality -->
-    <script type="text/javascript">
-      // Dark mode toggle functionality with Safari compatibility
-      const themeToggle = document.getElementById("themeToggle");
-      const sunElements = document.querySelectorAll(".sun");
-      const moonElement = document.querySelector(".moon");
+  <!-- Dark Mode Toggle Functionality -->
+  <script type="text/javascript">
+    // Dark mode toggle functionality with Safari compatibility
+    const themeToggle = document.getElementById("themeToggle");
+    const sunElements = document.querySelectorAll(".sun");
+    const moonElement = document.querySelector(".moon");
 
-      // Check for saved theme preference or default to light mode
-      let currentTheme;
-      try {
-        currentTheme = localStorage.getItem("theme") || "light";
-      } catch (e) {
-        // Fallback if localStorage is not available
-        currentTheme = "light";
-      }
+    // Check for saved theme preference or default to light mode
+    let currentTheme;
+    try {
+      currentTheme = localStorage.getItem("theme") || "light";
+    } catch (e) {
+      // Fallback if localStorage is not available
+      currentTheme = "light";
+    }
 
-      // Apply theme with Safari compatibility
-      function applyTheme(theme) {
-        // Set the attribute on html
-        document.documentElement.setAttribute("data-theme", theme);
+    // Apply theme with Safari compatibility
+    function applyTheme(theme) {
+      const htmlEl = document.documentElement;
+      const bodyEl = document.body;
 
-        // Set classes on both html and body for maximum Safari compatibility
-        const htmlEl = document.documentElement;
-        const bodyEl = document.body;
+      // Set the attribute and classes
+      htmlEl.setAttribute("data-theme", theme);
 
-        if (theme === "dark") {
-          htmlEl.classList.add("dark-theme");
-          htmlEl.classList.remove("light-theme");
-          if (bodyEl) {
-            bodyEl.classList.add("dark-theme");
-            bodyEl.classList.remove("light-theme");
-          }
-        } else {
-          htmlEl.classList.add("light-theme");
-          htmlEl.classList.remove("dark-theme");
-          if (bodyEl) {
-            bodyEl.classList.add("light-theme");
-            bodyEl.classList.remove("dark-theme");
-          }
-        }
-
-        // Multiple force reflows for Safari - this is crucial
-        void htmlEl.offsetHeight;
+      if (theme === "dark") {
+        htmlEl.classList.add("dark-theme");
+        htmlEl.classList.remove("light-theme");
         if (bodyEl) {
-          void bodyEl.offsetHeight;
+          bodyEl.classList.add("dark-theme");
+          bodyEl.classList.remove("light-theme");
         }
-
-        // Use requestAnimationFrame to ensure changes are applied
-        requestAnimationFrame(() => {
-          void htmlEl.offsetHeight;
-          if (bodyEl) {
-            void bodyEl.offsetHeight;
-          }
-        });
-
-        // Save to localStorage
-        try {
-          localStorage.setItem("theme", theme);
-        } catch (e) {
-          console.warn("Could not save theme preference");
-        }
-      }
-
-      // Update toggle icon based on current theme
-      function updateToggleIcon(theme) {
-        if (theme === "dark") {
-          sunElements.forEach((el) => (el.style.display = "none"));
-          moonElement.style.display = "block";
-        } else {
-          sunElements.forEach((el) => (el.style.display = "block"));
-          moonElement.style.display = "none";
-        }
-      }
-
-      // Initialize theme and icon state
-      // Ensure theme is applied on DOM ready for Safari
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", function () {
-          applyTheme(currentTheme);
-          updateToggleIcon(currentTheme);
-        });
       } else {
+        htmlEl.classList.add("light-theme");
+        htmlEl.classList.remove("dark-theme");
+        if (bodyEl) {
+          bodyEl.classList.add("light-theme");
+          bodyEl.classList.remove("dark-theme");
+        }
+      }
+
+      // Safari fix: force a full style recalculation by briefly
+      // setting explicit inline styles, then removing them so CSS
+      // custom properties take over properly
+      if (bodyEl) {
+        var colors = theme === "dark"
+          ? { bg: "#111b2b", text: "#e6f1ff" }
+          : { bg: "#fffbf7", text: "#1a1a1a" };
+
+        bodyEl.style.backgroundColor = colors.bg;
+        bodyEl.style.color = colors.text;
+
+        // Force reflow
+        void bodyEl.offsetHeight;
+
+        // Double rAF to ensure Safari fully repaints
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () {
+            bodyEl.style.backgroundColor = "";
+            bodyEl.style.color = "";
+          });
+        });
+      }
+
+      // Save to localStorage
+      try {
+        localStorage.setItem("theme", theme);
+      } catch (e) {
+        console.warn("Could not save theme preference");
+      }
+    }
+
+    // Update toggle icon based on current theme
+    function updateToggleIcon(theme) {
+      if (theme === "dark") {
+        sunElements.forEach((el) => (el.style.display = "none"));
+        moonElement.style.display = "block";
+      } else {
+        sunElements.forEach((el) => (el.style.display = "block"));
+        moonElement.style.display = "none";
+      }
+    }
+
+    // Initialize theme and icon state
+    // Ensure theme is applied on DOM ready for Safari
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", function () {
         applyTheme(currentTheme);
         updateToggleIcon(currentTheme);
-      }
-
-      // Toggle theme
-      themeToggle.addEventListener("click", function () {
-        const currentTheme =
-          document.documentElement.getAttribute("data-theme") ||
-          (document.documentElement.classList.contains("dark-theme")
-            ? "dark"
-            : "light");
-        const newTheme = currentTheme === "dark" ? "light" : "dark";
-
-        applyTheme(newTheme);
-        updateToggleIcon(newTheme);
       });
+    } else {
+      applyTheme(currentTheme);
+      updateToggleIcon(currentTheme);
+    }
 
-      // Info icon tooltip is handled via CSS hover
-    </script>
+    // Toggle theme
+    themeToggle.addEventListener("click", function () {
+      const currentTheme =
+        document.documentElement.getAttribute("data-theme") ||
+        (document.documentElement.classList.contains("dark-theme")
+          ? "dark"
+          : "light");
+      const newTheme = currentTheme === "dark" ? "light" : "dark";
 
-    <!-- UMass Amherst Web Ring Integration -->
-    <script type="text/javascript">
-      const WEBRING_USERNAME = 'devaanand19';
-      const WEBRING_API_URL = `https://umaring.mkr.cx/${WEBRING_USERNAME}`;
+      applyTheme(newTheme);
+      updateToggleIcon(newTheme);
+    });
 
-      async function loadWebring() {
-        // Skip if username is not set
-        if (WEBRING_USERNAME === 'YOUR_USERNAME') {
-          return;
-        }
+    // Info icon tooltip is handled via CSS hover
+  </script>
 
-        try {
-          const response = await fetch(WEBRING_API_URL);
-          if (!response.ok) {
-            throw new Error('Failed to fetch webring data');
-          }
-          
-          const data = await response.json();
-          
-          // Update previous link
-          const prevLink = document.getElementById('webring-prev');
-          if (data.prev && prevLink) {
-            prevLink.href = data.prev.url;
-            prevLink.textContent = `← ${data.prev.name}`;
-            prevLink.style.display = 'inline-block';
-            prevLink.title = `Previous: ${data.prev.name}`;
-          }
-          
-          // Update next link
-          const nextLink = document.getElementById('webring-next');
-          if (data.next && nextLink) {
-            nextLink.href = data.next.url;
-            nextLink.textContent = `${data.next.name} →`;
-            nextLink.style.display = 'inline-block';
-            nextLink.title = `Next: ${data.next.name}`;
-          }
-          
-          // Show webring container
-          const webringContainer = document.getElementById('umass-webring');
-          if (webringContainer) {
-            webringContainer.style.display = 'block';
-          }
-        } catch (error) {
-          console.error('Failed to load webring:', error);
-          // Hide webring on error
-          const webringContainer = document.getElementById('umass-webring');
-          if (webringContainer) {
-            webringContainer.style.display = 'none';
-          }
-        }
+  <!-- UMass Amherst Web Ring Integration -->
+  <script type="text/javascript">
+    const WEBRING_USERNAME = 'devaanand19';
+    const WEBRING_API_URL = `https://umaring.mkr.cx/${WEBRING_USERNAME}`;
+
+    async function loadWebring() {
+      // Skip if username is not set
+      if (WEBRING_USERNAME === 'YOUR_USERNAME') {
+        return;
       }
 
-      // Load webring on page load
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", loadWebring);
-      } else {
-        loadWebring();
-      }
-    </script>
+      try {
+        const response = await fetch(WEBRING_API_URL);
+        if (!response.ok) {
+          throw new Error('Failed to fetch webring data');
+        }
 
-        <!-- UMass Amherst Web Ring -->
-    <div id="umass-webring" class="umass-webring">
-      <div class="webring-container">
-        <a id="webring-prev" href="#" class="webring-link webring-prev" style="display: none;">
-          ← Prev
-        </a>
-        <div class="webring-info">
-          <a href="https://umaring.mkr.cx/" target="_blank" rel="noopener noreferrer" class="webring-logo" title="UMass Amherst Web Ring">
-            <img 
-              src="https://raw.githubusercontent.com/Deva-1903/umaring/main/umass.png" 
-              alt="UMass Amherst Web Ring" 
-              class="webring-button"
-              loading="lazy"
-            />
-          </a>
-        </div>
-        <a id="webring-next" href="#" class="webring-link webring-next" style="display: none;">
-          Next →
+        const data = await response.json();
+
+        // Update previous link
+        const prevLink = document.getElementById('webring-prev');
+        if (data.prev && prevLink) {
+          prevLink.href = data.prev.url;
+          prevLink.textContent = `← ${data.prev.name}`;
+          prevLink.style.display = 'inline-block';
+          prevLink.title = `Previous: ${data.prev.name}`;
+        }
+
+        // Update next link
+        const nextLink = document.getElementById('webring-next');
+        if (data.next && nextLink) {
+          nextLink.href = data.next.url;
+          nextLink.textContent = `${data.next.name} →`;
+          nextLink.style.display = 'inline-block';
+          nextLink.title = `Next: ${data.next.name}`;
+        }
+
+        // Show webring container
+        const webringContainer = document.getElementById('umass-webring');
+        if (webringContainer) {
+          webringContainer.style.display = 'block';
+        }
+      } catch (error) {
+        console.error('Failed to load webring:', error);
+        // Hide webring on error
+        const webringContainer = document.getElementById('umass-webring');
+        if (webringContainer) {
+          webringContainer.style.display = 'none';
+        }
+      }
+    }
+
+    // Load webring on page load
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", loadWebring);
+    } else {
+      loadWebring();
+    }
+  </script>
+
+  <!-- UMass Amherst Web Ring -->
+  <div id="umass-webring" class="umass-webring">
+    <div class="webring-container">
+      <a id="webring-prev" href="#" class="webring-link webring-prev" style="display: none;">
+        ← Prev
+      </a>
+      <div class="webring-info">
+        <a href="https://umaring.mkr.cx/" target="_blank" rel="noopener noreferrer" class="webring-logo"
+          title="UMass Amherst Web Ring">
+          <img src="https://raw.githubusercontent.com/Deva-1903/umaring/main/umass.png" alt="UMass Amherst Web Ring"
+            class="webring-button" loading="lazy" />
         </a>
       </div>
+      <a id="webring-next" href="#" class="webring-link webring-next" style="display: none;">
+        Next →
+      </a>
     </div>
+  </div>
 
-    <footer
-      id="footer"
-      style="
+  <footer id="footer" style="
         text-align: center;
         padding: 20px 0;
         color: var(--text-muted);
@@ -602,7 +615,7 @@
         border-top: 1px solid var(--border-light);
         margin-top: 40px;
         transition: color 0.3s ease, border-color 0.3s ease;
-      "
-    ></footer>
-  </body>
+      "></footer>
+</body>
+
 </html>
