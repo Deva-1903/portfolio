@@ -135,6 +135,11 @@
     "subtitle": "I occasionally write on medium and X",
     "articles": [
       {
+        "date": "Feb 2026",
+        "title": "Measuring Memory Access Patterns (Sequential vs Strided vs Random)",
+        "url": "https://medium.com/@devaaa/measuring-memory-access-patterns-sequential-vs-strided-vs-random-48371d8a4725"
+      },
+      {
         "date": "Jan 2026",
         "title": "The \"Middleman\" Trap: A Better Way to Handle File Uploads",
         "url": "https://medium.com/@devaaa/the-middleman-trap-a-better-way-to-handle-file-uploads"
