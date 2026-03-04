@@ -120,7 +120,7 @@
       },
       {
         "timespan": "2022 - 2023",
-        "logo": "./assets/cario.png",
+        "logo": "./assets/cario.jpg",
         "description": "<strong>Backend Developer Intern at Cario Growth Services Pvt. Ltd.</strong> Built and maintained over 20 API endpoints in Node.js and Fastify, with solid database integrations for the core product.<br /><br />Integrated LLMs to power an auto-commenting feature, improving the contextual quality of responses in chat. Helped migrate core services to Fastify and gradually move codebases from JavaScript to TypeScript, improving maintainability and type safety."
       },
       {
