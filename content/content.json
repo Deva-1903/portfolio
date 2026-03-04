@@ -164,6 +164,18 @@
     "title": "projects",
     "items": [
       {
+        "name": "TasteGraph",
+        "url": "https://github.com/Deva-1903/TasteGraph",
+        "image": "https://opengraph.githubassets.com/1/Deva-1903/TasteGraph",
+        "description": "is a production-grade cross-media identity mapping MVP where users log films, books, music, food, places, and ideas to generate a taste fingerprint and discover people through overlap stories and rare shared tastes, built with Next.js, tRPC, Prisma, and PostgreSQL."
+      },
+      {
+        "name": "ReferralFinder",
+        "url": "https://github.com/Deva-1903/ReferralFinder",
+        "image": "https://opengraph.githubassets.com/1/Deva-1903/ReferralFinder",
+        "description": "is a production-ready SaaS platform that helps students, especially international students in the US, prioritize jobs, estimate sponsorship likelihood, tailor ATS-friendly applications, and generate referral outreach workflows without scraping or automating LinkedIn."
+      },
+      {
         "name": "Spend - AI Expense Tracker",
         "url": "https://github.com/Deva-1903/Expense-Tracker",
         "image": "https://opengraph.githubassets.com/1/Deva-1903/Expense-Tracker",
