@@ -172,7 +172,7 @@
       {
         "name": "ReferralFinder",
         "url": "https://github.com/Deva-1903/ReferralFinder",
-        "image": "https://opengraph.githubassets.com/1/Deva-1903/ReferralFinder",
+        "image": "./assets/icon.webp",
         "description": "is a production-ready SaaS platform that helps students, especially international students in the US, prioritize jobs, estimate sponsorship likelihood, tailor ATS-friendly applications, and generate referral outreach workflows without scraping or automating LinkedIn."
       },
       {
