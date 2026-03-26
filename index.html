@@ -278,22 +278,25 @@
 
       // Projects
       const projectsContainer = document.getElementById("pet-projects");
-      const displayedProjects = siteContent.projects.items.slice(0, 7);
+      const sortedProjects = [...siteContent.projects.items].sort((a, b) => (a.order ?? 99) - (b.order ?? 99));
+      const displayedProjects = sortedProjects.slice(0, 6);
       projectsContainer.innerHTML = `
         <div class="ctitle fade-up">${siteContent.projects.title}</div>
-        <div class="projects-list-horizontal">
+        <div class="projects-grid-new">
         ${displayedProjects
           .map(
             (project, index) => `
-          <a href="${project.url}" target="_blank" rel="noopener noreferrer" class="project-card-horizontal fade-up" style="transition-delay: ${index * 50}ms">
-            <div class="project-h-image-container">
-              <img src="${project.image}" class="project-h-image" onerror="this.style.display='none'" />
+          <div class="project-card-new fade-up" style="transition-delay: ${index * 50}ms">
+            <div class="pcn-body">
+              <h3 class="pcn-title">${project.name}</h3>
+              <p class="pcn-desc">${project.description}</p>
+              ${project.stack ? `<div class="pcn-stack">${project.stack}</div>` : ''}
             </div>
-            <div class="project-h-content">
-              <h3 class="project-h-title">${project.name}</h3>
-              <p class="project-h-description">${project.description}</p>
+            <div class="pcn-footer">
+              <a href="${project.url}" target="_blank" rel="noopener noreferrer" class="pcn-footer-link">repo ↗</a>
+              ${project.report ? `<a href="${project.report}" target="_blank" rel="noopener noreferrer" class="pcn-footer-link">report ↗</a>` : ''}
             </div>
-          </a>
+          </div>
         `
           )
           .join("")}

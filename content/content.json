@@ -164,63 +164,74 @@
     "title": "projects",
     "items": [
       {
+        "order": 1,
         "name": "TasteGraph",
         "url": "https://github.com/Deva-1903/TasteGraph",
-        "image": "https://opengraph.githubassets.com/1/Deva-1903/TasteGraph",
-        "description": "is a production-grade cross-media identity mapping MVP where users log films, books, music, food, places, and ideas to generate a taste fingerprint and discover people through overlap stories and rare shared tastes, built with Next.js, tRPC, Prisma, and PostgreSQL."
+        "stack": "Next.js · tRPC · Prisma · PostgreSQL",
+        "description": "is a production-grade cross-media identity mapping MVP where users log films, books, music, food, places, and ideas to generate a taste fingerprint and discover people through overlap stories and rare shared tastes."
       },
       {
-        "name": "ReferralFinder",
-        "url": "https://github.com/Deva-1903/ReferralFinder",
-        "image": "./assets/icon.webp",
-        "description": "is a production-ready SaaS platform that helps students, especially international students in the US, prioritize jobs, estimate sponsorship likelihood, tailor ATS-friendly applications, and generate referral outreach workflows without scraping or automating LinkedIn."
+        "order": 2,
+        "name": "Knowledge-Graph-Guided RAG",
+        "url": "https://github.com/Deva-1903/kg-rag",
+        "stack": "Python · Ollama · sentence-transformers · llama-index · spaCy",
+        "description": "is a team-built KG-guided RAG pipeline for multi-hop QA on HotpotQA, decomposing complex questions into single-hop sub-questions, fusing multi-view FAISS evidence with RRF, cross-encoder reranking, and MMR, then selecting evidence with token-budgeted 0–1 knapsack and knowledge-graph reasoning to improve supporting-fact recall over the KG2RAG baseline.",
+        "report": "https://drive.google.com/file/d/1Bzk-WegUimQPsZd7vdcGZ_fKJ91i-BvS/view?usp=sharing"
       },
       {
-        "name": "Spend - AI Expense Tracker",
-        "url": "https://github.com/Deva-1903/Expense-Tracker",
-        "image": "https://opengraph.githubassets.com/1/Deva-1903/Expense-Tracker",
-        "description": "is a zero-friction personal finance tool that uses AI to parse natural language inputs (e.g., 'chipotle $14') into structured expenses, featuring income tracking, monthly budgets, and recurring bills, built with React, FastAPI, and Supabase."
-      },
-      {
+        "order": 3,
         "name": "Spark ETL Optimization",
         "url": "https://github.com/Deva-1903/Spark-ETL-Optimization",
-        "image": "https://images.seeklogo.com/logo-png/34/1/apache-spark-logo-png_seeklogo-349535.png",
+        "stack": "Apache Spark · PySpark · Python",
         "description": "is a performance deep-dive on the NYC TLC taxi dataset, where I start from a naive Apache Spark ETL pipeline and iteratively optimize partitioning, column pruning, precomputed fields, and skew handling to reduce runtime, tail latency, and resource usage."
       },
       {
-        "name": "kg-rag",
-        "url": "https://github.com/Deva-1903/kg-rag",
-        "image": "https://opengraph.githubassets.com/1/Deva-1903/kg-rag",
-        "description": "is an experimental vanilla RAG pipeline on HotpotQA, combining FAISS-based retrieval, cross-encoder reranking, and GPT-based answer generation, with basic EM evaluation to understand how each component affects multi-hop QA performance."
+        "order": 4,
+        "name": "Spend - AI Expense Tracker",
+        "url": "https://github.com/Deva-1903/Expense-Tracker",
+        "stack": "React · FastAPI · Supabase · OpenAI",
+        "description": "is a zero-friction personal finance tool that uses AI to parse natural language inputs (e.g., ‘chipotle $14’) into structured expenses, featuring income tracking, monthly budgets, and recurring bills."
       },
       {
-        "name": "Team Sonare - Sign ↔ Speech (Offline)",
+        "order": 5,
+        "name": "ReferralFinder",
+        "url": "https://github.com/Deva-1903/ReferralFinder",
+        "stack": "Next.js · OpenAI · Supabase · TypeScript",
+        "description": "is a production-ready SaaS platform that helps students, especially international students in the US, prioritize jobs, estimate sponsorship likelihood, tailor ATS-friendly applications, and generate referral outreach workflows without scraping or automating LinkedIn."
+      },
+      {
+        "order": 6,
+        "name": "Team Sonare — Sign ↔ Speech (Offline)",
         "url": "https://github.com/Deva-1903/Qualcomm-Sep25-Team-Sonare",
-        "image": "https://opengraph.githubassets.com/1/Deva-1903/Qualcomm-Sep25-Team-Sonare",
+        "stack": "Electron · React · FastAPI · MediaPipe · whisper.cpp",
         "description": "is a fully offline, privacy-preserving Sign ↔ Speech translator built for the Qualcomm Hackathon 2025 with Team Sonare, using an Electron + React UI, MediaPipe gesture tracking, a FastAPI backend, and whisper.cpp to run the entire pipeline locally on edge devices."
       },
       {
+        "order": 7,
         "name": "Underdogs Fitness Platform",
         "url": "https://github.com/Deva-1903/backend_underdogs",
-        "image": "https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png",
+        "stack": "Node.js · Express · MongoDB · React",
         "description": "is a full-stack gym management system built as a freelance project, with separate backend and frontend repos, handling member onboarding, plans, payments, and day-to-day operations using a clean API-first architecture."
       },
       {
+        "order": 8,
         "name": "Alzheimer’s Disease Classification",
         "url": "https://github.com/Deva-1903/Alzheimer-s-Disease-Classification-",
-        "image": "https://opengraph.githubassets.com/1/Deva-1903/Alzheimer-s-Disease-Classification-",
+        "stack": "Python · TensorFlow · Keras · Transfer Learning",
         "description": "is a deep learning project for classifying Alzheimer’s disease from medical imaging, exploring different architectures, training setups, and evaluation metrics as part of my undergrad capstone project, which was later published in an IEEE conference."
       },
       {
+        "order": 9,
         "name": "Goalsetter App",
         "url": "https://github.com/Deva-1903/Goalsetter-app",
-        "image": "https://opengraph.githubassets.com/1/Deva-1903/Goalsetter-app",
+        "stack": "MERN · Redux",
         "description": "is a MERN + Redux app for setting, tracking, and managing personal goals, featuring authentication, CRUD workflows, and a simple dashboard to keep long-term goals organized."
       },
       {
+        "order": 10,
         "name": "Tinder Clone",
         "url": "https://github.com/Deva-1903/Tinder-Clone",
-        "image": "https://static.dezeen.com/uploads/2017/08/tinder-redesign-graphics_dezeen_sq-1.jpg",
+        "stack": "MERN · Socket.io",
         "description": "is a Tinder-inspired MERN stack clone that experiments with swipe-style interactions, matchmaking logic, and real-time updates using a modern React + Node.js setup."
       }
     ]
