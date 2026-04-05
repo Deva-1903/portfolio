@@ -165,13 +165,34 @@
     "items": [
       {
         "order": 1,
+        "name": "AI Research Scout",
+        "demo": "https://cf-ai-research-scout.pages.dev",
+        "stack": "Cloudflare Workers · Hono · Workers AI · D1 · React 19",
+        "description": "is a RAG-based research assistant on Cloudflare: paste URLs, it fetches each page, strips HTML, chunks and embeds with bge-base-en-v1.5, stores everything in D1, and answers your questions via cosine similarity retrieval — using only what it actually read. Chat streams over WebSockets via AIChatAgent with history persisted in Durable Object storage."
+      },
+      {
+        "order": 2,
+        "name": "Refusal Decay",
+        "status": "in-progress",
+        "stack": "Python · PyTorch · Hugging Face · Llama-3.2-3B · SLURM",
+        "description": "is a mechanistic interpretability study tracing how the refusal direction in a safety-aligned LLM’s residual stream decays under prefilling attacks — token by token, layer by layer — to determine whether early forced compliance causally erodes the model’s ability to refuse. Implements difference-in-means probing, per-token projection tracing, and direction-patching experiments on Llama-3.2-3B-Instruct."
+      },
+      {
+        "order": 3,
+        "name": "AgenticSearch",
+        "demo": "https://agentic-search-uij3k.ondigitalocean.app/",
+        "stack": "Python · FastAPI · OpenAI · Brave Search · SQLite",
+        "description": "is a provenance-first entity discovery system: takes a free-text topic query and returns a ranked table of real-world entities with per-cell evidence — source URL, snippet, and confidence score — across a 10-stage pipeline covering schema planning, scraping, reranking, deterministic extraction, deduplication, and verification."
+      },
+      {
+        "order": 4,
         "name": "TasteGraph",
         "url": "https://github.com/Deva-1903/TasteGraph",
         "stack": "Next.js · tRPC · Prisma · PostgreSQL",
         "description": "is a production-grade cross-media identity mapping MVP where users log films, books, music, food, places, and ideas to generate a taste fingerprint and discover people through overlap stories and rare shared tastes."
       },
       {
-        "order": 2,
+        "order": 5,
         "name": "Knowledge-Graph-Guided RAG",
         "url": "https://github.com/Deva-1903/kg-rag",
         "stack": "Python · Ollama · sentence-transformers · llama-index · spaCy",
@@ -179,56 +200,56 @@
         "report": "https://drive.google.com/file/d/1Bzk-WegUimQPsZd7vdcGZ_fKJ91i-BvS/view?usp=sharing"
       },
       {
-        "order": 3,
+        "order": 6,
         "name": "Spark ETL Optimization",
         "url": "https://github.com/Deva-1903/Spark-ETL-Optimization",
         "stack": "Apache Spark · PySpark · Python",
         "description": "is a performance deep-dive on the NYC TLC taxi dataset, where I start from a naive Apache Spark ETL pipeline and iteratively optimize partitioning, column pruning, precomputed fields, and skew handling to reduce runtime, tail latency, and resource usage."
       },
       {
-        "order": 4,
+        "order": 7,
         "name": "Spend - AI Expense Tracker",
         "url": "https://github.com/Deva-1903/Expense-Tracker",
         "stack": "React · FastAPI · Supabase · OpenAI",
         "description": "is a zero-friction personal finance tool that uses AI to parse natural language inputs (e.g., ‘chipotle $14’) into structured expenses, featuring income tracking, monthly budgets, and recurring bills."
       },
       {
-        "order": 5,
+        "order": 8,
         "name": "ReferralFinder",
         "url": "https://github.com/Deva-1903/ReferralFinder",
         "stack": "Next.js · OpenAI · Supabase · TypeScript",
         "description": "is a production-ready SaaS platform that helps students, especially international students in the US, prioritize jobs, estimate sponsorship likelihood, tailor ATS-friendly applications, and generate referral outreach workflows without scraping or automating LinkedIn."
       },
       {
-        "order": 6,
+        "order": 9,
         "name": "Team Sonare — Sign ↔ Speech (Offline)",
         "url": "https://github.com/Deva-1903/Qualcomm-Sep25-Team-Sonare",
         "stack": "Electron · React · FastAPI · MediaPipe · whisper.cpp",
         "description": "is a fully offline, privacy-preserving Sign ↔ Speech translator built for the Qualcomm Hackathon 2025 with Team Sonare, using an Electron + React UI, MediaPipe gesture tracking, a FastAPI backend, and whisper.cpp to run the entire pipeline locally on edge devices."
       },
       {
-        "order": 7,
+        "order": 10,
         "name": "Underdogs Fitness Platform",
         "url": "https://github.com/Deva-1903/backend_underdogs",
         "stack": "Node.js · Express · MongoDB · React",
         "description": "is a full-stack gym management system built as a freelance project, with separate backend and frontend repos, handling member onboarding, plans, payments, and day-to-day operations using a clean API-first architecture."
       },
       {
-        "order": 8,
+        "order": 11,
         "name": "Alzheimer’s Disease Classification",
         "url": "https://github.com/Deva-1903/Alzheimer-s-Disease-Classification-",
         "stack": "Python · TensorFlow · Keras · Transfer Learning",
         "description": "is a deep learning project for classifying Alzheimer’s disease from medical imaging, exploring different architectures, training setups, and evaluation metrics as part of my undergrad capstone project, which was later published in an IEEE conference."
       },
       {
-        "order": 9,
+        "order": 12,
         "name": "Goalsetter App",
         "url": "https://github.com/Deva-1903/Goalsetter-app",
         "stack": "MERN · Redux",
         "description": "is a MERN + Redux app for setting, tracking, and managing personal goals, featuring authentication, CRUD workflows, and a simple dashboard to keep long-term goals organized."
       },
       {
-        "order": 10,
+        "order": 13,
         "name": "Tinder Clone",
         "url": "https://github.com/Deva-1903/Tinder-Clone",
         "stack": "MERN · Socket.io",

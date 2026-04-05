@@ -285,19 +285,25 @@
         <div class="projects-grid-new">
         ${displayedProjects
           .map(
-            (project, index) => `
+            (project, index) => {
+              const footerLinks = [
+                project.url    ? `<a href="${project.url}"    target="_blank" rel="noopener noreferrer" class="pcn-footer-link">repo ↗</a>`    : '',
+                project.demo   ? `<a href="${project.demo}"   target="_blank" rel="noopener noreferrer" class="pcn-footer-link">demo ↗</a>`   : '',
+                project.report ? `<a href="${project.report}" target="_blank" rel="noopener noreferrer" class="pcn-footer-link">report ↗</a>` : '',
+              ].filter(Boolean).join('');
+              return `
           <div class="project-card-new fade-up" style="transition-delay: ${index * 50}ms">
             <div class="pcn-body">
-              <h3 class="pcn-title">${project.name}</h3>
+              <h3 class="pcn-title">
+                ${project.name}
+                ${project.status === 'in-progress' ? '<span class="pcn-badge">in progress</span>' : ''}
+              </h3>
               <p class="pcn-desc">${project.description}</p>
               ${project.stack ? `<div class="pcn-stack">${project.stack}</div>` : ''}
             </div>
-            <div class="pcn-footer">
-              <a href="${project.url}" target="_blank" rel="noopener noreferrer" class="pcn-footer-link">repo ↗</a>
-              ${project.report ? `<a href="${project.report}" target="_blank" rel="noopener noreferrer" class="pcn-footer-link">report ↗</a>` : ''}
-            </div>
-          </div>
-        `
+            ${footerLinks ? `<div class="pcn-footer">${footerLinks}</div>` : ''}
+          </div>`;
+            }
           )
           .join("")}
         </div>
