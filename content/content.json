@@ -34,13 +34,13 @@
     ]
   },
   "info": {
-    "lastUpdated": "2026-02-08"
+    "lastUpdated": "2026-05-09"
   },
   "about": {
     "title": "about me",
     "paragraphs": [
       "I'm an MS CS student at UMass Amherst. I spent a lot of time in <span class=\"highlight\">ML Systems</span> and Backend Engineering, obsessing over how to make models run faster and cheaper.",
-      "But lately, I've have been more intrested <span class=\"highlight\">AI Safety</span>, <span class=\"highlight\">Mechanistic Interpretability</span>, and <span class=\"highlight\">Causal Reasoning</span>. I want to understand <em>how</em> these black boxes actually \"think\"—specifically looking at <strong>internal circuits for planning</strong> and verifying if agents are using valid logic versus just memorizing correlations.",
+      "But lately, I've been more interested in <span class=\"highlight\">AI Safety</span>, <span class=\"highlight\">Mechanistic Interpretability</span>, and <span class=\"highlight\">Causal Reasoning</span>. I want to understand <em>how</em> these black boxes actually \"think\"—specifically looking at <strong>internal circuits for planning</strong> and verifying if agents are using valid logic versus just memorizing correlations.",
       "I'm always open to chatting about Safety, Interpretability, or building reliable guardrails. Hit me up at: <a href=\"mailto:devaanand@umass.edu\">devaanand@umass.edu</a>"
     ]
   },
@@ -111,7 +111,7 @@
       {
         "timespan": "2023 - 2025",
         "logo": "https://images.squarespace-cdn.com/content/v1/587b44e1d1758e3ceffe18c6/1596580033188-H1B3JYJN0ZMPFA19BFP7/wysa+logo.png",
-        "description": "<strong>Backend Engineer at Wysa</strong>. Worked on scalable mental health tooling, including customizable NHS eTriage systems integrated with Mayden’s iaptus platform, contributing to revenue and impact at clinical scale.<br /><br />Built a full-stack annotation tool from scratch for the AI team, replacing manual sheet-based workflows and saving over 100 hours of manual work per month. Also fixed 20+ security vulnerabilities from VAPT reports, hardening core systems and reducing potential attack surface."
+        "description": "<strong>Backend Engineer at Wysa</strong>. Built and scaled a multi-tenant NHS eTriage backend serving <strong>8+ UK clinical clients</strong>, processing <strong>10,000+ monthly triage submissions</strong> and contributing to <strong>$340K+ in revenue</strong>, integrated with Mayden’s iaptus platform via REST APIs.<br /><br />Architected a full-stack ML training-data annotation tool from scratch for the AI team, replacing spreadsheet-based workflows and saving <strong>100+ hours of manual work per month</strong> while improving annotation throughput by <strong>60%</strong>. Also remediated <strong>20+ vulnerabilities</strong> from VAPT reports, hardening authentication, rate limiting, and audit logging."
       },
       {
         "timespan": "2022 - 2023",
