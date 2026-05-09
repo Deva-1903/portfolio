@@ -40,7 +40,7 @@
     "title": "about me",
     "paragraphs": [
       "I'm an MS CS student at UMass Amherst. I spent a lot of time in <span class=\"highlight\">ML Systems</span> and Backend Engineering, obsessing over how to make models run faster and cheaper.",
-      "But lately, I've been more interested in <span class=\"highlight\">AI Safety</span>, <span class=\"highlight\">Mechanistic Interpretability</span>, and <span class=\"highlight\">Causal Reasoning</span>. I want to understand <em>how</em> these black boxes actually \"think\"—specifically looking at <strong>internal circuits for planning</strong> and verifying if agents are using valid logic versus just memorizing correlations.",
+      "But lately, I've been more interested in <span class=\"highlight\">AI Safety</span>, <span class=\"highlight\">Mechanistic Interpretability</span>, and <span class=\"highlight\">Causal Reasoning</span>. I want to understand <em>how</em> these black boxes actually \"think\" - specifically looking at <strong>internal circuits for planning</strong> and verifying if agents are using valid logic versus just memorizing correlations.",
       "I'm always open to chatting about Safety, Interpretability, or building reliable guardrails. Hit me up at: <a href=\"mailto:devaanand@umass.edu\">devaanand@umass.edu</a>"
     ]
   },
@@ -48,7 +48,7 @@
     "entries": [
       {
         "timespan": "2025 - 2027",
-        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/UMass_Amherst_athletics_logo.svg/1200px-UMass_Amherst_athletics_logo.svg.png",
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/2/23/UMass_Amherst_athletics_logo.svg",
         "description": "Pursuing my <strong>Master of Science in Computer Science</strong> at the University of Massachusetts Amherst, trying to turn my obsession with ML systems into useful research and real-world impact.",
         "coursework": [
           {
@@ -168,21 +168,21 @@
         "name": "AI Research Scout",
         "demo": "https://cf-ai-research-scout.pages.dev",
         "stack": "Cloudflare Workers · Hono · Workers AI · D1 · React 19",
-        "description": "is a RAG-based research assistant on Cloudflare: paste URLs, it fetches each page, strips HTML, chunks and embeds with bge-base-en-v1.5, stores everything in D1, and answers your questions via cosine similarity retrieval — using only what it actually read. Chat streams over WebSockets via AIChatAgent with history persisted in Durable Object storage."
+        "description": "is a RAG-based research assistant on Cloudflare: paste URLs, it fetches each page, strips HTML, chunks and embeds with bge-base-en-v1.5, stores everything in D1, and answers your questions via cosine similarity retrieval - using only what it actually read. Chat streams over WebSockets via AIChatAgent with history persisted in Durable Object storage."
       },
       {
         "order": 2,
         "name": "Refusal Decay",
         "status": "in-progress",
         "stack": "Python · PyTorch · Hugging Face · Llama-3.2-3B · SLURM",
-        "description": "is a mechanistic interpretability study tracing how the refusal direction in a safety-aligned LLM’s residual stream decays under prefilling attacks — token by token, layer by layer — to determine whether early forced compliance causally erodes the model’s ability to refuse. Implements difference-in-means probing, per-token projection tracing, and direction-patching experiments on Llama-3.2-3B-Instruct."
+        "description": "is a mechanistic interpretability study tracing how the refusal direction in a safety-aligned LLM’s residual stream decays under prefilling attacks - token by token, layer by layer - to determine whether early forced compliance causally erodes the model’s ability to refuse. Implements difference-in-means probing, per-token projection tracing, and direction-patching experiments on Llama-3.2-3B-Instruct."
       },
       {
         "order": 3,
         "name": "AgenticSearch",
         "demo": "https://agentic-search-uij3k.ondigitalocean.app/",
         "stack": "Python · FastAPI · OpenAI · Brave Search · SQLite",
-        "description": "is a provenance-first entity discovery system: takes a free-text topic query and returns a ranked table of real-world entities with per-cell evidence — source URL, snippet, and confidence score — across a 10-stage pipeline covering schema planning, scraping, reranking, deterministic extraction, deduplication, and verification."
+        "description": "is a provenance-first entity discovery system: takes a free-text topic query and returns a ranked table of real-world entities with per-cell evidence - source URL, snippet, and confidence score - across a 10-stage pipeline covering schema planning, scraping, reranking, deterministic extraction, deduplication, and verification."
       },
       {
         "order": 4,
@@ -222,7 +222,7 @@
       },
       {
         "order": 9,
-        "name": "Team Sonare — Sign ↔ Speech (Offline)",
+        "name": "Team Sonare - Sign ↔ Speech (Offline)",
         "url": "https://github.com/Deva-1903/Qualcomm-Sep25-Team-Sonare",
         "stack": "Electron · React · FastAPI · MediaPipe · whisper.cpp",
         "description": "is a fully offline, privacy-preserving Sign ↔ Speech translator built for the Qualcomm Hackathon 2025 with Team Sonare, using an Electron + React UI, MediaPipe gesture tracking, a FastAPI backend, and whisper.cpp to run the entire pipeline locally on edge devices."
