@@ -65,6 +65,10 @@
   .da-head p{margin:2px 0 0;font-size:11.5px;color:var(--text-muted,#718096);}
   .da-close{border:none;background:none;cursor:pointer;font-size:20px;line-height:1;color:var(--text-muted,#718096);padding:2px 6px;border-radius:6px;}
   .da-close:hover{background:var(--bg-tertiary,#f2f0eb);}
+  .da-head-btns{display:flex;align-items:center;gap:2px;}
+  .da-expand{border:none;background:none;cursor:pointer;font-size:14px;line-height:1;color:var(--text-muted,#718096);padding:5px 7px;border-radius:6px;}
+  .da-expand:hover{background:var(--bg-tertiary,#f2f0eb);}
+  .da-panel.expanded{width:760px;height:calc(100vh - 40px);}
   .da-log{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:4px;}
   .da-meta{font-size:11px;color:var(--text-muted,#718096);margin:6px 4px 0;}
   .da-msg{padding:10px 13px;border-radius:12px;font-size:14px;line-height:1.5;max-width:88%;word-wrap:break-word;}
@@ -111,7 +115,8 @@
   panel.className = "da-panel";
   panel.innerHTML =
     '<div class="da-head"><div><h4>Ask Deva</h4><p>AI that answers from verified facts about me</p></div>' +
-    '<button class="da-close" aria-label="close">&times;</button></div>' +
+    '<div class="da-head-btns"><button class="da-expand" aria-label="expand chat"><i class="fa-solid fa-expand"></i></button>' +
+    '<button class="da-close" aria-label="close">&times;</button></div></div>' +
     '<div class="da-log"></div>' +
     '<form class="da-form"><input type="text" autocomplete="off" placeholder="Ask about my experience or projects…"/>' +
     '<button type="submit">Send</button></form>';
@@ -192,6 +197,21 @@
     panel.classList.contains("open") ? closePanel() : openPanel();
   });
   panel.querySelector(".da-close").addEventListener("click", closePanel);
+
+  var expandBtn = panel.querySelector(".da-expand");
+  function setExpanded(on) {
+    panel.classList.toggle("expanded", on);
+    expandBtn.innerHTML = on
+      ? '<i class="fa-solid fa-compress"></i>'
+      : '<i class="fa-solid fa-expand"></i>';
+    expandBtn.setAttribute("aria-label", on ? "shrink chat" : "expand chat");
+    try { localStorage.setItem("daExpanded", on ? "1" : "0"); } catch (e) {}
+    scrollDown();
+  }
+  expandBtn.addEventListener("click", function () {
+    setExpanded(!panel.classList.contains("expanded"));
+  });
+  try { if (localStorage.getItem("daExpanded") === "1") setExpanded(true); } catch (e) {}
   hint.addEventListener("click", function (e) {
     if (e.target.classList.contains("da-hint-x")) { hint.classList.remove("show"); dismissHint(); return; }
     openPanel(); dismissHint();
