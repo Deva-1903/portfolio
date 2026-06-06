@@ -134,12 +134,12 @@
     log.appendChild(meta); log.appendChild(m); scrollDown();
   }
   function addBot(htmlContent) {
-    var meta = document.createElement("div"); meta.className = "da-meta"; meta.textContent = "Deva";
+    var meta = document.createElement("div"); meta.className = "da-meta"; meta.textContent = "Ava";
     var m = document.createElement("div"); m.className = "da-msg da-bot"; m.innerHTML = htmlContent;
     log.appendChild(meta); log.appendChild(m); scrollDown(); return m;
   }
   function addThinking() {
-    var meta = document.createElement("div"); meta.className = "da-meta"; meta.textContent = "Deva";
+    var meta = document.createElement("div"); meta.className = "da-meta"; meta.textContent = "Ava";
     var m = document.createElement("div"); m.className = "da-msg da-bot";
     m.innerHTML = '<span class="da-typing"><i></i><i></i><i></i></span>';
     log.appendChild(meta); log.appendChild(m); scrollDown(); return m;
@@ -148,7 +148,7 @@
   function greet() {
     if (greeted) return;
     greeted = true;
-    addBot("Hi! I'm Deva's AI assistant. Ask me anything about his experience, skills, or projects.");
+    addBot("Hi! I'm Ava, Deva's AI assistant. Ask me anything about his experience, skills, or projects.");
     var wrap = document.createElement("div");
     wrap.className = "da-suggest";
     ["What's Deva's background?", "Show me his projects", "What's he strongest at?"].forEach(function (q) {
