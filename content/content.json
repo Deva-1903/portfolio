@@ -34,14 +34,14 @@
     ]
   },
   "info": {
-    "lastUpdated": "2026-05-09"
+    "lastUpdated": "2026-07-05"
   },
   "about": {
     "title": "about me",
     "paragraphs": [
-      "I'm an MS CS student at UMass Amherst. I spent a lot of time in <span class=\"highlight\">ML Systems</span> and Backend Engineering, obsessing over how to make models run faster and cheaper.",
-      "But lately, I've been more interested in <span class=\"highlight\">AI Safety</span>, <span class=\"highlight\">Mechanistic Interpretability</span>, and <span class=\"highlight\">Causal Reasoning</span>. I want to understand <em>how</em> these black boxes actually \"think\" - specifically looking at <strong>internal circuits for planning</strong> and verifying if agents are using valid logic versus just memorizing correlations.",
-      "I'm always open to chatting about Safety, Interpretability, or building reliable guardrails. Hit me up at: <a href=\"mailto:devaanand@umass.edu\">devaanand@umass.edu</a>"
+      "I'm an MS CS student at UMass Amherst. I've spent a lot of time in <span class=\"highlight\">ML Systems</span> and Backend Engineering, obsessing over how to make models run faster and cheaper.",
+      "These days I'm focused on two things. <span class=\"highlight\">AI Safety</span> and <span class=\"highlight\">Mechanistic Interpretability</span>: understanding how these black boxes actually \"think\" and where their safety properties actually live. And <span class=\"highlight\">Inference Engineering</span>: the systems side of serving models well, from kernels and memory layout to batching, KV cache, and everything that happens between a request landing and a token coming back. To me they're the same problem: open the box, see what's really going on.",
+      "I'm always open to chatting about Safety, Interpretability, Inference, or ML Systems. Hit me up at: <a href=\"mailto:devaanand@umass.edu\">devaanand@umass.edu</a>"
     ]
   },
   "history": {
@@ -142,7 +142,7 @@
       {
         "date": "Jan 2026",
         "title": "The \"Middleman\" Trap: A Better Way to Handle File Uploads",
-        "url": "https://medium.com/@devaaa/the-middleman-trap-a-better-way-to-handle-file-uploads"
+        "url": "https://medium.com/@devaaa/the-middleman-trap-a-better-way-to-handle-file-uploads-979e2712403a"
       },
       {
         "date": "Dec 2025",
@@ -165,91 +165,122 @@
     "items": [
       {
         "order": 1,
+        "name": "Refusal Decay",
+        "url": "https://github.com/Deva-1903/refusal-decay",
+        "stack": "Python · PyTorch · Hugging Face · Llama-3.1-8B-Instruct",
+        "description": "is a mechanistic interpretability study (CS 602, graded full marks) of how prefilling attacks weaken refusal in a safety-aligned LLM. Extracts the refusal direction via difference-in-means on a held-out set, traces its residual-stream projection per layer/token, and runs causal interventions (cross-condition patching + additive injection) via PyTorch forward hooks. Behavioral refusal drops 0.92 → 0.32 at k=3, the late-layer signal shifts monotone-by-depth, but both interventions fail to restore refusal (0/300): a clean null showing the late-layer signal is a readout, not the causal lever."
+      },
+      {
+        "order": 2,
+        "name": "CS 690PF - Performance Engineering (SIMD + Cache Matmul)",
+        "url": "https://github.com/Deva-1903/cs690pf",
+        "stack": "C++ · AVX intrinsics · OpenMP · perf · Cachegrind",
+        "description": "is my consolidated CS 690PF (Performance Engineering) coursework: hand-tuned matmul (loop reorder/unroll/blocking, manual AVX SIMD via __m256, cache-aware tiling with hardware-tuned Kc/Mc/Nc + Mr/Nr micro-kernels, OpenMP multithreading), profiled with perf, perf c2c, Cachegrind, and TMA. Also reproduces Coz causal profiling, Hoard vs ptmalloc2/jemalloc/mimalloc false-sharing, and Mytkowicz measurement-bias experiments."
+      },
+      {
+        "order": 3,
+        "name": "NGVI Curvature vs Variance",
+        "url": "https://github.com/Deva-1903/ngvi-curvature-variance",
+        "stack": "Python · PyTorch · NumPy · matplotlib",
+        "description": "is a CS 651 optimization research project (team) asking when natural-gradient VI actually beats Adam on ill-conditioned posteriors. Matched-compute black-box VI with mean-field + LRD Gaussian families and three optimizers (Adam / closed-form NGVI / EMA Diagonal-Fisher). NGVI's ELBO gain over Adam grows with curvature (κ≈180 → +0.28 nats; κ≈2566 → +2.32); antithetic sampling cut gradient variance ~10× but couldn't lift Adam off ill-conditioned plateaus, showing that ill-conditioning, not noise, was the binding constraint."
+      },
+      {
+        "order": 4,
+        "name": "CCR Platform",
+        "demo": "https://devaanand-ccr-platform.hf.space",
+        "url": "https://github.com/Deva-1903/ccr-platform",
+        "stack": "FastAPI · React · sentence-transformers · SQLite · Docker · HF Spaces",
+        "description": "is a full-stack platform for CCR (Contextualized Construct Representations) psychological text analysis: upload a corpus, pick a validated construct, embed items + texts with sentence-transformers, and get per-item cosine-similarity loadings, distributions, and CSV export with a per-run reproducibility record (model version, item hash, package versions). Hardened ingestion (encoding fallback, delimiter sniffing, row/size caps), DB-backed job queue with orphaned-job recovery, and 17 end-to-end tests running in ~1s via a deterministic fake embedding backend."
+      },
+      {
+        "order": 5,
+        "name": "AgenticSearch",
+        "demo": "https://agentic-search-negglszkwa-uc.a.run.app",
+        "url": "https://github.com/Deva-1903/ciir_agentic_search",
+        "stack": "Python · FastAPI · OpenAI · Brave Search · SQLite",
+        "description": "is a provenance-first entity discovery system: takes a free-text topic query and returns a ranked table of real-world entities with per-cell evidence - source URL, snippet, and confidence score - across a multi-stage pipeline covering typed retrieval planning, page rerank, evidence-regime classification, deterministic extraction with LLM fallback, and output verification. Hardened with 150+ automated tests, provider routing/fallback across LLM backends, and a reviewer-facing trust UI."
+      },
+      {
+        "order": 6,
         "name": "AI Research Scout",
         "demo": "https://cf-ai-research-scout.pages.dev",
         "stack": "Cloudflare Workers · Hono · Workers AI · D1 · React 19",
         "description": "is a RAG-based research assistant on Cloudflare: paste URLs, it fetches each page, strips HTML, chunks and embeds with bge-base-en-v1.5, stores everything in D1, and answers your questions via cosine similarity retrieval - using only what it actually read. Chat streams over WebSockets via AIChatAgent with history persisted in Durable Object storage."
       },
       {
-        "order": 2,
-        "name": "Refusal Decay",
-        "status": "in-progress",
-        "stack": "Python · PyTorch · Hugging Face · Llama-3.2-3B · SLURM",
-        "description": "is a mechanistic interpretability study tracing how the refusal direction in a safety-aligned LLM’s residual stream decays under prefilling attacks - token by token, layer by layer - to determine whether early forced compliance causally erodes the model’s ability to refuse. Implements difference-in-means probing, per-token projection tracing, and direction-patching experiments on Llama-3.2-3B-Instruct."
+        "order": 7,
+        "name": "Knowledge-Graph-Guided RAG",
+        "url": "https://github.com/Deva-1903/kg-rag",
+        "stack": "Python · Ollama · sentence-transformers · llama-index · spaCy",
+        "description": "is a team-built KG-guided RAG pipeline for multi-hop QA on HotpotQA (CS 685). I led the multi-view retrieval component (query-side decomposition into sub-questions, per-view dense retrieval, and RRF fusion + cross-encoder reranking + MMR), which lifted supporting-fact recall +2.68% (54.53 → 57.21) over the KG²RAG baseline on a 4,905-question evaluation. Teammates added a 0–1 knapsack token-budget selector and KG construction/reasoning.",
+        "report": "https://drive.google.com/file/d/1Bzk-WegUimQPsZd7vdcGZ_fKJ91i-BvS/view?usp=sharing"
       },
       {
-        "order": 3,
-        "name": "AgenticSearch",
-        "demo": "https://agentic-search-uij3k.ondigitalocean.app/",
-        "stack": "Python · FastAPI · OpenAI · Brave Search · SQLite",
-        "description": "is a provenance-first entity discovery system: takes a free-text topic query and returns a ranked table of real-world entities with per-cell evidence - source URL, snippet, and confidence score - across a 10-stage pipeline covering schema planning, scraping, reranking, deterministic extraction, deduplication, and verification."
+        "order": 8,
+        "name": "Spark ETL Optimization",
+        "url": "https://github.com/Deva-1903/Spark-ETL-Optimization",
+        "stack": "Apache Spark · PySpark · Python",
+        "description": "is a performance deep-dive on the NYC TLC taxi dataset (~1.4B records) that cuts end-to-end ETL runtime ~25% (17–19 min → 14.3 min) and drops the analytics P99/P50 tail-latency ratio 2.14× → 1.74×. Broadcast joins over the ~265-zone lookup collapse shuffle stages (minutes → ~0.05s); AQE, skew-join handling, schema-aware batched reads, column pruning, year/month partitioning + Snappy, and pre-computed derived fields do the rest. Documented as a repeatable optimization playbook (naive vs tuned)."
       },
       {
-        "order": 4,
+        "order": 9,
         "name": "TasteGraph",
         "url": "https://github.com/Deva-1903/TasteGraph",
         "stack": "Next.js · tRPC · Prisma · PostgreSQL",
         "description": "is a production-grade cross-media identity mapping MVP where users log films, books, music, food, places, and ideas to generate a taste fingerprint and discover people through overlap stories and rare shared tastes."
       },
       {
-        "order": 5,
-        "name": "Knowledge-Graph-Guided RAG",
-        "url": "https://github.com/Deva-1903/kg-rag",
-        "stack": "Python · Ollama · sentence-transformers · llama-index · spaCy",
-        "description": "is a team-built KG-guided RAG pipeline for multi-hop QA on HotpotQA, decomposing complex questions into single-hop sub-questions, fusing multi-view FAISS evidence with RRF, cross-encoder reranking, and MMR, then selecting evidence with token-budgeted 0–1 knapsack and knowledge-graph reasoning to improve supporting-fact recall over the KG2RAG baseline.",
-        "report": "https://drive.google.com/file/d/1Bzk-WegUimQPsZd7vdcGZ_fKJ91i-BvS/view?usp=sharing"
+        "order": 10,
+        "name": "AutoEval",
+        "url": "https://github.com/Deva-1903/AutoEval",
+        "stack": "Python · IR eval tooling · Git automation",
+        "description": "is a retrieval evaluation improvement agent that iteratively proposes new queries and labels, scores them against multiple reference systems, and accepts only updates that improve discriminative power on a holdout-heavy fitness objective. Anti-Goodharting guardrails - schema checks, duplicate rejection, read-only holdout protection - and Git-backed accepted updates with report cards keep the eval workflow auditable and reproducible."
       },
       {
-        "order": 6,
-        "name": "Spark ETL Optimization",
-        "url": "https://github.com/Deva-1903/Spark-ETL-Optimization",
-        "stack": "Apache Spark · PySpark · Python",
-        "description": "is a performance deep-dive on the NYC TLC taxi dataset, where I start from a naive Apache Spark ETL pipeline and iteratively optimize partitioning, column pruning, precomputed fields, and skew handling to reduce runtime, tail latency, and resource usage."
-      },
-      {
-        "order": 7,
+        "order": 11,
         "name": "Spend - AI Expense Tracker",
         "url": "https://github.com/Deva-1903/Expense-Tracker",
         "stack": "React · FastAPI · Supabase · OpenAI",
         "description": "is a zero-friction personal finance tool that uses AI to parse natural language inputs (e.g., ‘chipotle $14’) into structured expenses, featuring income tracking, monthly budgets, and recurring bills."
       },
       {
-        "order": 8,
+        "order": 12,
         "name": "ReferralFinder",
         "url": "https://github.com/Deva-1903/ReferralFinder",
         "stack": "Next.js · OpenAI · Supabase · TypeScript",
         "description": "is a production-ready SaaS platform that helps students, especially international students in the US, prioritize jobs, estimate sponsorship likelihood, tailor ATS-friendly applications, and generate referral outreach workflows without scraping or automating LinkedIn."
       },
       {
-        "order": 9,
+        "order": 13,
         "name": "Team Sonare - Sign ↔ Speech (Offline)",
         "url": "https://github.com/Deva-1903/Qualcomm-Sep25-Team-Sonare",
         "stack": "Electron · React · FastAPI · MediaPipe · whisper.cpp",
         "description": "is a fully offline, privacy-preserving Sign ↔ Speech translator built for the Qualcomm Hackathon 2025 with Team Sonare, using an Electron + React UI, MediaPipe gesture tracking, a FastAPI backend, and whisper.cpp to run the entire pipeline locally on edge devices."
       },
       {
-        "order": 10,
+        "order": 14,
         "name": "Underdogs Fitness Platform",
         "url": "https://github.com/Deva-1903/backend_underdogs",
-        "stack": "Node.js · Express · MongoDB · React",
-        "description": "is a full-stack gym management system built as a freelance project, with separate backend and frontend repos, handling member onboarding, plans, payments, and day-to-day operations using a clean API-first architecture."
+        "demo": "https://www.underdogsfitness.in/",
+        "stack": "Node.js · Express · MongoDB · React · Redux",
+        "description": "is a full-stack gym management platform I built solo end-to-end in ~1.5 months and shipped to a real client - live 3+ years and still running. Auth, membership + attendance, Stripe + admin manual-cash with a partial-payment ledger, cron-driven renewal automation, and multi-branch from day 1 (every entity scoped by branchId, JWT-claim auth). When the client opened a 2nd branch a year later, onboarded it as a config change with zero schema migration. 90%+ of payments moved through the portal; 70% cut in the client's manual workload."
       },
       {
-        "order": 11,
+        "order": 15,
         "name": "Alzheimer’s Disease Classification",
         "url": "https://github.com/Deva-1903/Alzheimer-s-Disease-Classification-",
         "stack": "Python · TensorFlow · Keras · Transfer Learning",
         "description": "is a deep learning project for classifying Alzheimer’s disease from medical imaging, exploring different architectures, training setups, and evaluation metrics as part of my undergrad capstone project, which was later published in an IEEE conference."
       },
       {
-        "order": 12,
+        "order": 16,
         "name": "Goalsetter App",
         "url": "https://github.com/Deva-1903/Goalsetter-app",
         "stack": "MERN · Redux",
         "description": "is a MERN + Redux app for setting, tracking, and managing personal goals, featuring authentication, CRUD workflows, and a simple dashboard to keep long-term goals organized."
       },
       {
-        "order": 13,
+        "order": 17,
         "name": "Tinder Clone",
         "url": "https://github.com/Deva-1903/Tinder-Clone",
         "stack": "MERN · Socket.io",
@@ -271,6 +302,18 @@
   "misc": {
     "title": "updates",
     "items": [
+      {
+        "date": "Jul 2026",
+        "description": "Built and shipped the CCR Platform in ~1 day while interviewing with the Culture and Morality Lab (UMass PBS) - live on Hugging Face Spaces.",
+        "url": "https://devaanand-ccr-platform.hf.space",
+        "linkText": "CCR Platform"
+      },
+      {
+        "date": "May 2026",
+        "description": "Wrapped up Spring 2026 - refusal-decay mechanistic interpretability project (CS 602) graded full marks; ngvi-curvature-variance (CS 651) natural-gradient VI study also shipped.",
+        "url": "https://github.com/Deva-1903/refusal-decay",
+        "linkText": "refusal-decay"
+      },
       {
         "date": "Dec 2025",
         "description": "Started The Inheritance Games, first real dive into fiction, let's see how that goes.",
