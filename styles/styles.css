@@ -1773,3 +1773,72 @@ html.dark-theme .navbar {
     grid-template-columns: 1fr;
   }
 }
+/* ============================================================
+   Enter 3D Mode button (links to the Three.js portfolio)
+   ============================================================ */
+.enter-3d-btn {
+  position: fixed;
+  bottom: 28px;
+  left: 28px;
+  z-index: 1000;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 18px 11px 14px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.01em;
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-medium);
+  box-shadow: 0 6px 24px var(--shadow-medium);
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.enter-3d-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px var(--shadow-heavy);
+  border-color: var(--text-primary);
+}
+
+.enter-3d-btn:active {
+  transform: translateY(0);
+}
+
+.enter-3d-orbit {
+  display: inline-flex;
+  width: 26px;
+  height: 26px;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+}
+
+.enter-3d-orbit svg {
+  width: 20px;
+  height: 20px;
+  animation: enter3dSpin 9s linear infinite;
+  transform-origin: 50% 50%;
+}
+
+@keyframes enter3dSpin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .enter-3d-orbit svg { animation: none; }
+}
+
+@media (max-width: 600px) {
+  .enter-3d-btn {
+    bottom: 18px;
+    left: 18px;
+    padding: 10px 15px 10px 12px;
+    font-size: 13px;
+  }
+}
