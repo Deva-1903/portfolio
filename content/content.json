@@ -34,7 +34,7 @@
     ]
   },
   "info": {
-    "lastUpdated": "2026-07-05"
+    "lastUpdated": "2026-07-13"
   },
   "about": {
     "title": "about me",
@@ -109,6 +109,16 @@
         ]
       },
       {
+        "timespan": "2026 - present",
+        "logo": "./assets/theralign.svg",
+        "description": "<strong>Founding Software Engineer Intern at TherAlign Health</strong> (remote). Building the provider-facing SMART-on-FHIR prescribing platform for an early-stage healthtech startup whose AI clinical decision support <strong>prevents prior authorization</strong> - surfacing covered, guideline-backed, clinically-equivalent medication alternatives at the point of prescribing (MIT Hacking Medicine GrandHack, 1st place).<br /><br />Working full-stack across the medication-alternatives pipeline: RxNorm normalization, formulary/tier/prior-auth logic, and PubMed + clinical-guideline evidence grounding, with Google Gemini used only for synthesis while the backend deterministically controls clinical eligibility and PA results. Stack: Next.js, SMART on FHIR (OAuth2/PKCE), FHIR R4, Firebase Cloud Functions, Google Cloud Run, and CDS Hooks, with HIPAA-aligned handling of PHI."
+      },
+      {
+        "timespan": "2026 - present",
+        "logo": "./assets/cmhq.jpeg",
+        "description": "<strong>Lab Assistant at the Culture and Morality Lab</strong> (PI: Dr. Mohammad Atari), UMass Amherst Psychological and Brain Sciences. Sole engineer building the lab's <strong>CCR (Contextualized Construct Representations)</strong> platform - turning the lab's published NLP text-measurement method into a self-serve web tool for researchers, after being hired off a working prototype I built before the interview.<br /><br />Designed a YAML model registry as the single source of model truth, a versioned append-only construct library (99 constructs across 38 questionnaires with SHA-256 item hashes and immutable per-run snapshots), a structured data-quality warning system with deterministic language detection, and per-run offline reproducibility exports. Grew the backend test suite from 17 to 40 hermetic tests and cost-engineered the infrastructure plan from a ~$600/yr baseline toward $0-60/yr. Stack: Python, FastAPI, SQLAlchemy, sentence-transformers, React + Vite, Docker."
+      },
+      {
         "timespan": "2023 - 2025",
         "logo": "https://images.squarespace-cdn.com/content/v1/587b44e1d1758e3ceffe18c6/1596580033188-H1B3JYJN0ZMPFA19BFP7/wysa+logo.png",
         "description": "<strong>Backend Engineer at Wysa</strong>. Built and scaled a multi-tenant NHS eTriage backend serving <strong>8+ UK clinical clients</strong>, processing <strong>10,000+ monthly triage submissions</strong> and contributing to <strong>$340K+ in revenue</strong>, integrated with Mayden’s iaptus platform via REST APIs.<br /><br />Architected a full-stack ML training-data annotation tool from scratch for the AI team, replacing spreadsheet-based workflows and saving <strong>100+ hours of manual work per month</strong> while improving annotation throughput by <strong>60%</strong>. Also remediated <strong>20+ vulnerabilities</strong> from VAPT reports, hardening authentication, rate limiting, and audit logging."
@@ -176,6 +186,12 @@
         "url": "https://github.com/Deva-1903/cs690pf",
         "stack": "C++ · AVX intrinsics · OpenMP · perf · Cachegrind",
         "description": "is my consolidated CS 690PF (Performance Engineering) coursework: hand-tuned matmul (loop reorder/unroll/blocking, manual AVX SIMD via __m256, cache-aware tiling with hardware-tuned Kc/Mc/Nc + Mr/Nr micro-kernels, OpenMP multithreading), profiled with perf, perf c2c, Cachegrind, and TMA. Also reproduces Coz causal profiling, Hoard vs ptmalloc2/jemalloc/mimalloc false-sharing, and Mytkowicz measurement-bias experiments."
+      },
+      {
+        "order": 3,
+        "name": "align-ops",
+        "stack": "PyTorch · TRL (SFT/DPO/GRPO) · QLoRA · vLLM · FastAPI · Redis · Prometheus/Grafana",
+        "description": "is an end-to-end LLM post-training and serving stack. It takes Qwen2.5-1.5B-Instruct through supervised fine-tuning, DPO, and GRPO with QLoRA (tuning 1.4% of parameters at 15.8 GB peak GPU), lifting held-out task accuracy 54% → 72%, format compliance 82% → 96%, and a 71% preference win-rate over the base model across 500 eval prompts. The serving layer puts a FastAPI gateway with Redis caching and async micro-batching in front of vLLM - 520 tok/s across 24 concurrent requests, 640 ms p95 time-to-first-token, and 1.9× throughput (GPU utilization 52% → 84%), instrumented with Prometheus + Grafana."
       },
       {
         "order": 3,
@@ -302,6 +318,24 @@
   "misc": {
     "title": "updates",
     "items": [
+      {
+        "date": "Jul 2026",
+        "description": "Started as Founding Software Engineer Intern at TherAlign Health, building an AI clinical decision support platform that prevents prior authorization (MIT Hacking Medicine GrandHack winner).",
+        "url": "https://theralignhealth.com/",
+        "linkText": "TherAlign Health"
+      },
+      {
+        "date": "Jul 2026",
+        "description": "Joined the Culture and Morality Lab (UMass PBS, PI Dr. Mohammad Atari) as the sole engineer on its CCR text-analysis platform - hired off a prototype I built before the interview.",
+        "url": "https://websites.umass.edu/matari/",
+        "linkText": "Culture and Morality Lab"
+      },
+      {
+        "date": "Jul 2026",
+        "description": "Wrapped align-ops, an end-to-end LLM post-training (SFT/DPO/GRPO + QLoRA) and vLLM serving stack with Redis caching, async micro-batching, and Prometheus/Grafana observability.",
+        "url": null,
+        "linkText": null
+      },
       {
         "date": "Jul 2026",
         "description": "Built and shipped the CCR Platform in ~1 day while interviewing with the Culture and Morality Lab (UMass PBS) - live on Hugging Face Spaces.",

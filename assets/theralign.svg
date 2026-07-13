@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="TherAlign Health">
+  <defs>
+    <linearGradient id="ta" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2FC1B1"/>
+      <stop offset="1" stop-color="#12B0E0"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="96" height="96" rx="24" fill="url(#ta)"/>
+  <path d="M28 52 L44 68 L74 34" fill="none" stroke="#ffffff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
