@@ -110,12 +110,12 @@
       },
       {
         "timespan": "2026 - present",
-        "logo": "./assets/theralign.svg",
+        "logo": "./assets/theralign.jpeg",
         "description": "<strong>Founding Software Engineer Intern at TherAlign Health</strong> (remote). Building the provider-facing SMART-on-FHIR prescribing platform for an early-stage healthtech startup whose AI clinical decision support <strong>prevents prior authorization</strong> - surfacing covered, guideline-backed, clinically-equivalent medication alternatives at the point of prescribing (MIT Hacking Medicine GrandHack, 1st place).<br /><br />Working full-stack across the medication-alternatives pipeline: RxNorm normalization, formulary/tier/prior-auth logic, and PubMed + clinical-guideline evidence grounding, with Google Gemini used only for synthesis while the backend deterministically controls clinical eligibility and PA results. Stack: Next.js, SMART on FHIR (OAuth2/PKCE), FHIR R4, Firebase Cloud Functions, Google Cloud Run, and CDS Hooks, with HIPAA-aligned handling of PHI."
       },
       {
         "timespan": "2026 - present",
-        "logo": "./assets/cmhq.jpeg",
+        "logo": "./assets/caml_logo.png",
         "description": "<strong>Lab Assistant at the Culture and Morality Lab</strong> (PI: Dr. Mohammad Atari), UMass Amherst Psychological and Brain Sciences. Sole engineer building the lab's <strong>CCR (Contextualized Construct Representations)</strong> platform - turning the lab's published NLP text-measurement method into a self-serve web tool for researchers, after being hired off a working prototype I built before the interview.<br /><br />Designed a YAML model registry as the single source of model truth, a versioned append-only construct library (99 constructs across 38 questionnaires with SHA-256 item hashes and immutable per-run snapshots), a structured data-quality warning system with deterministic language detection, and per-run offline reproducibility exports. Grew the backend test suite from 17 to 40 hermetic tests and cost-engineered the infrastructure plan from a ~$600/yr baseline toward $0-60/yr. Stack: Python, FastAPI, SQLAlchemy, sentence-transformers, React + Vite, Docker."
       },
       {
