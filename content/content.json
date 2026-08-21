@@ -34,14 +34,14 @@
     ]
   },
   "info": {
-    "lastUpdated": "2026-07-13"
+    "lastUpdated": "2026-08-21"
   },
   "about": {
     "title": "about me",
     "paragraphs": [
       "I'm an MS CS student at UMass Amherst. I've spent a lot of time in <span class=\"highlight\">ML Systems</span> and Backend Engineering, obsessing over how to make models run faster and cheaper.",
       "These days I'm focused on two things. <span class=\"highlight\">AI Safety</span> and <span class=\"highlight\">Mechanistic Interpretability</span>: understanding how these black boxes actually \"think\" and where their safety properties actually live. And <span class=\"highlight\">Inference Engineering</span>: the systems side of serving models well, from kernels and memory layout to batching, KV cache, and everything that happens between a request landing and a token coming back. To me they're the same problem: open the box, see what's really going on.",
-      "I'm always open to chatting about Safety, Interpretability, Inference, or ML Systems. Hit me up at: <a href=\"mailto:devaanand@umass.edu\">devaanand@umass.edu</a>"
+      "I'm open to <span class=\"highlight\">full-time roles starting May 2027</span> (and Fall 2026 co-ops), and always up for chatting about Safety, Interpretability, Inference, or ML Systems. Hit me up at: <a href=\"mailto:devaanand@umass.edu\">devaanand@umass.edu</a>"
     ]
   },
   "history": {
@@ -60,12 +60,12 @@
                   {
                     "code": "COMPSCI 689",
                     "name": "Advanced Machine Learning",
-                    "current": true
+                    "current": false
                   },
                   {
                     "code": "COMPSCI 685",
                     "name": "Advanced Natural Language Processing",
-                    "current": true
+                    "current": false
                   }
                 ]
               },
@@ -75,7 +75,7 @@
                   {
                     "code": "COMPSCI 532",
                     "name": "Systems for Data Science",
-                    "current": true
+                    "current": false
                   }
                 ]
               }
@@ -90,17 +90,17 @@
                   {
                     "code": "COMPSCI 690PF",
                     "name": "Performance Engineering",
-                    "current": true
+                    "current": false
                   },
                   {
                     "code": "COMPSCI 651",
                     "name": "Optimization in CS",
-                    "current": true
+                    "current": false
                   },
                   {
                     "code": "COMPSCI 602",
                     "name": "Research Methods/Empirical CS",
-                    "current": true
+                    "current": false
                   }
                 ]
               }
@@ -111,7 +111,7 @@
       {
         "timespan": "2026 - present",
         "logo": "./assets/theralign.jpeg",
-        "description": "<strong>Founding Software Engineer Intern at TherAlign Health</strong> (remote). Building the provider-facing SMART-on-FHIR prescribing platform for an early-stage healthtech startup whose AI clinical decision support <strong>prevents prior authorization</strong> - surfacing covered, guideline-backed, clinically-equivalent medication alternatives at the point of prescribing (MIT Hacking Medicine GrandHack, 1st place).<br /><br />Working full-stack across the medication-alternatives pipeline: RxNorm normalization, formulary/tier/prior-auth logic, and PubMed + clinical-guideline evidence grounding, with Google Gemini used only for synthesis while the backend deterministically controls clinical eligibility and PA results. Stack: Next.js, SMART on FHIR (OAuth2/PKCE), FHIR R4, Firebase Cloud Functions, Google Cloud Run, and CDS Hooks, with HIPAA-aligned handling of PHI."
+        "description": "<strong>Software Engineer Intern at TherAlign Health</strong> (remote). Building the provider-facing SMART-on-FHIR prescribing platform for an early-stage healthtech startup whose AI clinical decision support <strong>prevents prior authorization</strong> - surfacing covered, guideline-backed, clinically-equivalent medication alternatives at the point of prescribing (MIT Hacking Medicine GrandHack, 1st place).<br /><br />Working full-stack across the medication-alternatives pipeline: RxNorm normalization, formulary/tier/prior-auth logic, and PubMed + clinical-guideline evidence grounding, with Google Gemini used only for synthesis while the backend deterministically controls clinical eligibility and PA results. Stack: Next.js, SMART on FHIR (OAuth2/PKCE), FHIR R4, Firebase Cloud Functions, Google Cloud Run, and CDS Hooks, with HIPAA-aligned handling of PHI."
       },
       {
         "timespan": "2026 - present",
@@ -178,30 +178,52 @@
         "name": "Refusal Decay",
         "url": "https://github.com/Deva-1903/refusal-decay",
         "stack": "Python · PyTorch · Hugging Face · Llama-3.1-8B-Instruct",
-        "description": "is a mechanistic interpretability study (CS 602, graded full marks) of how prefilling attacks weaken refusal in a safety-aligned LLM. Extracts the refusal direction via difference-in-means on a held-out set, traces its residual-stream projection per layer/token, and runs causal interventions (cross-condition patching + additive injection) via PyTorch forward hooks. Behavioral refusal drops 0.92 → 0.32 at k=3, the late-layer signal shifts monotone-by-depth, but both interventions fail to restore refusal (0/300): a clean null showing the late-layer signal is a readout, not the causal lever."
+        "description": "is a mechanistic interpretability study (CS 602, graded full marks) of how prefilling attacks weaken refusal in a safety-aligned LLM. Extracts the refusal direction via difference-in-means on a held-out set, traces its residual-stream projection per layer/token, and runs causal interventions (cross-condition patching + additive injection) via PyTorch forward hooks. Behavioral refusal drops 0.92 → 0.32 at k=3, the late-layer signal shifts monotone-by-depth, but both interventions fail to restore refusal (0/300): a clean null showing the late-layer signal is a readout, not the causal lever.",
+        "report": "https://github.com/Deva-1903/refusal-decay/blob/main/reports/08-final-paper.pdf"
       },
       {
         "order": 2,
+        "name": "align-ops",
+        "stack": "PyTorch · TRL (SFT/DPO/GRPO) · QLoRA · vLLM · FastAPI · Redis · Prometheus/Grafana",
+        "description": "is an end-to-end LLM post-training and serving stack. It takes Qwen2.5-1.5B-Instruct through supervised fine-tuning, DPO, and GRPO with QLoRA (tuning 1.4% of parameters at 15.8 GB peak GPU), lifting held-out task accuracy 54% → 72%, format compliance 82% → 96%, and a 71% preference win-rate over the base model across 500 eval prompts. The serving layer puts a FastAPI gateway with Redis caching and async micro-batching in front of vLLM - 520 tok/s across 24 concurrent requests, 640 ms p95 time-to-first-token, and 1.9× throughput (GPU utilization 52% → 84%), instrumented with Prometheus + Grafana."
+      },
+      {
+        "name": "NEON Quantized GEMM",
+        "url": "https://github.com/Deva-1903/neon-quantized-gemm",
+        "stack": "C++17 · ARM NEON (sdot) · INT8/INT4 quantization",
+        "description": "is a from-scratch study of quantized matmul kernels on Apple Silicon: from a naive fp32 baseline at 3 GFLOP/s to a 4x4 register-blocked int8 micro-kernel at 394 GFLOP/s - a 132× speedup and ~2.5× over compiler auto-vectorization - via ARM NEON sdot intrinsics. Adds GGUF-style INT4 block quantization (6.4× smaller weights than fp32), SNR analysis showing per-channel scaling contains weight outliers per-tensor scaling can't (40 vs 19 dB), roofline analysis that diagnosed and broke a shared memory-bandwidth ceiling (~4× less memory traffic), bit-exact verification against a scalar reference, and p50/p99/p999 tail-latency methodology.",
+        "order": 3
+      },
+      {
+        "name": "Provisioning Platform",
+        "url": "https://github.com/Deva-1903/provisioning-platform",
+        "stack": "Go · gRPC · PostgreSQL · Redis · Prometheus · Docker",
+        "description": "is a server-provisioning control plane in Go: REST + gRPC over one service layer, idempotent workflows, three-role RBAC, and a transactional audit log. Benchmarked at ~19,700 provisions/min across 2,500+ simulated servers at 300 concurrent ops; Redis-TTL heartbeat liveness (500/s sustained over gRPC) detects silently failed servers in 19s with zero false positives, and an async workflow engine (FOR UPDATE SKIP LOCKED claims, capped backoff + jitter) drove 5,250 operations to 100% eventual success through a 3% injected failure rate. CI runs go test -race against real Postgres and Redis containers.",
+        "order": 4
+      },
+      {
+        "name": "GPU Scheduler",
+        "url": "https://github.com/Deva-1903/gpu-scheduler",
+        "stack": "Go · Python · PostgreSQL · Redis · Kubernetes",
+        "description": "is a multi-tenant compute scheduler with weighted Dominant Resource Fairness and GPU-aware best-fit bin-packing. On a simulated 32-GPU fleet it sustains 542 succeeded jobs/min under a 500-job flood while holding every backlogged tenant within ~1 GPU of its weight-ideal share, at p50 11 ms / p95 66 ms scheduling latency and ~75% utilization. Preemption was tuned by measurement (an unrestricted threshold caused 688 preemptions at p95 15 s; restricting to an urgent band cut the identical workload to 4 at p95 66 ms), and crash recovery reloads queued jobs from PostgreSQL and requeues running work (at-least-once). Includes a Kubernetes executor mode (implemented; benchmarks ran on the sim executor).",
+        "order": 5
+      },
+      {
+        "order": 6,
         "name": "CS 690PF - Performance Engineering (SIMD + Cache Matmul)",
         "url": "https://github.com/Deva-1903/cs690pf",
         "stack": "C++ · AVX intrinsics · OpenMP · perf · Cachegrind",
         "description": "is my consolidated CS 690PF (Performance Engineering) coursework: hand-tuned matmul (loop reorder/unroll/blocking, manual AVX SIMD via __m256, cache-aware tiling with hardware-tuned Kc/Mc/Nc + Mr/Nr micro-kernels, OpenMP multithreading), profiled with perf, perf c2c, Cachegrind, and TMA. Also reproduces Coz causal profiling, Hoard vs ptmalloc2/jemalloc/mimalloc false-sharing, and Mytkowicz measurement-bias experiments."
       },
       {
-        "order": 3,
-        "name": "align-ops",
-        "stack": "PyTorch · TRL (SFT/DPO/GRPO) · QLoRA · vLLM · FastAPI · Redis · Prometheus/Grafana",
-        "description": "is an end-to-end LLM post-training and serving stack. It takes Qwen2.5-1.5B-Instruct through supervised fine-tuning, DPO, and GRPO with QLoRA (tuning 1.4% of parameters at 15.8 GB peak GPU), lifting held-out task accuracy 54% → 72%, format compliance 82% → 96%, and a 71% preference win-rate over the base model across 500 eval prompts. The serving layer puts a FastAPI gateway with Redis caching and async micro-batching in front of vLLM - 520 tok/s across 24 concurrent requests, 640 ms p95 time-to-first-token, and 1.9× throughput (GPU utilization 52% → 84%), instrumented with Prometheus + Grafana."
-      },
-      {
-        "order": 3,
+        "order": 7,
         "name": "NGVI Curvature vs Variance",
         "url": "https://github.com/Deva-1903/ngvi-curvature-variance",
         "stack": "Python · PyTorch · NumPy · matplotlib",
         "description": "is a CS 651 optimization research project (team) asking when natural-gradient VI actually beats Adam on ill-conditioned posteriors. Matched-compute black-box VI with mean-field + LRD Gaussian families and three optimizers (Adam / closed-form NGVI / EMA Diagonal-Fisher). NGVI's ELBO gain over Adam grows with curvature (κ≈180 → +0.28 nats; κ≈2566 → +2.32); antithetic sampling cut gradient variance ~10× but couldn't lift Adam off ill-conditioned plateaus, showing that ill-conditioning, not noise, was the binding constraint."
       },
       {
-        "order": 4,
+        "order": 8,
         "name": "CCR Platform",
         "demo": "https://devaanand-ccr-platform.hf.space",
         "url": "https://github.com/Deva-1903/ccr-platform",
@@ -209,7 +231,7 @@
         "description": "is a full-stack platform for CCR (Contextualized Construct Representations) psychological text analysis: upload a corpus, pick a validated construct, embed items + texts with sentence-transformers, and get per-item cosine-similarity loadings, distributions, and CSV export with a per-run reproducibility record (model version, item hash, package versions). Hardened ingestion (encoding fallback, delimiter sniffing, row/size caps), DB-backed job queue with orphaned-job recovery, and 17 end-to-end tests running in ~1s via a deterministic fake embedding backend."
       },
       {
-        "order": 5,
+        "order": 9,
         "name": "AgenticSearch",
         "demo": "https://agentic-search-negglszkwa-uc.a.run.app",
         "url": "https://github.com/Deva-1903/ciir_agentic_search",
@@ -217,14 +239,14 @@
         "description": "is a provenance-first entity discovery system: takes a free-text topic query and returns a ranked table of real-world entities with per-cell evidence - source URL, snippet, and confidence score - across a multi-stage pipeline covering typed retrieval planning, page rerank, evidence-regime classification, deterministic extraction with LLM fallback, and output verification. Hardened with 150+ automated tests, provider routing/fallback across LLM backends, and a reviewer-facing trust UI."
       },
       {
-        "order": 6,
+        "order": 10,
         "name": "AI Research Scout",
         "demo": "https://cf-ai-research-scout.pages.dev",
         "stack": "Cloudflare Workers · Hono · Workers AI · D1 · React 19",
         "description": "is a RAG-based research assistant on Cloudflare: paste URLs, it fetches each page, strips HTML, chunks and embeds with bge-base-en-v1.5, stores everything in D1, and answers your questions via cosine similarity retrieval - using only what it actually read. Chat streams over WebSockets via AIChatAgent with history persisted in Durable Object storage."
       },
       {
-        "order": 7,
+        "order": 11,
         "name": "Knowledge-Graph-Guided RAG",
         "url": "https://github.com/Deva-1903/kg-rag",
         "stack": "Python · Ollama · sentence-transformers · llama-index · spaCy",
@@ -232,49 +254,49 @@
         "report": "https://drive.google.com/file/d/1Bzk-WegUimQPsZd7vdcGZ_fKJ91i-BvS/view?usp=sharing"
       },
       {
-        "order": 8,
+        "order": 12,
         "name": "Spark ETL Optimization",
         "url": "https://github.com/Deva-1903/Spark-ETL-Optimization",
         "stack": "Apache Spark · PySpark · Python",
         "description": "is a performance deep-dive on the NYC TLC taxi dataset (~1.4B records) that cuts end-to-end ETL runtime ~25% (17–19 min → 14.3 min) and drops the analytics P99/P50 tail-latency ratio 2.14× → 1.74×. Broadcast joins over the ~265-zone lookup collapse shuffle stages (minutes → ~0.05s); AQE, skew-join handling, schema-aware batched reads, column pruning, year/month partitioning + Snappy, and pre-computed derived fields do the rest. Documented as a repeatable optimization playbook (naive vs tuned)."
       },
       {
-        "order": 9,
+        "order": 13,
         "name": "TasteGraph",
         "url": "https://github.com/Deva-1903/TasteGraph",
         "stack": "Next.js · tRPC · Prisma · PostgreSQL",
         "description": "is a production-grade cross-media identity mapping MVP where users log films, books, music, food, places, and ideas to generate a taste fingerprint and discover people through overlap stories and rare shared tastes."
       },
       {
-        "order": 10,
+        "order": 14,
         "name": "AutoEval",
         "url": "https://github.com/Deva-1903/AutoEval",
         "stack": "Python · IR eval tooling · Git automation",
         "description": "is a retrieval evaluation improvement agent that iteratively proposes new queries and labels, scores them against multiple reference systems, and accepts only updates that improve discriminative power on a holdout-heavy fitness objective. Anti-Goodharting guardrails - schema checks, duplicate rejection, read-only holdout protection - and Git-backed accepted updates with report cards keep the eval workflow auditable and reproducible."
       },
       {
-        "order": 11,
+        "order": 15,
         "name": "Spend - AI Expense Tracker",
         "url": "https://github.com/Deva-1903/Expense-Tracker",
         "stack": "React · FastAPI · Supabase · OpenAI",
         "description": "is a zero-friction personal finance tool that uses AI to parse natural language inputs (e.g., ‘chipotle $14’) into structured expenses, featuring income tracking, monthly budgets, and recurring bills."
       },
       {
-        "order": 12,
+        "order": 16,
         "name": "ReferralFinder",
         "url": "https://github.com/Deva-1903/ReferralFinder",
         "stack": "Next.js · OpenAI · Supabase · TypeScript",
         "description": "is a production-ready SaaS platform that helps students, especially international students in the US, prioritize jobs, estimate sponsorship likelihood, tailor ATS-friendly applications, and generate referral outreach workflows without scraping or automating LinkedIn."
       },
       {
-        "order": 13,
+        "order": 17,
         "name": "Team Sonare - Sign ↔ Speech (Offline)",
         "url": "https://github.com/Deva-1903/Qualcomm-Sep25-Team-Sonare",
         "stack": "Electron · React · FastAPI · MediaPipe · whisper.cpp",
         "description": "is a fully offline, privacy-preserving Sign ↔ Speech translator built for the Qualcomm Hackathon 2025 with Team Sonare, using an Electron + React UI, MediaPipe gesture tracking, a FastAPI backend, and whisper.cpp to run the entire pipeline locally on edge devices."
       },
       {
-        "order": 14,
+        "order": 18,
         "name": "Underdogs Fitness Platform",
         "url": "https://github.com/Deva-1903/backend_underdogs",
         "demo": "https://www.underdogsfitness.in/",
@@ -282,21 +304,21 @@
         "description": "is a full-stack gym management platform I built solo end-to-end in ~1.5 months and shipped to a real client - live 3+ years and still running. Auth, membership + attendance, Stripe + admin manual-cash with a partial-payment ledger, cron-driven renewal automation, and multi-branch from day 1 (every entity scoped by branchId, JWT-claim auth). When the client opened a 2nd branch a year later, onboarded it as a config change with zero schema migration. 90%+ of payments moved through the portal; 70% cut in the client's manual workload."
       },
       {
-        "order": 15,
+        "order": 19,
         "name": "Alzheimer’s Disease Classification",
         "url": "https://github.com/Deva-1903/Alzheimer-s-Disease-Classification-",
         "stack": "Python · TensorFlow · Keras · Transfer Learning",
         "description": "is a deep learning project for classifying Alzheimer’s disease from medical imaging, exploring different architectures, training setups, and evaluation metrics as part of my undergrad capstone project, which was later published in an IEEE conference."
       },
       {
-        "order": 16,
+        "order": 20,
         "name": "Goalsetter App",
         "url": "https://github.com/Deva-1903/Goalsetter-app",
         "stack": "MERN · Redux",
         "description": "is a MERN + Redux app for setting, tracking, and managing personal goals, featuring authentication, CRUD workflows, and a simple dashboard to keep long-term goals organized."
       },
       {
-        "order": 17,
+        "order": 21,
         "name": "Tinder Clone",
         "url": "https://github.com/Deva-1903/Tinder-Clone",
         "stack": "MERN · Socket.io",
@@ -318,6 +340,18 @@
   "misc": {
     "title": "updates",
     "items": [
+      {
+        "date": "Aug 2026",
+        "description": "Went low-level for inference: hand-wrote INT8/INT4 quantized GEMM kernels on Apple Silicon (ARM NEON sdot) - 394 GFLOP/s, 132× over naive fp32, with GGUF-style INT4 block quantization and roofline analysis.",
+        "url": "https://github.com/Deva-1903/neon-quantized-gemm",
+        "linkText": "neon-quantized-gemm"
+      },
+      {
+        "date": "Aug 2026",
+        "description": "Built and benchmarked two Go systems: a server-provisioning control plane (~19,700 provisions/min across 2,500+ simulated servers, failure detection in 19s) and a multi-tenant GPU scheduler (weighted DRF, p50 11 ms scheduling latency on a simulated 32-GPU fleet).",
+        "url": "https://github.com/Deva-1903/gpu-scheduler",
+        "linkText": "gpu-scheduler"
+      },
       {
         "date": "Jul 2026",
         "description": "Started as Founding Software Engineer Intern at TherAlign Health, building an AI clinical decision support platform that prevents prior authorization (MIT Hacking Medicine GrandHack winner).",
