@@ -33,23 +33,46 @@
       }
     ]
   },
+  "plain": {
+    "intro": "I work on ML systems, inference engineering, and AI safety.",
+    "about": [
+      "Currently an MS CS student at <a href=\"https://www.umass.edu/\">UMass Amherst</a> (2025 - May 2027).",
+      "Graduate Research Assistant at the <a href=\"https://cultureandmorality.org/\">Culture and Morality Lab</a>, where I'm the sole engineer on its research platform and website.",
+      "Previously a Founding Software Engineer Intern at TherAlign Health, and a backend engineer at Wysa, building an NHS eTriage backend used by 8+ UK clinical clients.",
+      "Spend my time on AI safety, mechanistic interpretability, and ML systems: batching, KV-cache management, memory optimization, and model serving.",
+      "Lives in Amherst, MA.",
+      "Open to full-time SDE, ML, and AI roles starting May 2027."
+    ],
+    "contact": "You can reach me at <a href=\"mailto:devaanand@umass.edu\">devaanand@umass.edu</a>. Design inspired by <a href=\"https://nat.org/\">Nat Friedman</a> and <a href=\"https://pratikratadiya.in/\">Pratik Ratadiya</a>."
+  },
   "info": {
     "lastUpdated": "2026-09-24"
   },
   "about": {
     "title": "about me",
     "paragraphs": [
-      "I'm an MS CS student at UMass Amherst. I've spent a lot of time in <span class=\"highlight\">ML Systems</span> and Backend Engineering, obsessing over how to make models run faster and cheaper.",
-      "These days I'm focused on two things. <span class=\"highlight\">AI Safety</span> and <span class=\"highlight\">Mechanistic Interpretability</span>: understanding how these black boxes actually \"think\" and where their safety properties actually live. And <span class=\"highlight\">Inference Engineering</span>: the systems side of serving models well, from kernels and memory layout to batching, KV cache, and everything that happens between a request landing and a token coming back. To me they're the same problem: open the box, see what's really going on.",
-      "I'm open to <span class=\"highlight\">full-time roles starting May 2027</span> (and Fall 2026 co-ops), and always up for chatting about Safety, Interpretability, Inference, or ML Systems. Hit me up at: <a href=\"mailto:devaanand@umass.edu\">devaanand@umass.edu</a>"
+      "I’m an M.S. Computer Science student at UMass Amherst, focused on <span class=\"highlight\">AI Safety, Mechanistic Interpretability, and ML Systems</span>.",
+      "My work spans understanding how safety-relevant behaviors emerge inside language models and building efficient inference systems, including batching, KV-cache management, memory optimization, and model serving.",
+      "I’m open to <span class=\"highlight\">full-time roles starting May 2027</span> across <span class=\"highlight\">Software Engineering (SDE), ML Engineering, and AI</span>, including ML Systems, Inference Engineering, AI Safety, and Research Engineering.",
+      "<a href=\"mailto:devaanand@umass.edu\">devaanand@umass.edu</a>"
     ]
   },
   "history": {
     "entries": [
       {
-        "timespan": "2025 - 2027",
+        "timespan": "2025 - May 2027",
+        "type": "education",
         "logo": "https://upload.wikimedia.org/wikipedia/commons/2/23/UMass_Amherst_athletics_logo.svg",
-        "description": "Pursuing my <strong>Master of Science in Computer Science</strong> at the University of Massachusetts Amherst, trying to turn my obsession with ML systems into useful research and real-world impact.",
+        "role": "M.S. in Computer Science",
+        "org": "University of Massachusetts Amherst",
+        "summary": "Graduate coursework across ML, NLP, performance engineering, optimization, and AI alignment.",
+        "skills": [
+          "Machine Learning",
+          "NLP",
+          "Performance Engineering",
+          "AI Alignment",
+          "Computer Vision"
+        ],
         "coursework": [
           {
             "semester": "fall 2025",
@@ -131,37 +154,127 @@
               }
             ]
           }
+        ],
+        "note": "GPA 3.46"
+      },
+      {
+        "timespan": "Jul 2026 - Present",
+        "logo": "./assets/caml_logo.png",
+        "role": "Graduate Research Assistant",
+        "org": "Culture and Morality Lab, UMass Amherst",
+        "orgUrl": "https://cultureandmorality.org/",
+        "note": "Advisor: Mohammad Atari",
+        "summary": "Sole engineer on the lab's CCR text-analysis platform (<a href=\"https://psychologicaltextanalysis.com/\">link</a>), turning a published NLP method into a self-serve research tool, and on the lab's public website (<a href=\"https://cultureandmorality.org/\">link</a>).",
+        "skills": [
+          "Python",
+          "FastAPI",
+          "PostgreSQL",
+          "React",
+          "Next.js",
+          "TypeScript",
+          "sentence-transformers",
+          "Cloudflare Workers"
+        ],
+        "bullets": [
+          "Built and shipped the lab’s CCR text-analysis platform to <strong>production</strong> as sole engineer, turning a published NLP method into a self-serve research tool.",
+          "Built and shipped the lab’s public website as sole developer (Next.js 16, React 19, TypeScript), statically generated from typed content-as-code with build-time validation, live on <strong>Cloudflare Workers</strong>.",
+          "Designed a YAML model registry as the single source of model truth (CCR reference model plus multilingual embeddings, with automatic language-coverage warnings).",
+          "Built a versioned, append-only construct library with <strong>SHA-256 item hashing</strong> and immutable per-run snapshots.",
+          "Added structured data-quality warnings with deterministic language detection, and per-run reproducibility exports that regenerate any analysis offline.",
+          "Wrote a hermetic test suite that runs the full pipeline in <strong>~1 second</strong> via a deterministic fake-embedding backend."
         ]
       },
       {
-        "timespan": "2026 - present",
+        "timespan": "Jul 2026 - Sep 2026",
         "logo": "./assets/theralign.jpeg",
-        "description": "<strong>Founding Software Engineer Intern at TherAlign Health</strong> (remote). Building the core of an AI clinical decision support product that <strong>prevents prior authorization</strong> by surfacing covered, comparably-effective drug alternatives at the point of prescribing (MIT Hacking Medicine GrandHack, 1st place).<br /><br />Owned the <strong>evidence engine</strong>: a causal-inference comparative-effectiveness pipeline (target-trial emulation, propensity-score overlap weighting, doubly-robust estimation) that measures how alternatives compare on baseline-adjusted 6-month blood-pressure outcomes, with confidence tiering and honest abstention when the data can't support a call - effectiveness is always measured statistically, never generated by an LLM. Turned it into an online decision service that runs safety and eligibility gates then ranks the alternatives, integrated real, dated public payer formulary data (Da Vinci PDex) with honest coverage unknowns, and connected the provider-facing SMART-on-FHIR sidecar (Next.js) to it. Prototype on roughly 9,800 synthetic (Synthea) patients, illustrative rather than clinically validated. Stack: Python (statsmodels), Next.js, SMART on FHIR, FHIR R4."
+        "role": "Founding Software Engineer Intern",
+        "org": "TherAlign Health",
+        "note": "Remote",
+        "summary": "Built AI clinical decision support that prevents prior authorization by surfacing covered, comparably-effective drug alternatives at the point of prescribing (MIT Hacking Medicine GrandHack, 1st place).",
+        "skills": [
+          "Python",
+          "pandas",
+          "scikit-learn",
+          "statsmodels",
+          "FHIR R4",
+          "Next.js",
+          "SMART on FHIR"
+        ],
+        "bullets": [
+          "Built the online decision service end to end in a two-plane architecture (offline evidence factory to versioned registry, online retrieve/abstain/rank), with the <strong>LLM confined to extraction and explanation</strong> while safety verdicts stay deterministic.",
+          "Shipped an <strong>end-to-end product slice</strong> on synthetic (Synthea) data, from drug normalization and coverage/prior-auth checks through ranking or abstention, plus the browser sidecar UI with a pane explaining each recommendation."
+        ]
       },
       {
-        "timespan": "2026 - present",
-        "logo": "./assets/caml_logo.png",
-        "description": "<strong>Graduate Research Assistant at the Culture and Morality Lab</strong> (PI: Dr. Mohammad Atari), UMass Amherst Psychological and Brain Sciences. Sole engineer on the lab's <strong>CCR (Contextualized Construct Representations)</strong> platform, live at <a href=\"https://psychologicaltextanalysis.com\">psychologicaltextanalysis.com</a> - turning the lab's published NLP text-measurement method into a self-serve web tool researchers use to score a text corpus against validated psychological constructs. Hired off a working prototype I built before the interview.<br /><br />Designed a YAML model registry as the single source of model truth (the CCR reference model plus multilingual embeddings, with automatic language-coverage warnings), a versioned append-only construct library backed by SHA-256 item hashing and immutable per-run snapshots, a structured data-quality warning system with deterministic language detection, and per-run reproducibility exports that regenerate any analysis offline. Backed by a hermetic test suite that runs the full pipeline in about a second via a deterministic fake-embedding backend. Stack: Python, FastAPI, SQLAlchemy, sentence-transformers, React + Vite, Docker."
-      },
-      {
-        "timespan": "2023 - 2025",
+        "timespan": "Jul 2023 - Jul 2025",
         "logo": "https://images.squarespace-cdn.com/content/v1/587b44e1d1758e3ceffe18c6/1596580033188-H1B3JYJN0ZMPFA19BFP7/wysa+logo.png",
-        "description": "<strong>Backend Engineer at Wysa</strong>. Built and scaled a multi-tenant NHS eTriage backend serving <strong>8+ UK clinical clients</strong>, processing <strong>10,000+ monthly triage submissions</strong> and contributing to <strong>$340K+ in revenue</strong>, integrated with Mayden’s iaptus platform via REST APIs.<br /><br />Architected a full-stack ML training-data annotation tool from scratch for the AI team, replacing spreadsheet-based workflows and saving <strong>100+ hours of manual work per month</strong> while improving annotation throughput by <strong>60%</strong>. Also remediated <strong>20+ vulnerabilities</strong> from VAPT reports, hardening authentication, rate limiting, and audit logging."
+        "role": "Backend Engineer",
+        "org": "Wysa",
+        "summary": "Engineered a multi-tenant NHS eTriage backend for <strong>8+ UK clinical clients</strong>, contributing to <strong>$340K+</strong> in annual revenue.",
+        "skills": [
+          "Node.js",
+          "Express",
+          "MongoDB",
+          "React",
+          "REST APIs",
+          "AWS KMS"
+        ],
+        "bullets": [
+          "Processed <strong>10,000+ monthly triage submissions</strong> via Mayden iaptus REST integrations.",
+          "Architected a full-stack ML training-data annotation platform used daily by the AI team, cutting manual annotation by <strong>100+ hours/month</strong> and lifting labeling throughput by <strong>60%</strong>.",
+          "Owned backend security and reliability: <strong>AWS KMS</strong> encryption for clinical PII, hardened authentication and rate limiting, and remediated <strong>20+ VAPT findings</strong> with regression-tested fixes.",
+          "Released the multi-tenant backend to 8+ UK clients with <strong>zero downtime</strong> through ALB-fronted rolling deployments, shipping tenant-specific fixes during live client integrations."
+        ],
+        "note": "Bengaluru, India"
       },
       {
         "timespan": "2022 - 2023",
         "logo": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
-        "description": "<strong>Open Source Contributor & Freelancer</strong>. Developed a full-featured gym website and management system using the MERN stack, with authentication, membership management, and payment flows that streamlined day-to-day operations.<br /><br />Automated payment-triggered email notifications and periodic background jobs, cutting the client’s manual workload significantly. Contributed to multiple open-source projects (like LinkFree, FreeHit, and ProjectsHut), adding new features and improving both backend and frontend codebases."
+        "role": "Open Source Contributor & Freelancer",
+        "org": "",
+        "summary": "Built a full-featured gym website and management system for a client, and contributed to open-source projects.",
+        "skills": [
+          "MongoDB",
+          "Express",
+          "React",
+          "Node.js",
+          "Background Jobs",
+          "Payments"
+        ],
+        "bullets": [
+          "Built a MERN gym management system with authentication, membership management, and payment flows.",
+          "Automated payment-triggered email notifications and periodic background jobs, cutting the client’s manual workload.",
+          "Contributed features and fixes to open-source projects including LinkFree, FreeHit, and ProjectsHut."
+        ]
       },
       {
-        "timespan": "2022 - 2023",
+        "timespan": "Nov 2022 - May 2023",
         "logo": "./assets/cario.jpg",
-        "description": "<strong>Backend Developer Intern at Cario Growth Services Pvt. Ltd.</strong> Built and maintained over 20 API endpoints in Node.js and Fastify, with solid database integrations for the core product.<br /><br />Integrated LLMs to power an auto-commenting feature, improving the contextual quality of responses in chat. Helped migrate core services to Fastify and gradually move codebases from JavaScript to TypeScript, improving maintainability and type safety."
+        "role": "Backend Developer Intern",
+        "org": "Cario Growth Services",
+        "summary": "Shipped an LLM auto-commenting feature to production and built backend APIs for the core product.",
+        "skills": [
+          "Node.js",
+          "Fastify",
+          "PostgreSQL",
+          "TypeScript",
+          "llama.cpp"
+        ],
+        "bullets": [
+          "Shipped an LLM auto-commenting feature end to end using <strong>4-bit quantized Llama-7B via llama.cpp</strong>, with persona prompts, async queued generation, rate limits, and a content-safety filter, with no ML mentor on the team.",
+          "Built and maintained <strong>20+ API endpoints</strong> in Node.js and Fastify, with database integrations for the core product.",
+          "Helped migrate core services to Fastify and move codebases from JavaScript to TypeScript."
+        ],
+        "note": "Chennai, India"
       },
       {
         "timespan": "2019 - 2023",
+        "type": "education",
         "logo": "https://upload.wikimedia.org/wikipedia/en/6/60/Vels_University_logo.png",
-        "description": "<strong>B.E. in Computer Science and Engineering</strong> at Vels Institute of Science, Technology and Advanced Studies, Chennai. This is where I properly fell in love with CS from ML and AI to Distributed and Cloud Computing and decided to double down on systems and ML as my long-term path."
+        "role": "B.E. in Computer Science and Engineering",
+        "org": "Vels Institute of Science, Technology and Advanced Studies",
+        "note": "Chennai, India",
+        "summary": "Where I fell in love with CS, from ML and AI to distributed and cloud computing, and decided to double down on systems and ML."
       }
     ]
   },
@@ -197,156 +310,316 @@
   },
   "projects": {
     "title": "projects",
+    "categories": [
+      {
+        "id": "research",
+        "label": "AI Safety & Research"
+      },
+      {
+        "id": "inference",
+        "label": "Inference & Performance"
+      },
+      {
+        "id": "infra",
+        "label": "Infrastructure & Distributed Systems"
+      },
+      {
+        "id": "llm-apps",
+        "label": "LLM Apps & RAG"
+      },
+      {
+        "id": "fullstack",
+        "label": "Full-stack Products"
+      }
+    ],
     "items": [
       {
         "order": 1,
         "name": "Refusal Decay",
+        "category": "research",
         "url": "https://github.com/Deva-1903/refusal-decay",
         "stack": "Python · PyTorch · Hugging Face · Llama-3.1-8B-Instruct",
+        "summary": "A mechanistic interpretability study of how prefilling attacks weaken refusal in a safety-aligned LLM (CS 602, graded full marks).",
+        "highlights": [
+          "Extracted the refusal direction via difference-in-means and traced its residual-stream projection per layer and token.",
+          "Ran causal interventions (cross-condition patching, additive injection) with PyTorch forward hooks.",
+          "Refusal dropped 0.92 → 0.32 at k=3, but neither intervention restored it (0/300): the late-layer signal is a readout, not the causal lever."
+        ],
         "description": "is a mechanistic interpretability study (CS 602, graded full marks) of how prefilling attacks weaken refusal in a safety-aligned LLM. Extracts the refusal direction via difference-in-means on a held-out set, traces its residual-stream projection per layer/token, and runs causal interventions (cross-condition patching + additive injection) via PyTorch forward hooks. Behavioral refusal drops 0.92 → 0.32 at k=3, the late-layer signal shifts monotone-by-depth, but both interventions fail to restore refusal (0/300): a clean null showing the late-layer signal is a readout, not the causal lever.",
         "report": "https://github.com/Deva-1903/refusal-decay/blob/main/reports/08-final-paper.pdf"
       },
       {
         "order": 2,
         "name": "align-ops",
+        "category": "inference",
         "stack": "PyTorch · TRL (SFT/DPO/GRPO) · QLoRA · vLLM · FastAPI · Redis · Prometheus/Grafana",
+        "summary": "An end-to-end LLM post-training and serving stack.",
+        "highlights": [
+          "Took Qwen2.5-1.5B-Instruct through SFT, DPO, and GRPO with QLoRA (1.4% of parameters, 15.8 GB peak GPU).",
+          "Held-out accuracy 54% → 72%, format compliance 82% → 96%, and a 71% preference win-rate over the base model.",
+          "Serving: FastAPI gateway with Redis caching and async micro-batching in front of vLLM: 520 tok/s at 24 concurrent requests, 640 ms p95 time-to-first-token.",
+          "1.9× throughput (GPU utilization 52% → 84%), monitored with Prometheus + Grafana."
+        ],
         "description": "is an end-to-end LLM post-training and serving stack. It takes Qwen2.5-1.5B-Instruct through supervised fine-tuning, DPO, and GRPO with QLoRA (tuning 1.4% of parameters at 15.8 GB peak GPU), lifting held-out task accuracy 54% → 72%, format compliance 82% → 96%, and a 71% preference win-rate over the base model across 500 eval prompts. The serving layer puts a FastAPI gateway with Redis caching and async micro-batching in front of vLLM - 520 tok/s across 24 concurrent requests, 640 ms p95 time-to-first-token, and 1.9× throughput (GPU utilization 52% → 84%), instrumented with Prometheus + Grafana."
       },
       {
         "name": "NEON Quantized GEMM",
+        "category": "inference",
         "url": "https://github.com/Deva-1903/neon-quantized-gemm",
         "stack": "C++17 · ARM NEON (sdot) · INT8/INT4 quantization",
+        "summary": "A from-scratch study of quantized matrix-multiply kernels on Apple Silicon.",
+        "highlights": [
+          "Went from a 3 GFLOP/s fp32 baseline to a 394 GFLOP/s int8 micro-kernel (132× faster, ~2.5× over compiler auto-vectorization) with ARM NEON sdot.",
+          "Added GGUF-style INT4 block quantization: 6.4× smaller weights than fp32.",
+          "Roofline analysis found and broke a memory-bandwidth ceiling (~4× less memory traffic).",
+          "Bit-exact verification against a scalar reference, plus p50/p99/p999 latency measurement."
+        ],
         "description": "is a from-scratch study of quantized matmul kernels on Apple Silicon: from a naive fp32 baseline at 3 GFLOP/s to a 4x4 register-blocked int8 micro-kernel at 394 GFLOP/s - a 132× speedup and ~2.5× over compiler auto-vectorization - via ARM NEON sdot intrinsics. Adds GGUF-style INT4 block quantization (6.4× smaller weights than fp32), SNR analysis showing per-channel scaling contains weight outliers per-tensor scaling can't (40 vs 19 dB), roofline analysis that diagnosed and broke a shared memory-bandwidth ceiling (~4× less memory traffic), bit-exact verification against a scalar reference, and p50/p99/p999 tail-latency methodology.",
         "order": 3
       },
       {
         "name": "Provisioning Platform",
+        "category": "infra",
         "url": "https://github.com/Deva-1903/provisioning-platform",
         "stack": "Go · gRPC · PostgreSQL · Redis · Prometheus · Docker",
+        "summary": "A server-provisioning control plane in Go, with REST + gRPC over one service layer.",
+        "highlights": [
+          "~19,700 provisions/min across 2,500+ simulated servers at 300 concurrent operations.",
+          "Redis-TTL heartbeats detect silently failed servers in 19s with zero false positives.",
+          "Async workflow engine drove 5,250 operations to 100% eventual success through a 3% injected failure rate.",
+          "Idempotent workflows, three-role RBAC, a transactional audit log, and race-tested CI against real Postgres and Redis."
+        ],
         "description": "is a server-provisioning control plane in Go: REST + gRPC over one service layer, idempotent workflows, three-role RBAC, and a transactional audit log. Benchmarked at ~19,700 provisions/min across 2,500+ simulated servers at 300 concurrent ops; Redis-TTL heartbeat liveness (500/s sustained over gRPC) detects silently failed servers in 19s with zero false positives, and an async workflow engine (FOR UPDATE SKIP LOCKED claims, capped backoff + jitter) drove 5,250 operations to 100% eventual success through a 3% injected failure rate. CI runs go test -race against real Postgres and Redis containers.",
         "order": 4
       },
       {
         "name": "GPU Scheduler",
+        "category": "infra",
         "url": "https://github.com/Deva-1903/gpu-scheduler",
         "stack": "Go · Python · PostgreSQL · Redis · Kubernetes",
+        "summary": "A multi-tenant GPU scheduler with weighted Dominant Resource Fairness and best-fit bin-packing.",
+        "highlights": [
+          "542 jobs/min under a 500-job flood on a simulated 32-GPU fleet, keeping every tenant within ~1 GPU of its fair share.",
+          "p50 11 ms / p95 66 ms scheduling latency at ~75% utilization.",
+          "Tuned preemption by measurement: 688 preemptions down to 4 on the same workload.",
+          "Crash recovery from PostgreSQL with at-least-once requeueing, plus a Kubernetes executor mode."
+        ],
         "description": "is a multi-tenant compute scheduler with weighted Dominant Resource Fairness and GPU-aware best-fit bin-packing. On a simulated 32-GPU fleet it sustains 542 succeeded jobs/min under a 500-job flood while holding every backlogged tenant within ~1 GPU of its weight-ideal share, at p50 11 ms / p95 66 ms scheduling latency and ~75% utilization. Preemption was tuned by measurement (an unrestricted threshold caused 688 preemptions at p95 15 s; restricting to an urgent band cut the identical workload to 4 at p95 66 ms), and crash recovery reloads queued jobs from PostgreSQL and requeues running work (at-least-once). Includes a Kubernetes executor mode (implemented; benchmarks ran on the sim executor).",
         "order": 5
       },
       {
         "order": 6,
         "name": "CS 690PF - Performance Engineering (SIMD + Cache Matmul)",
+        "category": "inference",
         "url": "https://github.com/Deva-1903/cs690pf",
         "stack": "C++ · AVX intrinsics · OpenMP · perf · Cachegrind",
+        "summary": "My consolidated Performance Engineering coursework (CS 690PF).",
+        "highlights": [
+          "Hand-tuned matmul: loop reordering, unrolling, blocking, AVX SIMD (__m256), cache-aware tiling, and OpenMP.",
+          "Profiled with perf, perf c2c, Cachegrind, and TMA.",
+          "Reproduced Coz causal profiling, allocator false-sharing (Hoard vs ptmalloc2/jemalloc/mimalloc), and measurement-bias experiments."
+        ],
         "description": "is my consolidated CS 690PF (Performance Engineering) coursework: hand-tuned matmul (loop reorder/unroll/blocking, manual AVX SIMD via __m256, cache-aware tiling with hardware-tuned Kc/Mc/Nc + Mr/Nr micro-kernels, OpenMP multithreading), profiled with perf, perf c2c, Cachegrind, and TMA. Also reproduces Coz causal profiling, Hoard vs ptmalloc2/jemalloc/mimalloc false-sharing, and Mytkowicz measurement-bias experiments."
       },
       {
         "order": 7,
         "name": "NGVI Curvature vs Variance",
+        "category": "research",
         "url": "https://github.com/Deva-1903/ngvi-curvature-variance",
         "stack": "Python · PyTorch · NumPy · matplotlib",
+        "summary": "A team research project (CS 651) on when natural-gradient VI beats Adam on ill-conditioned posteriors.",
+        "highlights": [
+          "Compared Adam, closed-form NGVI, and EMA Diagonal-Fisher at matched compute, with mean-field and low-rank Gaussian families.",
+          "NGVI's advantage grows with curvature (+0.28 nats at κ≈180, +2.32 at κ≈2566).",
+          "Cutting gradient variance ~10× didn't help Adam: ill-conditioning, not noise, was the bottleneck."
+        ],
         "description": "is a CS 651 optimization research project (team) asking when natural-gradient VI actually beats Adam on ill-conditioned posteriors. Matched-compute black-box VI with mean-field + LRD Gaussian families and three optimizers (Adam / closed-form NGVI / EMA Diagonal-Fisher). NGVI's ELBO gain over Adam grows with curvature (κ≈180 → +0.28 nats; κ≈2566 → +2.32); antithetic sampling cut gradient variance ~10× but couldn't lift Adam off ill-conditioned plateaus, showing that ill-conditioning, not noise, was the binding constraint."
       },
       {
         "order": 8,
         "name": "CCR Platform",
+        "category": "llm-apps",
         "demo": "https://devaanand-ccr-platform.hf.space",
         "url": "https://github.com/Deva-1903/ccr-platform",
         "stack": "FastAPI · React · sentence-transformers · SQLite · Docker · HF Spaces",
+        "summary": "A full-stack platform for CCR psychological text analysis: upload a corpus, pick a validated construct, and get item loadings and exports.",
+        "highlights": [
+          "Embeds items and texts with sentence-transformers and scores them by cosine similarity.",
+          "Every run records its model version, item hash, and package versions for reproducibility.",
+          "Hardened ingestion, a DB-backed job queue with orphaned-job recovery, and 17 end-to-end tests that run in ~1s."
+        ],
         "description": "is a full-stack platform for CCR (Contextualized Construct Representations) psychological text analysis: upload a corpus, pick a validated construct, embed items + texts with sentence-transformers, and get per-item cosine-similarity loadings, distributions, and CSV export with a per-run reproducibility record (model version, item hash, package versions). Hardened ingestion (encoding fallback, delimiter sniffing, row/size caps), DB-backed job queue with orphaned-job recovery, and 17 end-to-end tests running in ~1s via a deterministic fake embedding backend."
       },
       {
         "order": 9,
         "name": "AgenticSearch",
+        "category": "llm-apps",
         "demo": "https://agentic-search-negglszkwa-uc.a.run.app",
         "url": "https://github.com/Deva-1903/ciir_agentic_search",
         "stack": "Python · FastAPI · OpenAI · Brave Search · SQLite",
+        "summary": "A provenance-first entity discovery system: a topic query in, a ranked table of real-world entities out, with evidence for every cell.",
+        "highlights": [
+          "Each cell carries its source URL, snippet, and confidence score.",
+          "Multi-stage pipeline: retrieval planning, page reranking, evidence classification, deterministic extraction with LLM fallback, and verification.",
+          "150+ automated tests and provider fallback across LLM backends."
+        ],
         "description": "is a provenance-first entity discovery system: takes a free-text topic query and returns a ranked table of real-world entities with per-cell evidence - source URL, snippet, and confidence score - across a multi-stage pipeline covering typed retrieval planning, page rerank, evidence-regime classification, deterministic extraction with LLM fallback, and output verification. Hardened with 150+ automated tests, provider routing/fallback across LLM backends, and a reviewer-facing trust UI."
       },
       {
         "order": 10,
         "name": "AI Research Scout",
+        "category": "llm-apps",
         "demo": "https://cf-ai-research-scout.pages.dev",
         "stack": "Cloudflare Workers · Hono · Workers AI · D1 · React 19",
+        "summary": "A RAG research assistant on Cloudflare that answers only from the pages you give it.",
+        "highlights": [
+          "Fetches each URL, strips HTML, chunks, and embeds with bge-base-en-v1.5 into D1.",
+          "Answers via cosine-similarity retrieval over what it actually read.",
+          "Streams chat over WebSockets, with history stored in Durable Objects."
+        ],
         "description": "is a RAG-based research assistant on Cloudflare: paste URLs, it fetches each page, strips HTML, chunks and embeds with bge-base-en-v1.5, stores everything in D1, and answers your questions via cosine similarity retrieval - using only what it actually read. Chat streams over WebSockets via AIChatAgent with history persisted in Durable Object storage."
       },
       {
         "order": 11,
         "name": "Knowledge-Graph-Guided RAG",
+        "category": "llm-apps",
         "url": "https://github.com/Deva-1903/kg-rag",
         "stack": "Python · Ollama · sentence-transformers · llama-index · spaCy",
+        "summary": "A team-built knowledge-graph-guided RAG pipeline for multi-hop QA on HotpotQA (CS 685).",
+        "highlights": [
+          "I led multi-view retrieval: sub-question decomposition, per-view dense retrieval, RRF fusion, cross-encoder reranking, and MMR.",
+          "Lifted supporting-fact recall +2.68% (54.53 → 57.21) over the KG²RAG baseline on 4,905 questions."
+        ],
         "description": "is a team-built KG-guided RAG pipeline for multi-hop QA on HotpotQA (CS 685). I led the multi-view retrieval component (query-side decomposition into sub-questions, per-view dense retrieval, and RRF fusion + cross-encoder reranking + MMR), which lifted supporting-fact recall +2.68% (54.53 → 57.21) over the KG²RAG baseline on a 4,905-question evaluation. Teammates added a 0–1 knapsack token-budget selector and KG construction/reasoning.",
         "report": "https://drive.google.com/file/d/1Bzk-WegUimQPsZd7vdcGZ_fKJ91i-BvS/view?usp=sharing"
       },
       {
         "order": 12,
         "name": "Spark ETL Optimization",
+        "category": "infra",
         "url": "https://github.com/Deva-1903/Spark-ETL-Optimization",
         "stack": "Apache Spark · PySpark · Python",
+        "summary": "A performance deep-dive on the NYC taxi dataset (~1.4B records).",
+        "highlights": [
+          "Cut end-to-end ETL runtime ~25% (17–19 min → 14.3 min).",
+          "Broadcast joins collapsed shuffle stages from minutes to ~0.05s.",
+          "Tail-latency ratio (P99/P50) down from 2.14× to 1.74× using AQE, skew handling, column pruning, and partitioning."
+        ],
         "description": "is a performance deep-dive on the NYC TLC taxi dataset (~1.4B records) that cuts end-to-end ETL runtime ~25% (17–19 min → 14.3 min) and drops the analytics P99/P50 tail-latency ratio 2.14× → 1.74×. Broadcast joins over the ~265-zone lookup collapse shuffle stages (minutes → ~0.05s); AQE, skew-join handling, schema-aware batched reads, column pruning, year/month partitioning + Snappy, and pre-computed derived fields do the rest. Documented as a repeatable optimization playbook (naive vs tuned)."
       },
       {
         "order": 13,
         "name": "TasteGraph",
+        "category": "fullstack",
         "url": "https://github.com/Deva-1903/TasteGraph",
         "stack": "Next.js · tRPC · Prisma · PostgreSQL",
+        "summary": "A cross-media taste-mapping app: log films, books, music, food, places, and ideas to build a taste fingerprint.",
+        "highlights": [
+          "Discover people through overlap stories and rare shared tastes."
+        ],
         "description": "is a production-grade cross-media identity mapping MVP where users log films, books, music, food, places, and ideas to generate a taste fingerprint and discover people through overlap stories and rare shared tastes."
       },
       {
         "order": 14,
         "name": "AutoEval",
+        "category": "llm-apps",
         "url": "https://github.com/Deva-1903/AutoEval",
         "stack": "Python · IR eval tooling · Git automation",
+        "summary": "An agent that improves retrieval evaluation sets.",
+        "highlights": [
+          "Proposes new queries and labels, and accepts only changes that improve how well the eval separates reference systems.",
+          "Guardrails against gaming the metric: schema checks, duplicate rejection, and a read-only holdout.",
+          "Accepted updates are Git-backed with report cards, so the workflow is auditable."
+        ],
         "description": "is a retrieval evaluation improvement agent that iteratively proposes new queries and labels, scores them against multiple reference systems, and accepts only updates that improve discriminative power on a holdout-heavy fitness objective. Anti-Goodharting guardrails - schema checks, duplicate rejection, read-only holdout protection - and Git-backed accepted updates with report cards keep the eval workflow auditable and reproducible."
       },
       {
         "order": 15,
         "name": "Spend - AI Expense Tracker",
+        "category": "fullstack",
         "url": "https://github.com/Deva-1903/Expense-Tracker",
         "stack": "React · FastAPI · Supabase · OpenAI",
+        "summary": "A personal finance tool that turns natural-language input like ‘chipotle $14’ into structured expenses.",
+        "highlights": [
+          "Income tracking, monthly budgets, and recurring bills."
+        ],
         "description": "is a zero-friction personal finance tool that uses AI to parse natural language inputs (e.g., ‘chipotle $14’) into structured expenses, featuring income tracking, monthly budgets, and recurring bills."
       },
       {
         "order": 16,
         "name": "ReferralFinder",
+        "category": "fullstack",
         "url": "https://github.com/Deva-1903/ReferralFinder",
         "stack": "Next.js · OpenAI · Supabase · TypeScript",
+        "summary": "A SaaS platform that helps students, especially international students in the US, run their job search.",
+        "highlights": [
+          "Prioritizes jobs and estimates sponsorship likelihood.",
+          "Tailors ATS-friendly applications and generates referral outreach, without scraping or automating LinkedIn."
+        ],
         "description": "is a production-ready SaaS platform that helps students, especially international students in the US, prioritize jobs, estimate sponsorship likelihood, tailor ATS-friendly applications, and generate referral outreach workflows without scraping or automating LinkedIn."
       },
       {
         "order": 17,
         "name": "Team Sonare - Sign ↔ Speech (Offline)",
+        "category": "fullstack",
         "url": "https://github.com/Deva-1903/Qualcomm-Sep25-Team-Sonare",
         "stack": "Electron · React · FastAPI · MediaPipe · whisper.cpp",
+        "summary": "A fully offline, privacy-preserving sign-language ↔ speech translator built at the Qualcomm Hackathon 2025.",
+        "highlights": [
+          "Runs the whole pipeline on edge devices: MediaPipe gesture tracking, whisper.cpp, and a FastAPI backend behind an Electron + React UI."
+        ],
         "description": "is a fully offline, privacy-preserving Sign ↔ Speech translator built for the Qualcomm Hackathon 2025 with Team Sonare, using an Electron + React UI, MediaPipe gesture tracking, a FastAPI backend, and whisper.cpp to run the entire pipeline locally on edge devices."
       },
       {
         "order": 18,
         "name": "Underdogs Fitness Platform",
+        "category": "fullstack",
         "url": "https://github.com/Deva-1903/backend_underdogs",
         "demo": "https://www.underdogsfitness.in/",
         "stack": "Node.js · Express · MongoDB · React · Redux",
+        "summary": "A full-stack gym management platform I built solo in ~1.5 months, live for a real client for 3+ years.",
+        "highlights": [
+          "Auth, memberships, attendance, Stripe plus manual-cash payments, and automated renewals.",
+          "Multi-branch from day 1: a second branch was onboarded as a config change, with zero schema migration.",
+          "90%+ of payments moved through the portal, cutting the client's manual workload by 70%."
+        ],
         "description": "is a full-stack gym management platform I built solo end-to-end in ~1.5 months and shipped to a real client - live 3+ years and still running. Auth, membership + attendance, Stripe + admin manual-cash with a partial-payment ledger, cron-driven renewal automation, and multi-branch from day 1 (every entity scoped by branchId, JWT-claim auth). When the client opened a 2nd branch a year later, onboarded it as a config change with zero schema migration. 90%+ of payments moved through the portal; 70% cut in the client's manual workload."
       },
       {
         "order": 19,
         "name": "Alzheimer’s Disease Classification",
+        "category": "research",
         "url": "https://github.com/Deva-1903/Alzheimer-s-Disease-Classification-",
         "stack": "Python · TensorFlow · Keras · Transfer Learning",
+        "summary": "A deep learning project classifying Alzheimer's disease from medical imaging; my undergrad capstone.",
+        "highlights": [
+          "Explored architectures, training setups, and evaluation metrics.",
+          "Later published at an IEEE conference."
+        ],
         "description": "is a deep learning project for classifying Alzheimer’s disease from medical imaging, exploring different architectures, training setups, and evaluation metrics as part of my undergrad capstone project, which was later published in an IEEE conference."
       },
       {
         "order": 20,
         "name": "Goalsetter App",
+        "category": "fullstack",
         "url": "https://github.com/Deva-1903/Goalsetter-app",
         "stack": "MERN · Redux",
+        "summary": "A MERN + Redux app for setting and tracking personal goals.",
+        "highlights": [
+          "Authentication, CRUD workflows, and a simple dashboard."
+        ],
         "description": "is a MERN + Redux app for setting, tracking, and managing personal goals, featuring authentication, CRUD workflows, and a simple dashboard to keep long-term goals organized."
       },
       {
         "order": 21,
         "name": "Tinder Clone",
+        "category": "fullstack",
         "url": "https://github.com/Deva-1903/Tinder-Clone",
         "stack": "MERN · Socket.io",
+        "summary": "A Tinder-inspired MERN clone.",
+        "highlights": [
+          "Swipe interactions, matchmaking logic, and real-time updates with Socket.io."
+        ],
         "description": "is a Tinder-inspired MERN stack clone that experiments with swipe-style interactions, matchmaking logic, and real-time updates using a modern React + Node.js setup."
       }
     ]
@@ -366,76 +639,28 @@
     "title": "updates",
     "items": [
       {
-        "date": "Aug 2026",
-        "description": "Went low-level for inference: hand-wrote INT8/INT4 quantized GEMM kernels on Apple Silicon (ARM NEON sdot) - 394 GFLOP/s, 132× over naive fp32, with GGUF-style INT4 block quantization and roofline analysis.",
-        "url": "https://github.com/Deva-1903/neon-quantized-gemm",
-        "linkText": "neon-quantized-gemm"
-      },
-      {
-        "date": "Aug 2026",
-        "description": "Built and benchmarked two Go systems: a server-provisioning control plane (~19,700 provisions/min across 2,500+ simulated servers, failure detection in 19s) and a multi-tenant GPU scheduler (weighted DRF, p50 11 ms scheduling latency on a simulated 32-GPU fleet).",
-        "url": "https://github.com/Deva-1903/gpu-scheduler",
-        "linkText": "gpu-scheduler"
-      },
-      {
         "date": "Jul 2026",
-        "description": "Started as Founding Software Engineer Intern at TherAlign Health, building an AI clinical decision support platform that prevents prior authorization (MIT Hacking Medicine GrandHack winner).",
+        "description": "Joined TherAlign Health as a Founding Software Engineer Intern, building AI clinical decision support.",
         "url": "https://theralignhealth.com/",
         "linkText": "TherAlign Health"
       },
       {
         "date": "Jul 2026",
-        "description": "Joined the Culture and Morality Lab (UMass PBS, PI Dr. Mohammad Atari) as the sole engineer on its CCR text-analysis platform - hired off a prototype I built before the interview.",
-        "url": "https://websites.umass.edu/matari/",
-        "linkText": "Culture and Morality Lab"
-      },
-      {
-        "date": "Jul 2026",
-        "description": "Wrapped align-ops, an end-to-end LLM post-training (SFT/DPO/GRPO + QLoRA) and vLLM serving stack with Redis caching, async micro-batching, and Prometheus/Grafana observability.",
-        "url": null,
-        "linkText": null
-      },
-      {
-        "date": "Jul 2026",
-        "description": "Built and shipped the CCR Platform in ~1 day while interviewing with the Culture and Morality Lab (UMass PBS) - live on Hugging Face Spaces.",
-        "url": "https://devaanand-ccr-platform.hf.space",
-        "linkText": "CCR Platform"
-      },
-      {
-        "date": "May 2026",
-        "description": "Wrapped up Spring 2026 - refusal-decay mechanistic interpretability project (CS 602) graded full marks; ngvi-curvature-variance (CS 651) natural-gradient VI study also shipped.",
-        "url": "https://github.com/Deva-1903/refusal-decay",
-        "linkText": "refusal-decay"
-      },
-      {
-        "date": "Dec 2025",
-        "description": "Started The Inheritance Games, first real dive into fiction, let's see how that goes.",
-        "url": "https://www.goodreads.com/series/282828-the-inheritance-games",
-        "linkText": "The Inheritance Games"
-      },
-      {
-        "date": "Nov 2025",
-        "description": "Posted my first reel after moving to the US, first snowfall at UMass Amherst and it somehow hit ~7k views.",
-        "url": "https://www.instagram.com/reel/DRz0KJZjsZc/",
-        "linkText": "first reel"
-      },
-      {
-        "date": "Nov 2025",
-        "description": "Saw first northern lights of my life in Amherst, MA",
-        "url": null,
-        "linkText": null
-      },
-      {
-        "date": "Sept 2025",
-        "description": "Participated in Qualcomm Edge AI hackathon at NYU in NYC and built an edge AI project and presented",
-        "url": "https://github.com/Deva-1903/Qualcomm-Sep25-Team-Sonare",
-        "linkText": "project"
+        "description": "Joined the Culture and Morality Lab at UMass as a Graduate Research Assistant, and launched its CCR text-analysis platform (link).",
+        "url": "https://psychologicaltextanalysis.com/",
+        "linkText": "link"
       },
       {
         "date": "Aug 2025",
-        "description": "Moved to United States of America 🇺🇸 for my MS in CS at UMass Amherst. Excited for the journey ahead!",
+        "description": "Started my MS in Computer Science at UMass Amherst.",
         "url": "https://www.umass.edu/",
         "linkText": "UMass Amherst"
+      },
+      {
+        "date": "2023",
+        "description": "Published a paper on Alzheimer's disease classification using transfer learning at CONIT 2023 (IEEE).",
+        "url": "https://ieeexplore.ieee.org/document/10205760",
+        "linkText": "CONIT 2023"
       }
     ]
   },

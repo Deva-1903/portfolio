@@ -39,11 +39,11 @@
   <nav class="navbar">
     <div class="navbar-container">
       <ul class="nav-links">
-        <li class="nav-item"><a href="index.html#about">about</a></li>
-        <li class="nav-item"><a href="index.html#history">experience</a></li>
+        <li class="nav-item"><a href="index.html?classic#about">about</a></li>
+        <li class="nav-item"><a href="index.html?classic#history">experience</a></li>
         <li class="nav-item"><a href="#all-projects">projects</a></li>
-        <li class="nav-item"><a href="index.html#writingContainer">writing</a></li>
-        <li class="nav-item"><a href="index.html#publicationsContainer">publications</a></li>
+        <li class="nav-item"><a href="index.html?classic#writingContainer">writing</a></li>
+        <li class="nav-item"><a href="index.html?classic#publicationsContainer">publications</a></li>
       </ul>
     </div>
   </nav>
@@ -60,7 +60,7 @@
 
   <main class="container hero-section">
     <p style="margin: 10px 0 26px;" class="fade-up">
-      <a href="index.html#pet-projects" class="view-all-projects">← back to home</a>
+      <a href="index.html?classic#pet-projects" class="view-all-projects">← back to home</a>
     </p>
     <div id="all-projects"></div>
   </main>
@@ -74,6 +74,8 @@
       margin-top: 40px;
       transition: color 0.3s ease, border-color 0.3s ease;
     "></footer>
+
+  <script src="./assets/projects.js"></script>
 
   <script type="text/javascript">
     let siteContent = null;
@@ -99,7 +101,7 @@
 
     async function loadContent() {
       try {
-        const response = await fetch("./content/content.json");
+        const response = await fetch("./content/content.json", { cache: "no-cache" });
         siteContent = await response.json();
         populateProjects();
       } catch (error) {
@@ -110,36 +112,35 @@
     function populateProjects() {
       if (!siteContent) return;
 
+      // All projects, grouped by area; the tabs (or a #area link) narrow it to one area
       const projectsContainer = document.getElementById("all-projects");
-      const sortedProjects = [...siteContent.projects.items].sort((a, b) => (a.order ?? 99) - (b.order ?? 99));
+      const projects = siteContent.projects;
+      const allProjects = ProjectsUI.sorted(projects.items);
+      const areas = (projects.categories || []).filter((c) => allProjects.some((p) => p.category === c.id));
+
+      const groupsFor = (filter) => areas
+        .filter((area) => filter === "all" || area.id === filter)
+        .map((area, groupIndex) => `
+          <div class="project-group" id="area-${area.id}">
+            <h3 class="project-group-title">${area.label}</h3>
+            <div class="projects-grid-new">
+              ${allProjects.filter((p) => p.category === area.id)
+                .map((p, index) => ProjectsUI.card(p, { animate: false, index })).join("")}
+            </div>
+          </div>`).join("");
+
+      const initial = areas.some((a) => a.id === location.hash.slice(1)) ? location.hash.slice(1) : "all";
       projectsContainer.innerHTML = `
-        <div class="ctitle fade-up">${siteContent.projects.title}</div>
-        <div class="projects-grid-new">
-          ${sortedProjects
-          .map(
-            (project, index) => {
-              const footerLinks = [
-                project.url    ? `<a href="${project.url}"    target="_blank" rel="noopener noreferrer" class="pcn-footer-link">repo ↗</a>`    : '',
-                project.demo   ? `<a href="${project.demo}"   target="_blank" rel="noopener noreferrer" class="pcn-footer-link">demo ↗</a>`   : '',
-                project.report ? `<a href="${project.report}" target="_blank" rel="noopener noreferrer" class="pcn-footer-link">report ↗</a>` : '',
-              ].filter(Boolean).join('');
-              return `
-            <div class="project-card-new fade-up" style="transition-delay: ${index * 50}ms">
-              <div class="pcn-body">
-                <h3 class="pcn-title">
-                  ${project.name}
-                  ${project.status === 'in-progress' ? '<span class="pcn-badge">in progress</span>' : ''}
-                </h3>
-                <p class="pcn-desc">${project.description}</p>
-                ${project.stack ? `<div class="pcn-stack">${project.stack}</div>` : ''}
-              </div>
-              ${footerLinks ? `<div class="pcn-footer">${footerLinks}</div>` : ''}
-            </div>`;
-            }
-          )
-          .join("")}
-        </div>
+        <div class="ctitle fade-up">${projects.title}</div>
+        ${ProjectsUI.filterBar(projects, initial)}
+        <div id="projectGroups">${groupsFor(initial)}</div>
       `;
+      ProjectsUI.onFilter(projectsContainer, (filter) => {
+        projectsContainer.querySelectorAll("[data-filter]").forEach((b) =>
+          b.setAttribute("aria-selected", String(b.dataset.filter === filter)));
+        document.getElementById("projectGroups").innerHTML = groupsFor(filter);
+        history.replaceState(null, "", filter === "all" ? location.pathname : `#${filter}`);
+      });
 
       document.getElementById("footer").innerHTML = `
         ${siteContent.footer.attribution}

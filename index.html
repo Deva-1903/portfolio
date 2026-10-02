@@ -48,10 +48,27 @@
         // Fallback if localStorage is not available
       }
     })();
+
+    // Plain (nat.org-style) is the default. ?plain / ?classic in the URL win,
+    // then the visitor's saved choice.
+    (function () {
+      var plain = true;
+      if (/[?&]plain\b/.test(location.search)) plain = true;
+      else if (/[?&]classic\b/.test(location.search)) plain = false;
+      else {
+        try {
+          if (localStorage.getItem("siteStyle") === "fancy") plain = false;
+        } catch (e) {}
+      }
+      if (plain) document.documentElement.classList.add("plain-mode");
+    })();
   </script>
 </head>
 
 <body>
+  <!-- Plain version, rendered from the same content.json -->
+  <div id="plainView"></div>
+
   <!-- Minimal Navbar -->
   <nav class="navbar">
     <div class="navbar-container">
@@ -73,6 +90,15 @@
         d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42">
       </path>
       <path class="moon" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" style="display: none"></path>
+    </svg>
+  </button>
+
+  <!-- Switch to the plain version -->
+  <button class="theme-toggle style-toggle" id="styleToggle" aria-label="Switch to plain version"
+    title="Plain version">
+    <svg class="theme-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round">
+      <path d="M4 6h16M4 12h16M4 18h10"></path>
     </svg>
   </button>
 
@@ -139,6 +165,8 @@
 
   <br /><br /><br /><br />
 
+  <script src="./assets/projects.js"></script>
+
   <!-- Content Loading Script -->
   <script type="text/javascript">
     let siteContent = null;
@@ -168,7 +196,7 @@
     // Load content from JSON
     async function loadContent() {
       try {
-        const response = await fetch("./content/content.json");
+        const response = await fetch("./content/content.json", { cache: "no-cache" });
         siteContent = await response.json();
         populateContent();
       } catch (error) {
@@ -253,6 +281,18 @@
         `;
             }).join("");
           }
+          const skillsHTML = entry.skills?.length
+            ? `<div class="exp-skills">${entry.skills.map((s) => `<span class="skill-chip">${s}</span>`).join("")}</div>`
+            : "";
+          const bulletsHTML = entry.bullets?.length
+            ? `<ul class="exp-bullets">${entry.bullets.map((b) => `<li>${b}</li>`).join("")}</ul>`
+            : "";
+          const moreHTML = bulletsHTML || courseworkHTML
+            ? `<details class="exp-more">
+                <summary><span class="exp-more-closed">see ${bulletsHTML ? "more" : "coursework"}</span><span class="exp-more-open">see less</span></summary>
+                ${bulletsHTML}${courseworkHTML}
+              </details>`
+            : "";
           return `
         <div class="entry row">
           <div class="timespan">${entry.timespan}</div>
@@ -261,8 +301,13 @@
             <img src="${entry.logo}" />
           </div>
           <div class="desc">
-            ${entry.description}
-            ${courseworkHTML}
+            <div class="exp-head">
+              <strong>${entry.role}</strong>${entry.org ? ` <span class="exp-org">· ${entry.orgUrl ? `<a href="${entry.orgUrl}" target="_blank" rel="noopener noreferrer">${entry.org}</a>` : entry.org}</span>` : ""}
+              ${entry.note ? `<span class="exp-note">${entry.note}</span>` : ""}
+            </div>
+            <div class="exp-summary">${entry.summary}</div>
+            ${skillsHTML}
+            ${moreHTML}
           </div>
         </div>
       `;
@@ -290,41 +335,31 @@
         </p>
       `;
 
-      // Projects
+      // Projects: top picks under "all", or every project in one area
       const projectsContainer = document.getElementById("pet-projects");
-      const sortedProjects = [...siteContent.projects.items].sort((a, b) => (a.order ?? 99) - (b.order ?? 99));
-      const displayedProjects = sortedProjects.slice(0, 6);
+      const projects = siteContent.projects;
+      const allProjects = ProjectsUI.sorted(projects.items);
+      const projectsFor = (filter) => filter === "all"
+        ? allProjects.slice(0, 6)
+        : allProjects.filter((p) => p.category === filter);
       projectsContainer.innerHTML = `
-        <div class="ctitle fade-up">${siteContent.projects.title}</div>
-        <div class="projects-grid-new">
-        ${displayedProjects
-          .map(
-            (project, index) => {
-              const footerLinks = [
-                project.url    ? `<a href="${project.url}"    target="_blank" rel="noopener noreferrer" class="pcn-footer-link">repo ↗</a>`    : '',
-                project.demo   ? `<a href="${project.demo}"   target="_blank" rel="noopener noreferrer" class="pcn-footer-link">demo ↗</a>`   : '',
-                project.report ? `<a href="${project.report}" target="_blank" rel="noopener noreferrer" class="pcn-footer-link">report ↗</a>` : '',
-              ].filter(Boolean).join('');
-              return `
-          <div class="project-card-new fade-up" style="transition-delay: ${index * 50}ms">
-            <div class="pcn-body">
-              <h3 class="pcn-title">
-                ${project.name}
-                ${project.status === 'in-progress' ? '<span class="pcn-badge">in progress</span>' : ''}
-              </h3>
-              <p class="pcn-desc">${project.description}</p>
-              ${project.stack ? `<div class="pcn-stack">${project.stack}</div>` : ''}
-            </div>
-            ${footerLinks ? `<div class="pcn-footer">${footerLinks}</div>` : ''}
-          </div>`;
-            }
-          )
-          .join("")}
+        <div class="ctitle fade-up">${projects.title}</div>
+        <div class="fade-up">${ProjectsUI.filterBar(projects, "all")}</div>
+        <div class="projects-grid-new" id="projectsGrid">
+          ${projectsFor("all").map((p, index) => ProjectsUI.card(p, { index })).join("")}
         </div>
         <p style="margin-top: 30px; font-size: 14px; text-align: center;" class="fade-up">
-          <a href="projects.html" class="view-all-projects">→ view all my projects</a>
+          <a href="projects.html" class="view-all-projects" id="viewAllProjects">→ view all my projects</a>
         </p>
       `;
+      ProjectsUI.onFilter(projectsContainer, (filter) => {
+        projectsContainer.querySelectorAll("[data-filter]").forEach((b) =>
+          b.setAttribute("aria-selected", String(b.dataset.filter === filter)));
+        document.getElementById("projectsGrid").innerHTML =
+          projectsFor(filter).map((p) => ProjectsUI.card(p, { animate: false })).join("");
+        document.getElementById("viewAllProjects").href =
+          filter === "all" ? "projects.html" : `projects.html#${filter}`;
+      });
 
       // Publications
       const publicationsContainer = document.getElementById(
@@ -392,12 +427,170 @@
       // document.getElementById("submitBtn").textContent =
       //   siteContent.contact.submitButton;
 
+      try {
+        renderPlainView();
+      } catch (error) {
+        console.error("Failed to render plain view:", error);
+      }
+
       // Footer
       document.getElementById("footer").innerHTML = `
         ${siteContent.footer.attribution}
         <div>${siteContent.footer.tagline}</div>
       `;
     }
+
+    // Plain version: browser-default HTML, one page per section (?plain=<page>)
+    function renderPlainView() {
+      const c = siteContent;
+      const link = (url, text) =>
+        `<a href="${url}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+      const list = (items, cls = "") =>
+        `<ul${cls ? ` class="${cls}"` : ""}>${items.map((i) => `<li>${i}</li>`).join("")}</ul>`;
+      // Multi-line entries (jobs, degrees, projects) get vertical space between them
+      const entries = (items) => list(items, "pv-entries");
+
+      const coursework = (entry) => {
+        if (!entry.coursework) return "";
+        const semesters = Array.isArray(entry.coursework) ? entry.coursework : [entry.coursework];
+        return "Coursework:" + list(semesters.map((sem) =>
+          `${sem.semester}: ` + sem.categories
+            .flatMap((cat) => cat.courses.map((course) => `${course.code} ${course.name}`))
+            .join(", ")
+        ));
+      };
+
+      const timeline = (items) => entries(items.map((e) =>
+        `<b>${e.role}</b>${e.org ? `, ${e.orgUrl ? link(e.orgUrl, e.org) : e.org}` : ""}${e.note ? ` (${e.note})` : ""} <i>${e.timespan}</i>` +
+        `<p>${e.summary}</p>` +
+        (e.skills?.length ? `<p>Skills: ${e.skills.join(", ")}</p>` : "") +
+        (e.bullets?.length ? list(e.bullets) : "") +
+        coursework(e)
+      ));
+
+      const sortedProjects = ProjectsUI.sorted(c.projects.items);
+      const projectAreas = (c.projects.categories || [])
+        .filter((a) => sortedProjects.some((p) => p.category === a.id));
+
+      const pages = {
+        experience: {
+          title: "Work Experience",
+          intro: "My work and research experience, most recent first. My degrees and coursework are on the <a href=\"?plain=education\">education</a> page.",
+          body: () => timeline(c.history.entries.filter((e) => e.type !== "education")),
+        },
+        education: {
+          title: "Education",
+          intro: "Where I studied, and the courses I've taken.",
+          body: () => timeline(c.history.entries.filter((e) => e.type === "education")),
+        },
+        projects: {
+          title: "Projects",
+          intro: "Things I've built, grouped by area. Jump to: " +
+            projectAreas.map((a) => `<a href="#area-${a.id}">${a.label}</a>`).join(", ") + ".",
+          body: () => projectAreas.map((area) => `
+            <h3 id="area-${area.id}">${area.label}</h3>
+            ${entries(sortedProjects.filter((p) => p.category === area.id).map((p) => {
+              const links = [
+                p.url ? link(p.url, "repo") : "",
+                p.demo ? link(p.demo, "demo") : "",
+                p.report ? link(p.report, "report") : "",
+              ].filter(Boolean).join(", ");
+              return `<b>${p.name}</b>${p.status === "in-progress" ? " (in progress)" : ""}` +
+                `${p.stack ? ` <i>${p.stack}</i>` : ""}` +
+                `<p>${p.summary || `${p.name} ${p.description}`}${links ? ` (${links})` : ""}</p>` +
+                (p.highlights?.length ? list(p.highlights) : "");
+            }))}`).join(""),
+        },
+        publications: {
+          title: "Publications",
+          intro: "Research papers I've published.",
+          body: () => list(c.publications.items.map((p) =>
+            `<b>${p.url ? link(p.url, p.title) : p.title}</b><br><i>${p.venue}</i><br>${p.authors}`
+          )),
+        },
+        writing: {
+          title: "Writing",
+          intro: `${c.writing.subtitle}.`,
+          body: () => list(c.writing.articles.map((a) => `${a.date}: ${link(a.url, a.title)}`)),
+        },
+        updates: {
+          title: "Updates",
+          intro: "Things that happened recently.",
+          body: () => list(c.misc.items.map((item) => {
+            let d = item.description || "";
+            if (item.url && item.linkText && d.includes(item.linkText)) {
+              d = d.replace(item.linkText, link(item.url, item.linkText));
+            } else if (item.url) {
+              d = link(item.url, d);
+            }
+            return `<b>${item.date}</b>: ${d}`;
+          })),
+        },
+      };
+
+      const pageKey = new URLSearchParams(location.search).get("plain");
+      const page = pages[pageKey];
+      const fancyLink = `<p><small><a href="#" data-style="fancy">switch to the classic version</a></small></p>`;
+      const plain = document.getElementById("plainView");
+
+      if (page) {
+        document.title = `${c.header.name}: ${page.title}`;
+        plain.innerHTML = `
+          <h2><a href="?plain" class="sitenav">${c.header.name}</a> &gt; ${page.title}</h2>
+          <p>${page.intro}</p>
+          ${page.body()}
+          ${fancyLink}
+        `;
+      } else {
+        const social = c.header.socialLinks.map((s) => link(s.url, s.platform));
+        plain.innerHTML = `
+          <img src="${c.header.profileImage}" alt="${c.header.name}" class="pv-photo" />
+          <h2>${c.header.name}</h2>
+          <p>${c.plain.intro}</p>
+
+          Some things about me:
+          ${list(c.plain.about)}
+
+          Site navigation:
+          ${list([
+            `Timeline of my <a href="?plain=experience">work experience</a>`,
+            `My <a href="?plain=education">educational background</a> and coursework`,
+            `Some <a href="?plain=projects">projects</a> I've built`,
+            `My published <a href="?plain=publications">research papers</a>`,
+            `Things I've <a href="?plain=writing">written</a>`,
+            `Recent <a href="?plain=updates">updates</a>`,
+            `Elsewhere: ${social.slice(0, -1).join(", ")}, and my ${social[social.length - 1]}`,
+          ])}
+
+          <span>${c.plain.contact}</span>
+          ${fancyLink}
+        `;
+      }
+
+      plain.querySelectorAll("[data-style]").forEach((a) =>
+        a.addEventListener("click", (e) => {
+          e.preventDefault();
+          setSiteStyle(a.dataset.style);
+        }));
+    }
+
+    // style: "fancy" (classic) or "plain"
+    function setSiteStyle(style) {
+      document.documentElement.classList.toggle("plain-mode", style === "plain");
+      try {
+        localStorage.setItem("siteStyle", style);
+      } catch (e) {}
+      if (/[?&](plain|classic)\b/.test(location.search)) {
+        history.replaceState(null, "", location.pathname);
+      }
+      if (siteContent) {
+        document.title = siteContent.header.name;
+        if (style === "plain") renderPlainView();
+      }
+      window.scrollTo(0, 0);
+    }
+
+    document.getElementById("styleToggle").addEventListener("click", () => setSiteStyle("plain"));
 
     // Load content on page load
     loadContent().then(() => {

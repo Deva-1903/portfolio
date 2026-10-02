@@ -1773,3 +1773,295 @@ html.dark-theme .navbar {
     grid-template-columns: 1fr;
   }
 }
+/* ===== Plain mode (nat.org-style, unstyled HTML) ===== */
+.style-toggle {
+  right: 74px;
+}
+
+html:not(.plain-mode) #plainView {
+  display: none;
+}
+
+html.plain-mode,
+html.plain-mode body {
+  background: #fff !important;
+  color: #000 !important;
+  color-scheme: light;
+  transition: none !important;
+}
+
+html.plain-mode body {
+  font: revert;
+  margin: 8px;
+}
+
+html.plain-mode body::before,
+html.plain-mode body > *:not(#plainView) {
+  display: none !important;
+}
+
+html.plain-mode #plainView {
+  display: block;
+}
+
+/* Strip every site style inside the plain view back to browser defaults */
+#plainView,
+#plainView * {
+  all: revert;
+}
+
+/* The site's mailto rule is !important, so undo it explicitly */
+#plainView a[href^="mailto:"] {
+  color: revert !important;
+}
+
+#plainView {
+  line-height: 1.4;
+  font-size: 16px;
+  padding: 0 10px;
+  margin: 70px auto 50px;
+  max-width: 650px;
+}
+
+#plainView a.sitenav {
+  text-decoration: none;
+}
+
+/* ===== Experience entries: headline, summary, skills, see more ===== */
+/* Entries are short now, so tighten the spacing and run the timeline line into the next logo */
+#history .entry {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  /* Fixed date + logo columns so every entry lines up, whatever its text length */
+  grid-template-columns: 72px 52px minmax(0, 1fr);
+}
+
+#history .timespan,
+#history .ico,
+#history .desc {
+  grid-column: auto;
+}
+
+@media (max-width: 768px) {
+  #history .entry {
+    grid-template-columns: 58px 48px minmax(0, 1fr);
+  }
+
+  #history .timespan {
+    font-size: 12px;
+    padding-right: 0;
+    letter-spacing: 0;
+  }
+
+  #history .desc {
+    padding-left: 6px;
+  }
+}
+
+#history .desc {
+  padding-bottom: 34px;
+}
+
+#history .ico::after {
+  top: 52px;
+  bottom: 4px;
+}
+
+.exp-head {
+  color: var(--text-primary);
+  font-size: 16px;
+  line-height: 1.45;
+}
+
+.exp-head strong {
+  font-weight: 600;
+}
+
+.exp-org {
+  font-weight: 400;
+}
+
+.exp-note {
+  margin-left: 4px;
+  font-size: 13px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.exp-summary {
+  margin-top: 4px;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* Skills read as a quiet "Python · FastAPI · Docker" line, like the project cards' stack line */
+.exp-skills {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 6px;
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+/* Separator trails each item so a wrapped line never starts with a dot */
+.skill-chip {
+  white-space: nowrap;
+}
+
+.skill-chip:not(:last-child)::after {
+  content: "\00B7";
+  margin: 0 7px;
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+.exp-more {
+  margin-top: 4px;
+}
+
+.exp-more summary {
+  display: inline-block;
+  cursor: pointer;
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--text-muted);
+  list-style: none;
+  user-select: none;
+  transition: color 0.2s ease;
+}
+
+.exp-more summary::-webkit-details-marker {
+  display: none;
+}
+
+.exp-more summary::after {
+  content: " \2193";
+}
+
+.exp-more[open] summary::after {
+  content: " \2191";
+}
+
+.exp-more summary:hover {
+  color: var(--text-primary);
+}
+
+.exp-more .exp-more-open,
+.exp-more[open] .exp-more-closed {
+  display: none;
+}
+
+.exp-more[open] .exp-more-open {
+  display: inline;
+}
+
+.exp-bullets {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.exp-bullets li {
+  margin-bottom: 5px;
+}
+
+.exp-bullets li::marker {
+  color: var(--text-muted);
+}
+
+.exp-bullets strong,
+.exp-summary strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.exp-more .entry-coursework {
+  margin-top: 8px;
+  padding-top: 8px;
+}
+
+/* ===== Project area filters (classic) ===== */
+.project-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 4px 0 22px;
+}
+
+.project-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border-light);
+  background: transparent;
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.project-filter:hover {
+  color: var(--text-primary);
+  border-color: var(--border-medium);
+}
+
+.project-filter[aria-selected="true"] {
+  background: var(--text-primary);
+  border-color: var(--text-primary);
+  color: var(--bg-primary);
+}
+
+.project-filter-count {
+  font-size: 11px;
+  opacity: 0.6;
+}
+
+.project-group + .project-group {
+  margin-top: 40px;
+}
+
+.project-group-title {
+  margin: 0 0 14px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--text-primary);
+}
+
+.project-filter:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.project-group .projects-grid-new {
+  margin-top: 0;
+}
+
+#plainView ul.pv-entries > li + li {
+  margin-top: 1.6em;
+}
+
+#plainView ul.pv-entries p {
+  margin: 0.5em 0;
+}
+
+/* Photo on the plain home page (the reset above drops the width attribute, so size it here) */
+#plainView img.pv-photo {
+  float: right;
+  width: 150px;
+  height: auto;
+  margin: 0 0 12px 24px;
+}
+
+@media (max-width: 480px) {
+  #plainView img.pv-photo {
+    width: 110px;
+    margin-left: 14px;
+  }
+}
