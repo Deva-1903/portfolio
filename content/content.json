@@ -37,8 +37,8 @@
     "intro": "I work on ML systems, inference engineering, and AI safety.",
     "about": [
       "Currently an MS CS student at <a href=\"https://www.umass.edu/\">UMass Amherst</a> (2025 - May 2027).",
-      "Graduate Research Assistant at the <a href=\"https://cultureandmorality.org/\">Culture and Morality Lab</a>, where I'm the sole engineer on its research platform and website.",
-      "Previously a Founding Software Engineer Intern at TherAlign Health, and a backend engineer at Wysa, building an NHS eTriage backend used by 8+ UK clinical clients.",
+      "Graduate Research Assistant at the <a href=\"https://cultureandmorality.org/\">Culture and Morality Lab</a>.",
+      "Previously a Founding Software Engineer Intern at <a href=\"https://theralignhealth.com/\">TherAlign Health</a>, and a backend engineer at <a href=\"https://www.wysa.com/\">Wysa</a>, building an NHS eTriage backend used by 8+ UK clinical clients.",
       "Spend my time on AI safety, mechanistic interpretability, and ML systems: batching, KV-cache management, memory optimization, and model serving.",
       "Lives in Amherst, MA.",
       "Open to full-time SDE, ML, and AI roles starting May 2027."
@@ -189,6 +189,7 @@
         "logo": "./assets/theralign.jpeg",
         "role": "Founding Software Engineer Intern",
         "org": "TherAlign Health",
+        "orgUrl": "https://theralignhealth.com/",
         "note": "Remote",
         "summary": "Built AI clinical decision support that prevents prior authorization by surfacing covered, comparably-effective drug alternatives at the point of prescribing (MIT Hacking Medicine GrandHack, 1st place).",
         "skills": [
@@ -210,6 +211,7 @@
         "logo": "https://images.squarespace-cdn.com/content/v1/587b44e1d1758e3ceffe18c6/1596580033188-H1B3JYJN0ZMPFA19BFP7/wysa+logo.png",
         "role": "Backend Engineer",
         "org": "Wysa",
+        "orgUrl": "https://www.wysa.com/",
         "summary": "Engineered a multi-tenant NHS eTriage backend for <strong>8+ UK clinical clients</strong>, contributing to <strong>$340K+</strong> in annual revenue.",
         "skills": [
           "Node.js",
