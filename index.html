@@ -49,15 +49,15 @@
       }
     })();
 
-    // Plain (nat.org-style) is the default. ?plain / ?classic in the URL win,
+    // Classic is the default. ?plain / ?classic in the URL win,
     // then the visitor's saved choice.
     (function () {
-      var plain = true;
+      var plain = false;
       if (/[?&]plain\b/.test(location.search)) plain = true;
       else if (/[?&]classic\b/.test(location.search)) plain = false;
       else {
         try {
-          if (localStorage.getItem("siteStyle") === "fancy") plain = false;
+          plain = localStorage.getItem("siteStyle") === "plain";
         } catch (e) {}
       }
       if (plain) document.documentElement.classList.add("plain-mode");
@@ -239,7 +239,8 @@
 
       // About
       document.getElementById("aboutContent").innerHTML =
-        siteContent.about.paragraphs.map((p) => `<p>${p}</p>`).join("");
+        // Entries that are already a list (e.g. "<ul>...") render as-is; the rest become paragraphs
+        siteContent.about.paragraphs.map((p) => /^<(ul|ol)\b/.test(p) ? p : `<p>${p}</p>`).join("");
 
       // History
       const historyContainer = document.getElementById("history");
@@ -305,7 +306,7 @@
               <strong>${entry.role}</strong>${entry.org ? ` <span class="exp-org">· ${entry.orgUrl ? `<a href="${entry.orgUrl}" target="_blank" rel="noopener noreferrer">${entry.org}</a>` : entry.org}</span>` : ""}
               ${entry.note ? `<span class="exp-note">${entry.note}</span>` : ""}
             </div>
-            <div class="exp-summary">${entry.summary}</div>
+            ${entry.summary ? `<div class="exp-summary">${entry.summary}</div>` : ""}
             ${skillsHTML}
             ${moreHTML}
           </div>
@@ -462,7 +463,7 @@
 
       const timeline = (items) => entries(items.map((e) =>
         `<b>${e.role}</b>${e.org ? `, ${e.orgUrl ? link(e.orgUrl, e.org) : e.org}` : ""}${e.note ? ` (${e.note})` : ""} <i>${e.timespan}</i>` +
-        `<p>${e.summary}</p>` +
+        (e.summary ? `<p>${e.summary}</p>` : "") +
         (e.skills?.length ? `<p>Skills: ${e.skills.join(", ")}</p>` : "") +
         (e.bullets?.length ? list(e.bullets) : "") +
         coursework(e)

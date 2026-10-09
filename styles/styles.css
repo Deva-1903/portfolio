@@ -2065,3 +2065,31 @@ html.plain-mode #plainView {
     margin-left: 14px;
   }
 }
+
+/* Bulleted list inside the bio */
+.about-content ul {
+  margin: -8px 0 16px;
+  padding-left: 20px;
+  font-size: 15.5px;
+  line-height: 1.75;
+  color: var(--text-secondary);
+}
+
+.about-content li {
+  margin-bottom: 4px;
+}
+
+.about-content a .highlight {
+  color: inherit;
+}
+
+.about-content a:not([href^="mailto:"]) {
+  color: var(--name-accent);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border-medium);
+  transition: border-color 0.2s ease;
+}
+
+.about-content a:not([href^="mailto:"]):hover {
+  border-bottom-color: var(--name-accent);
+}

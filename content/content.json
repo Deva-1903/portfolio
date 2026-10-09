@@ -34,14 +34,14 @@
     ]
   },
   "plain": {
-    "intro": "I work on ML systems, inference engineering, and AI safety.",
+    "intro": "I work on LLM post-training, reinforcement learning, ML systems, and mechanistic interpretability.",
     "about": [
       "Currently an MS CS student at <a href=\"https://www.umass.edu/\">UMass Amherst</a> (2025 - May 2027).",
-      "Graduate Research Assistant at the <a href=\"https://cultureandmorality.org/\">Culture and Morality Lab</a>.",
+      "Currently a Graduate Research Assistant at the <a href=\"https://cultureandmorality.org/\">Culture and Morality Lab (CAML)</a>, studying how language models represent and express cultural and moral values.",
       "Previously a Founding Software Engineer Intern at <a href=\"https://theralignhealth.com/\">TherAlign Health</a>, and a backend engineer at <a href=\"https://www.wysa.com/\">Wysa</a>, building an NHS eTriage backend used by 8+ UK clinical clients.",
-      "Spend my time on AI safety, mechanistic interpretability, and ML systems: batching, KV-cache management, memory optimization, and model serving.",
+      "Interested in post-training &amp; RL (RLHF/RLVR, alignment), ML systems (distributed training, inference engineering, GPU computing, model serving), and interpretability.",
       "Lives in Amherst, MA.",
-      "Open to full-time SDE, ML, and AI roles starting May 2027."
+      "Open to full-time opportunities starting May 2027 in software engineering, ML engineering, ML systems, AI infrastructure, and research engineering."
     ],
     "contact": "You can reach me at <a href=\"mailto:devaanand@umass.edu\">devaanand@umass.edu</a>. Design inspired by <a href=\"https://nat.org/\">Nat Friedman</a> and <a href=\"https://pratikratadiya.in/\">Pratik Ratadiya</a>."
   },
@@ -51,9 +51,11 @@
   "about": {
     "title": "about me",
     "paragraphs": [
-      "I’m an M.S. Computer Science student at UMass Amherst, focused on <span class=\"highlight\">AI Safety, Mechanistic Interpretability, and ML Systems</span>.",
-      "My work spans understanding how safety-relevant behaviors emerge inside language models and building efficient inference systems, including batching, KV-cache management, memory optimization, and model serving.",
-      "I’m open to <span class=\"highlight\">full-time roles starting May 2027</span> across <span class=\"highlight\">Software Engineering (SDE), ML Engineering, and AI</span>, including ML Systems, Inference Engineering, AI Safety, and Research Engineering.",
+      "I’m an M.S. Computer Science student at UMass Amherst, interested in <span class=\"highlight\">LLM Post-Training, Reinforcement Learning, ML Systems, and Mechanistic Interpretability</span>.",
+      "As a Graduate Research Assistant at the <a href=\"https://cultureandmorality.org/\"><span class=\"highlight\">Culture and Morality Lab (CAML)</span></a>, I study how language models represent and express cultural and moral values, with a focus on understanding model behavior and how it changes through training and alignment.",
+      "My technical interests lie at the intersection of:",
+      "<ul><li><span class=\"highlight\">Post-Training &amp; RL:</span> Reinforcement Learning, RLHF/RLVR, alignment, and model optimization.</li><li><span class=\"highlight\">ML Systems:</span> Distributed training, LLM inference engineering, GPU computing, and efficient model serving.</li><li><span class=\"highlight\">Interpretability:</span> Understanding and analyzing internal model representations and behavior.</li></ul>",
+      "I’m open to <span class=\"highlight\">full-time opportunities starting May 2027</span> in Software Engineering, ML Engineering, ML Systems, AI Infrastructure, and Research Engineering.",
       "<a href=\"mailto:devaanand@umass.edu\">devaanand@umass.edu</a>"
     ]
   },
@@ -65,7 +67,6 @@
         "logo": "https://upload.wikimedia.org/wikipedia/commons/2/23/UMass_Amherst_athletics_logo.svg",
         "role": "M.S. in Computer Science",
         "org": "University of Massachusetts Amherst",
-        "summary": "Graduate coursework across ML, NLP, performance engineering, optimization, and AI alignment.",
         "skills": [
           "Machine Learning",
           "NLP",
@@ -164,7 +165,7 @@
         "org": "Culture and Morality Lab, UMass Amherst",
         "orgUrl": "https://cultureandmorality.org/",
         "note": "Advisor: Mohammad Atari",
-        "summary": "Sole engineer on the lab's CCR text-analysis platform (<a href=\"https://psychologicaltextanalysis.com/\">link</a>), turning a published NLP method into a self-serve research tool, and on the lab's public website (<a href=\"https://cultureandmorality.org/\">link</a>).",
+        "summary": "Built and maintain the lab's CCR platform (<a href=\"https://psychologicaltextanalysis.com/\">link</a>) and public website (<a href=\"https://cultureandmorality.org/\">link</a>).",
         "skills": [
           "Python",
           "FastAPI",
@@ -176,8 +177,8 @@
           "Cloudflare Workers"
         ],
         "bullets": [
-          "Built and shipped the lab’s CCR text-analysis platform to <strong>production</strong> as sole engineer, turning a published NLP method into a self-serve research tool.",
-          "Built and shipped the lab’s public website as sole developer (Next.js 16, React 19, TypeScript), statically generated from typed content-as-code with build-time validation, live on <strong>Cloudflare Workers</strong>.",
+          "Built and shipped the lab’s CCR text-analysis platform to <strong>production</strong>, turning a published NLP method into a self-serve research tool.",
+          "Built and shipped the lab’s public website (Next.js 16, React 19, TypeScript), statically generated from typed content-as-code with build-time validation, live on <strong>Cloudflare Workers</strong>.",
           "Designed a YAML model registry as the single source of model truth (CCR reference model plus multilingual embeddings, with automatic language-coverage warnings).",
           "Built a versioned, append-only construct library with <strong>SHA-256 item hashing</strong> and immutable per-run snapshots.",
           "Added structured data-quality warnings with deterministic language detection, and per-run reproducibility exports that regenerate any analysis offline.",
@@ -254,7 +255,6 @@
         "logo": "./assets/cario.jpg",
         "role": "Backend Developer Intern",
         "org": "Cario Growth Services",
-        "summary": "Shipped an LLM auto-commenting feature to production and built backend APIs for the core product.",
         "skills": [
           "Node.js",
           "Fastify",
@@ -332,6 +332,10 @@
       {
         "id": "fullstack",
         "label": "Full-stack Products"
+      },
+      {
+        "id": "hackathons",
+        "label": "Hackathons"
       }
     ],
     "items": [
@@ -563,14 +567,14 @@
       {
         "order": 17,
         "name": "Team Sonare - Sign ↔ Speech (Offline)",
-        "category": "fullstack",
+        "category": "hackathons",
         "url": "https://github.com/Deva-1903/Qualcomm-Sep25-Team-Sonare",
         "stack": "Electron · React · FastAPI · MediaPipe · whisper.cpp",
-        "summary": "A fully offline, privacy-preserving sign-language ↔ speech translator built at the Qualcomm Hackathon 2025.",
+        "summary": "A fully offline, privacy-preserving sign-language ↔ speech translator built at the Qualcomm Edge AI Hackathon 2025 at NYU.",
         "highlights": [
           "Runs the whole pipeline on edge devices: MediaPipe gesture tracking, whisper.cpp, and a FastAPI backend behind an Electron + React UI."
         ],
-        "description": "is a fully offline, privacy-preserving Sign ↔ Speech translator built for the Qualcomm Hackathon 2025 with Team Sonare, using an Electron + React UI, MediaPipe gesture tracking, a FastAPI backend, and whisper.cpp to run the entire pipeline locally on edge devices."
+        "description": "is a fully offline, privacy-preserving Sign ↔ Speech translator built at the Qualcomm Edge AI Hackathon 2025 (NYU) with Team Sonare, using an Electron + React UI, MediaPipe gesture tracking, a FastAPI backend, and whisper.cpp to run the entire pipeline locally on edge devices."
       },
       {
         "order": 18,
