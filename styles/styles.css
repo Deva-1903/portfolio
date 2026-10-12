@@ -2797,3 +2797,229 @@ html.plain-mode #plainView {
     right: 6px;
   }
 }
+
+/* ======================================================================
+   Polish pass: editorial minimalism. Calmer motion, one type scale,
+   consistent section rhythm, quieter chrome.
+   ====================================================================== */
+
+/* --- Type scale: name strongest, headline expressive, titles quieter --- */
+#userName {
+  font-size: 60px;
+  letter-spacing: -0.6px;
+}
+
+.hero-headline {
+  font-size: 35px;
+  line-height: 1.12;
+  max-width: 22ch; /* breaks after "systems." */
+}
+
+.ctitle {
+  font-size: 33px;
+}
+
+.nav-item a {
+  font-size: 14px;
+  letter-spacing: 0.2px;
+}
+
+.hero-left #userLocation {
+  font-size: 14.5px;
+  letter-spacing: 0;
+}
+
+/* Availability: a quiet label, not a status light */
+.hero-availability {
+  margin-top: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  align-items: center;
+}
+
+.availability-dot {
+  width: 6px;
+  height: 6px;
+  box-shadow: none;
+  transform: none;
+  background: #2f9e5b;
+}
+
+/* --- Section rhythm: ~72px between sections, the same everywhere --- */
+.hero-section {
+  margin-bottom: 0;
+}
+
+#history,
+#pet-projects,
+#research,
+#miscContainer,
+#education,
+#contact {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.writing-section {
+  margin-top: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.ctitle {
+  margin-top: 36px;
+  padding-top: 36px;
+  margin-bottom: 28px;
+}
+
+#contact {
+  padding-bottom: 32px;
+}
+
+/* --- Motion: no drifting background, no reveal animations, no lifting --- */
+body::before {
+  animation: none;
+  display: none;
+}
+
+.container {
+  animation: none;
+}
+
+.fade-up,
+.fade-up.visible {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+#dpic img:hover,
+.ico img:hover,
+.iico:hover,
+.iico-resume:hover,
+.theme-toggle:hover,
+.info-toggle:hover,
+.cta:hover,
+.feature-media:hover,
+.project-card-new:hover,
+.entry:hover {
+  transform: none;
+}
+
+.nodot li:hover {
+  padding-left: 0;
+  background-color: transparent;
+}
+
+.pub:hover,
+.misc-item:hover {
+  transform: none;
+  background: inherit;
+}
+
+/* --- Project imagery: one flat frame for every figure --- */
+.feature-media,
+.feature-media:hover {
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  box-shadow: none;
+  background: #f6f5f1;
+}
+
+.feature-media img,
+.pcn-media img {
+  padding: 12px;
+}
+
+.pcn-media {
+  background: #f6f5f1;
+}
+
+html.dark-theme .feature-media:not(.feature-placeholder) {
+  border-color: transparent;
+}
+
+.feature-placeholder {
+  background: var(--bg-tertiary);
+}
+
+/* --- Experience logos: one size, flat, understated --- */
+.ico img,
+.edu-logo {
+  width: 40px;
+  height: 40px;
+  padding: 4px;
+  border-radius: 8px;
+  object-fit: contain;
+  background: #fff;
+  border: 1px solid var(--border-light);
+  box-shadow: none;
+}
+
+#history .ico::after {
+  top: 46px;
+}
+
+/* --- Header chrome: quieter controls, no floating (i) --- */
+.info-toggle {
+  display: none;
+}
+
+.theme-toggle {
+  width: 36px;
+  height: 36px;
+  border-width: 1px;
+  box-shadow: none;
+  background: transparent;
+  top: 14px;
+}
+
+.theme-toggle {
+  right: 16px;
+}
+
+.style-toggle {
+  right: 58px;
+}
+
+.theme-toggle-icon {
+  width: 17px;
+  height: 17px;
+}
+
+.footer-updated {
+  margin-top: 6px;
+  font-size: 12.5px;
+  opacity: 0.8;
+}
+
+/* --- Phones --- */
+@media (max-width: 768px) {
+  #userName {
+    font-size: 48px;
+  }
+
+  .hero-headline {
+    font-size: 29px;
+  }
+
+  .ctitle {
+    font-size: 29px;
+  }
+}
+
+.hero-headline {
+  max-width: none;
+}
+
+.headline-line {
+  display: block;
+}
+
+/* padding sits inside the frame, so the figure is never clipped */
+.feature-media img,
+.pcn-media img {
+  box-sizing: border-box;
+}

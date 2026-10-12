@@ -146,10 +146,8 @@
         history.replaceState(null, "", filter === "all" ? location.pathname : `#${filter}`);
       });
 
-      document.getElementById("footer").innerHTML = `
-        ${siteContent.footer.attribution}
-        <div>${siteContent.footer.tagline}</div>
-      `;
+      document.getElementById("footer").innerHTML =
+        `<div class="footer-updated">Last updated ${siteContent.info.lastUpdated}</div>`;
     }
 
     loadContent().then(() => {

@@ -229,7 +229,9 @@
       document.getElementById("lastUpdated").textContent = `Last updated: ${c.info.lastUpdated}`;
 
       // Hero: who I am, what I do, and the next step, in one screen
-      document.getElementById("heroHeadline").textContent = c.hero.headline;
+      // One sentence per line ("Building reliable AI systems." / "Understanding how models behave.")
+      document.getElementById("heroHeadline").innerHTML = c.hero.headline
+        .split(/(?<=\.)\s+/).map((line) => `<span class="headline-line">${line}</span>`).join("");
       document.getElementById("heroCredentials").textContent = c.hero.credentials;
       document.getElementById("heroIntro").innerHTML = c.hero.intro;
       document.getElementById("heroAvailability").innerHTML =
@@ -423,10 +425,9 @@
       }
 
       // Footer
-      document.getElementById("footer").innerHTML = `
-        ${siteContent.footer.attribution}
-        <div>${siteContent.footer.tagline}</div>
-      `;
+      // "Last updated" lives here now instead of a floating (i) button
+      document.getElementById("footer").innerHTML =
+        `<div class="footer-updated">Last updated ${siteContent.info.lastUpdated}</div>`;
     }
 
     // Plain version: browser-default HTML, one page per section (?plain=<page>)

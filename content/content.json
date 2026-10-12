@@ -3,7 +3,7 @@
     "name": "Deva Anand",
     "nameAudio": "DAY-vuh AA-nund",
     "tagline": "I design systems that make ML actually scale.",
-    "location": "📍 Amherst, MA, USA",
+    "location": "Amherst, Massachusetts",
     "profileImage": "../assets/img.jpeg",
     "socialLinks": [
       {
@@ -52,7 +52,7 @@
     "headline": "Building reliable AI systems. Understanding how models behave.",
     "credentials": "M.S. Computer Science @ UMass Amherst",
     "intro": "I work across LLM post-training &amp; RL, ML systems, and interpretability. Currently a Graduate Research Assistant at the <a href=\"https://cultureandmorality.org/\">Culture and Morality Lab</a> at UMass; previously a backend engineer at <a href=\"https://www.wysa.com/\">Wysa</a>, where I built an NHS eTriage backend for 8+ UK clinical clients.",
-    "availability": "Open to full-time software &amp; ML engineering roles starting May 2027"
+    "availability": "Open to full-time SWE &amp; ML roles starting May 2027"
   },
   "history": {
     "entries": [
