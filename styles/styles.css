@@ -2704,3 +2704,96 @@ html.plain-mode #plainView {
     font-size: 22px;
   }
 }
+
+/* ===== Phones: name and headline first, less chrome ===== */
+@media (max-width: 768px) {
+  /* text first, left-aligned; photo + icons follow, smaller */
+  .hero-right {
+    order: 1;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 16px;
+    padding-top: 0;
+  }
+
+  .hero-left {
+    text-align: left;
+  }
+
+  .hero-headline,
+  .hero-intro {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .hero-left .cta-row,
+  .hero-availability {
+    justify-content: flex-start;
+  }
+
+  #dpic img {
+    width: 72px;
+    height: 72px;
+    border-width: 2px;
+  }
+
+  .hero-right #dico {
+    gap: 14px;
+  }
+
+  .hero-right .iico {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 700px) {
+  /* one scrollable nav row instead of two wrapped rows */
+  .nav-links {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 18px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding: 0 4px;
+  }
+
+  .nav-links::-webkit-scrollbar {
+    display: none;
+  }
+
+  .navbar-container {
+    justify-content: flex-start;
+  }
+
+  /* The nav row sits at 66px; a top margin here would collapse into <body>
+     and push the absolutely-positioned nav down with it, so use padding only */
+  #hero.hero-section {
+    margin-top: 0;
+    padding-top: 118px;
+  }
+
+  /* "last updated" isn't needed on a phone */
+  .info-toggle {
+    display: none;
+  }
+}
+
+/* Chat launcher: icon only on small phones */
+@media (max-width: 480px) {
+  .da-launcher {
+    padding: 12px !important;
+    font-size: 0 !important;
+    gap: 0 !important;
+  }
+
+  .da-launcher .fa-comment-dots {
+    font-size: 17px;
+  }
+
+  .da-launcher .da-dot {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+  }
+}
