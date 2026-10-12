@@ -1832,8 +1832,18 @@ html.plain-mode #plainView {
 #history .entry {
   margin-bottom: 0;
   padding-bottom: 0;
-  /* Fixed date + logo columns so every entry lines up, whatever its text length */
-  grid-template-columns: 72px 52px minmax(0, 1fr);
+  /* Fixed date + logo columns so every entry lines up; wide enough for "Nov 2022 - May 2023" on one line */
+  grid-template-columns: 140px 52px minmax(0, 1fr);
+}
+
+#history .timespan {
+  white-space: nowrap;
+  letter-spacing: 0.2px;
+}
+
+/* Phones show the date under the title instead of in its own column */
+.exp-date-inline {
+  display: none;
 }
 
 #history .timespan,
@@ -1844,17 +1854,23 @@ html.plain-mode #plainView {
 
 @media (max-width: 768px) {
   #history .entry {
-    grid-template-columns: 58px 48px minmax(0, 1fr);
+    grid-template-columns: 48px minmax(0, 1fr);
   }
 
   #history .timespan {
-    font-size: 12px;
-    padding-right: 0;
-    letter-spacing: 0;
+    display: none;
   }
 
   #history .desc {
     padding-left: 6px;
+  }
+
+  .exp-date-inline {
+    display: block;
+    margin-top: 2px;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--text-muted);
   }
 }
 

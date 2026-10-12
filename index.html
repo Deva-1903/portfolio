@@ -306,6 +306,7 @@
               <strong>${entry.role}</strong>${entry.org ? ` <span class="exp-org">· ${entry.orgUrl ? `<a href="${entry.orgUrl}" target="_blank" rel="noopener noreferrer">${entry.org}</a>` : entry.org}</span>` : ""}
               ${entry.note ? `<span class="exp-note">${entry.note}</span>` : ""}
             </div>
+            <div class="exp-date-inline">${entry.timespan}</div>
             ${entry.summary ? `<div class="exp-summary">${entry.summary}</div>` : ""}
             ${skillsHTML}
             ${moreHTML}

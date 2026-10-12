@@ -213,7 +213,7 @@
         "role": "Backend Engineer",
         "org": "Wysa",
         "orgUrl": "https://www.wysa.com/",
-        "summary": "Engineered a multi-tenant NHS eTriage backend for <strong>8+ UK clinical clients</strong>, contributing to <strong>$340K+</strong> in annual revenue.",
+        "summary": "Engineered a multi-tenant NHS eTriage backend for <strong>8+ UK clinical clients</strong>, handling <strong>10,000+ monthly triage submissions</strong>.",
         "skills": [
           "Node.js",
           "Express",
@@ -224,7 +224,7 @@
         ],
         "bullets": [
           "Processed <strong>10,000+ monthly triage submissions</strong> via Mayden iaptus REST integrations.",
-          "Architected a full-stack ML training-data annotation platform used daily by the AI team, cutting manual annotation by <strong>100+ hours/month</strong> and lifting labeling throughput by <strong>60%</strong>.",
+          "Architected a full-stack ML training-data annotation platform used daily by the AI team, cutting manual annotation by <strong>100+ hours/month</strong>.",
           "Owned backend security and reliability: <strong>AWS KMS</strong> encryption for clinical PII, hardened authentication and rate limiting, and remediated <strong>20+ VAPT findings</strong> with regression-tested fixes.",
           "Released the multi-tenant backend to 8+ UK clients with <strong>zero downtime</strong> through ALB-fronted rolling deployments, shipping tenant-specific fixes during live client integrations."
         ],
