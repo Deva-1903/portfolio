@@ -219,13 +219,6 @@
   form.addEventListener("submit", function (e) { e.preventDefault(); send(input.value); });
   document.addEventListener("keydown", function (e) { if (e.key === "Escape") closePanel(); });
 
-  /* one-time hint so visitors notice the agent */
-  function hintDismissed() { try { return localStorage.getItem("daHintSeen") === "1"; } catch (e) { return false; } }
+  /* The hint no longer pops up on its own; the "Ask my AI" launcher is enough */
   function dismissHint() { try { localStorage.setItem("daHintSeen", "1"); } catch (e) {} }
-  if (!hintDismissed()) {
-    setTimeout(function () {
-      if (!panel.classList.contains("open")) { hint.classList.add("show"); dismissHint(); }
-    }, 2600);
-    setTimeout(function () { hint.classList.remove("show"); }, 12000);
-  }
 })();

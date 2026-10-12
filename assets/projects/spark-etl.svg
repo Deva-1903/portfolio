@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" width="640" height="400" role="img" aria-label="End-to-end ETL runtime">
+<rect width="640" height="400" fill="#fcfcfb"/>
+<text x="32" y="46" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="20" font-weight="600" fill="#0b0b0b">End-to-end ETL runtime</text>
+<text x="32" y="70" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" fill="#52514e">NYC TLC taxi data, ~1.4B records · minutes · naive vs. tuned pipeline</text>
+<line x1="150.0" y1="110" x2="150.0" y2="290" stroke="#e4e3df"/>
+<text x="150.0" y="310" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="11" fill="#8a8984" text-anchor="middle">0 min</text>
+<line x1="252.5" y1="110" x2="252.5" y2="290" stroke="#e4e3df"/>
+<text x="252.5" y="310" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="11" fill="#8a8984" text-anchor="middle">5 min</text>
+<line x1="355.0" y1="110" x2="355.0" y2="290" stroke="#e4e3df"/>
+<text x="355.0" y="310" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="11" fill="#8a8984" text-anchor="middle">10 min</text>
+<line x1="457.5" y1="110" x2="457.5" y2="290" stroke="#e4e3df"/>
+<text x="457.5" y="310" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="11" fill="#8a8984" text-anchor="middle">15 min</text>
+<line x1="560.0" y1="110" x2="560.0" y2="290" stroke="#e4e3df"/>
+<text x="560.0" y="310" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="11" fill="#8a8984" text-anchor="middle">20 min</text>
+<path d="M150,132.5 h344.5 a4,4 0 0 1 4,4 v23 a4,4 0 0 1 -4,4 h-344.5 z" fill="#ffffff" stroke="#8a8984" stroke-dasharray="3 2"/>
+<line x1="498.5" y1="148" x2="539.5" y2="148" stroke="#8a8984" stroke-width="2"/>
+<line x1="539.5" y1="141" x2="539.5" y2="155" stroke="#8a8984" stroke-width="2"/>
+<text x="138" y="153" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" fill="#52514e" text-anchor="end">Naive</text>
+<text x="547.5" y="153" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" fill="#52514e">17–19 min</text>
+<path d="M150,212 h289.1 a4,4 0 0 1 4,4 v24 a4,4 0 0 1 -4,4 h-289.1 z" fill="#2a78d6"/>
+<text x="138" y="233" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0b0b0b" text-anchor="end">Tuned</text>
+<text x="451.1" y="233" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0b0b0b">14.3 min <tspan font-weight="400" fill="#52514e">· ~25% faster</tspan></text>
+<line x1="150" y1="110" x2="150" y2="290" stroke="#b9b8b2"/>
+<text x="32" y="358" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="12.5" fill="#52514e">Broadcast joins, AQE + skew handling, column pruning, partitioning</text>
+<text x="32" y="378" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="12.5" fill="#52514e">Analytics tail latency (P99/P50): 2.14× → 1.74×</text>
+</svg>

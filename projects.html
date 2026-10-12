@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap"
     rel="stylesheet">
 
   <script>
@@ -39,11 +39,12 @@
   <nav class="navbar">
     <div class="navbar-container">
       <ul class="nav-links">
-        <li class="nav-item"><a href="index.html?classic#about">about</a></li>
+        <li class="nav-item"><a href="index.html?classic#hero">about</a></li>
         <li class="nav-item"><a href="index.html?classic#history">experience</a></li>
         <li class="nav-item"><a href="#all-projects">projects</a></li>
-        <li class="nav-item"><a href="index.html?classic#writingContainer">writing</a></li>
-        <li class="nav-item"><a href="index.html?classic#publicationsContainer">publications</a></li>
+        <li class="nav-item"><a href="index.html?classic#research">research</a></li>
+        <li class="nav-item"><a href="#" id="navResume" target="_blank" rel="noopener noreferrer">resume</a></li>
+        <li class="nav-item"><a href="index.html?classic#contact">contact</a></li>
       </ul>
     </div>
   </nav>
@@ -112,6 +113,9 @@
     function populateProjects() {
       if (!siteContent) return;
 
+      const resume = siteContent.header.socialLinks.find((l) => l.platform === "resume");
+      if (resume) document.getElementById("navResume").href = resume.url;
+
       // All projects, grouped by area; the tabs (or a #area link) narrow it to one area
       const projectsContainer = document.getElementById("all-projects");
       const projects = siteContent.projects;
@@ -123,9 +127,9 @@
         .map((area, groupIndex) => `
           <div class="project-group" id="area-${area.id}">
             <h3 class="project-group-title">${area.label}</h3>
-            <div class="projects-grid-new">
+            <div class="feature-list">
               ${allProjects.filter((p) => p.category === area.id)
-                .map((p, index) => ProjectsUI.card(p, { animate: false, index })).join("")}
+                .map((p) => ProjectsUI.featureRow(p, { detailed: true })).join("")}
             </div>
           </div>`).join("");
 

@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" width="640" height="400" role="img" aria-label="Fleet operations, 2,500 servers">
+<rect width="640" height="400" fill="#fcfcfb"/>
+<text x="32" y="46" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="20" font-weight="600" fill="#0b0b0b">Fleet operations, 2,500 servers</text>
+<text x="32" y="70" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" fill="#52514e">End-to-end seconds per phase · 300 concurrent ops · 3% injected failures</text>
+<line x1="222.0" y1="96" x2="222.0" y2="346" stroke="#e4e3df"/>
+<text x="222.0" y="366" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="11" fill="#8a8984" text-anchor="middle">0s</text>
+<line x1="301.5" y1="96" x2="301.5" y2="346" stroke="#e4e3df"/>
+<text x="301.5" y="366" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="11" fill="#8a8984" text-anchor="middle">5s</text>
+<line x1="381.0" y1="96" x2="381.0" y2="346" stroke="#e4e3df"/>
+<text x="381.0" y="366" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="11" fill="#8a8984" text-anchor="middle">10s</text>
+<line x1="460.5" y1="96" x2="460.5" y2="346" stroke="#e4e3df"/>
+<text x="460.5" y="366" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="11" fill="#8a8984" text-anchor="middle">15s</text>
+<line x1="540.0" y1="96" x2="540.0" y2="346" stroke="#e4e3df"/>
+<text x="540.0" y="366" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="11" fill="#8a8984" text-anchor="middle">20s</text>
+<path d="M222,104 h5.4 a4,4 0 0 1 4,4 v14 a4,4 0 0 1 -4,4 h-5.4 z" fill="#2a78d6"/>
+<text x="210" y="119" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" fill="#52514e" text-anchor="end">Register 2,500 servers</text>
+<text x="239.4" y="119" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0b0b0b">0.59 s</text>
+<path d="M222,144 h116.8 a4,4 0 0 1 4,4 v14 a4,4 0 0 1 -4,4 h-116.8 z" fill="#2a78d6"/>
+<text x="210" y="159" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" fill="#52514e" text-anchor="end">Provision whole fleet</text>
+<text x="350.8" y="159" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0b0b0b">7.6 s</text>
+<path d="M222,184 h116.8 a4,4 0 0 1 4,4 v14 a4,4 0 0 1 -4,4 h-116.8 z" fill="#2a78d6"/>
+<text x="210" y="199" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" fill="#52514e" text-anchor="end">Fleet-wide config rollout</text>
+<text x="350.8" y="199" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0b0b0b">7.6 s</text>
+<path d="M222,224 h298.1 a4,4 0 0 1 4,4 v14 a4,4 0 0 1 -4,4 h-298.1 z" fill="#2a78d6"/>
+<text x="210" y="239" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" fill="#52514e" text-anchor="end">Detect 125 failed servers</text>
+<text x="532.1" y="239" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0b0b0b">19 s</text>
+<path d="M222,264 h155.0 a4,4 0 0 1 4,4 v14 a4,4 0 0 1 -4,4 h-155.0 z" fill="#2a78d6"/>
+<text x="210" y="279" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" fill="#52514e" text-anchor="end">Recover after heartbeats</text>
+<text x="389.0" y="279" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0b0b0b">10 s</text>
+<path d="M222,304 h23.0 a4,4 0 0 1 4,4 v14 a4,4 0 0 1 -4,4 h-23.0 z" fill="#2a78d6"/>
+<text x="210" y="319" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" fill="#52514e" text-anchor="end">Decommission 250 servers</text>
+<text x="257.0" y="319" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0b0b0b">1.7 s</text>
+<line x1="222" y1="96" x2="222" y2="346" stroke="#b9b8b2"/>
+</svg>

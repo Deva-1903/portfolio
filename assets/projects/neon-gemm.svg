@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" width="640" height="400" role="img" aria-label="GFLOP/s by kernel">
+<rect width="640" height="400" fill="#fcfcfb"/>
+<text x="32" y="46" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="20" font-weight="600" fill="#0b0b0b">GEMM throughput by kernel</text>
+<text x="32" y="70" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" fill="#52514e">GFLOP/s · 512×512×512 · p50 · Apple M4 Pro</text>
+<line x1="212.0" y1="98" x2="212.0" y2="338" stroke="#e4e3df" stroke-width="1"/>
+<text x="212.0" y="358" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="11" fill="#8a8984" text-anchor="middle">0</text>
+<line x1="290.0" y1="98" x2="290.0" y2="338" stroke="#e4e3df" stroke-width="1"/>
+<text x="290.0" y="358" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="11" fill="#8a8984" text-anchor="middle">100</text>
+<line x1="368.0" y1="98" x2="368.0" y2="338" stroke="#e4e3df" stroke-width="1"/>
+<text x="368.0" y="358" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="11" fill="#8a8984" text-anchor="middle">200</text>
+<line x1="446.0" y1="98" x2="446.0" y2="338" stroke="#e4e3df" stroke-width="1"/>
+<text x="446.0" y="358" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="11" fill="#8a8984" text-anchor="middle">300</text>
+<line x1="524.0" y1="98" x2="524.0" y2="338" stroke="#e4e3df" stroke-width="1"/>
+<text x="524.0" y="358" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="11" fill="#8a8984" text-anchor="middle">400</text>
+<path d="M212,112 h0.0 a4,4 0 0 1 4,4 v16 a4,4 0 0 1 -4,4 h-0.0 z" fill="#2a78d6"/>
+<text x="200" y="128" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" fill="#52514e" font-weight="400" text-anchor="end">fp32 naive</text>
+<text x="224.0" y="128" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" font-weight="500" fill="#0b0b0b">3<tspan fill="#8a8984" font-weight="400"> · 1×</tspan></text>
+<path d="M212,158 h43.6 a4,4 0 0 1 4,4 v16 a4,4 0 0 1 -4,4 h-43.6 z" fill="#2a78d6"/>
+<text x="200" y="174" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" fill="#52514e" font-weight="400" text-anchor="end">int8 · 1 accumulator</text>
+<text x="267.6" y="174" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" font-weight="500" fill="#0b0b0b">61<tspan fill="#8a8984" font-weight="400"> · 20×</tspan></text>
+<path d="M212,204 h116.9 a4,4 0 0 1 4,4 v16 a4,4 0 0 1 -4,4 h-116.9 z" fill="#2a78d6"/>
+<text x="200" y="220" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" fill="#52514e" font-weight="400" text-anchor="end">int8 · 4 accumulators</text>
+<text x="340.9" y="220" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" font-weight="500" fill="#0b0b0b">155<tspan fill="#8a8984" font-weight="400"> · 52×</tspan></text>
+<path d="M212,250 h303.3 a4,4 0 0 1 4,4 v16 a4,4 0 0 1 -4,4 h-303.3 z" fill="#2a78d6"/>
+<text x="200" y="266" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" fill="#0b0b0b" font-weight="600" text-anchor="end">int8 · 4×4 register-tiled</text>
+<text x="527.3" y="266" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#0b0b0b">394<tspan fill="#8a8984" font-weight="400"> · 132×</tspan></text>
+<path d="M212,296 h70.9 a4,4 0 0 1 4,4 v16 a4,4 0 0 1 -4,4 h-70.9 z" fill="#2a78d6"/>
+<text x="200" y="312" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" fill="#52514e" font-weight="400" text-anchor="end">int4 weights (W4A8)</text>
+<text x="294.9" y="312" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" font-weight="500" fill="#0b0b0b">96<tspan fill="#8a8984" font-weight="400"> · 32×</tspan></text>
+<line x1="212" y1="98" x2="212" y2="338" stroke="#b9b8b2" stroke-width="1"/>
+</svg>

@@ -24,7 +24,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap"
     rel="stylesheet">
 
   <!-- Inline script to apply theme immediately for Safari compatibility -->
@@ -73,11 +73,12 @@
   <nav class="navbar">
     <div class="navbar-container">
       <ul class="nav-links">
-        <li class="nav-item"><a href="#about">about</a></li>
+        <li class="nav-item"><a href="#hero">about</a></li>
         <li class="nav-item"><a href="#history">experience</a></li>
         <li class="nav-item"><a href="#pet-projects">projects</a></li>
-        <li class="nav-item"><a href="#writingContainer">writing</a></li>
-        <li class="nav-item"><a href="#publicationsContainer">publications</a></li>
+        <li class="nav-item"><a href="#research">research</a></li>
+        <li class="nav-item"><a href="#" id="navResume" target="_blank" rel="noopener noreferrer">resume</a></li>
+        <li class="nav-item"><a href="#contact">contact</a></li>
       </ul>
     </div>
   </nav>
@@ -124,44 +125,36 @@
       <div class="hero-left">
         <h1 class="pronunciation-tooltip" id="userName" data-pronunciation=""></h1>
         <div id="userLocation"></div>
-        <div class="about-content" id="aboutContent"></div>
+        <p class="hero-headline" id="heroHeadline"></p>
+        <p class="hero-credentials" id="heroCredentials"></p>
+        <p class="hero-intro" id="heroIntro"></p>
+        <div class="cta-row" id="heroCtas"></div>
+        <p class="hero-availability" id="heroAvailability"></p>
       </div>
       <div class="hero-right">
         <div id="dpic">
-          <img src="" class="ppic" id="profileImage" />
+          <img src="" class="ppic" id="profileImage" alt="" />
         </div>
         <div id="dico"></div>
       </div>
     </div>
   </div>
 
-  <div id="bio" class="container" style="display: none"></div>
-
   <div id="history" class="container fade-up"></div>
+
+  <div id="pet-projects" class="container"></div>
+
+  <div id="research" class="container fade-up"></div>
+
+  <div class="container fade-up" id="miscContainer"></div>
 
   <div class="writing-section">
     <div class="container fade-up" id="writingContainer"></div>
   </div>
 
-  <div id="pet-projects" class="container"></div>
+  <div id="education" class="container fade-up"></div>
 
-  <div class="container fade-up" id="publicationsContainer"></div>
-
-  <div class="container fade-up" id="miscContainer"></div>
-
-  <!-- <div id="contact" class="container">
-      <div class="ctitle" id="contactTitle"></div>
-      <div class="contact-content">
-        <p id="contactDescription"></p>
-        <form id="contactForm" class="contact-form">
-          <input type="text" id="name" placeholder="" required />
-          <input type="email" id="email" placeholder="" required />
-          <textarea id="message" placeholder="" rows="4" required></textarea>
-          <button type="submit" id="submitBtn"></button>
-        </form>
-        <div id="formStatus" style="display: none; margin-top: 10px"></div>
-      </div>
-    </div> -->
+  <div id="contact" class="container fade-up"></div>
 
   <br /><br /><br /><br />
 
@@ -208,90 +201,96 @@
     function populateContent() {
       if (!siteContent) return;
 
-      // Header
-      document.getElementById("profileImage").src =
-        siteContent.header.profileImage;
-      const nameParts = siteContent.header.name.split(" ");
-      const firstName = nameParts[0];
-      const lastName = nameParts.slice(1).join(" ");
-      document.getElementById("userName").innerHTML =
-        `${firstName} <span class="name-accent">${lastName}</span>`;
-      document
-        .getElementById("userName")
-        .setAttribute("data-pronunciation", siteContent.header.nameAudio);
-      // document.getElementById("userTagline").textContent =
-      //   siteContent.header.tagline;
-      document.getElementById("userLocation").textContent =
-        siteContent.header.location;
+      const c = siteContent;
+      const ext = (url, text, cls = "") =>
+        `<a href="${url}" target="_blank" rel="noopener noreferrer"${cls ? ` class="${cls}"` : ""}>${text}</a>`;
+      const social = (platform) => c.header.socialLinks.find((l) => l.platform === platform);
+      const resume = social("resume");
 
-      const socialLinks = document.getElementById("dico");
-      socialLinks.innerHTML = siteContent.header.socialLinks
-        .map(
-          (link) =>
-            `<a href="${link.url}" target="_blank" rel="noopener noreferrer"><i class="${link.icon}"></i></a>`
-        )
+      // Header
+      const profileImage = document.getElementById("profileImage");
+      profileImage.src = c.header.profileImage;
+      profileImage.alt = `Photo of ${c.header.name}`;
+      const nameParts = c.header.name.split(" ");
+      document.getElementById("userName").innerHTML =
+        `${nameParts[0]} <span class="name-accent">${nameParts.slice(1).join(" ")}</span>`;
+      document.getElementById("userName").setAttribute("data-pronunciation", c.header.nameAudio);
+      document.getElementById("userLocation").textContent = c.header.location;
+
+      // Social icons (resume gets its own labelled button instead of an icon)
+      document.getElementById("dico").innerHTML = c.header.socialLinks
+        .filter((link) => link.platform !== "resume")
+        .map((link) =>
+          `<a href="${link.url}" target="_blank" rel="noopener noreferrer" aria-label="${link.platform}" title="${link.platform}"><i class="${link.icon}" aria-hidden="true"></i></a>`)
         .join("");
+      if (resume) document.getElementById("navResume").href = resume.url;
 
       // Last Updated
-      document.getElementById(
-        "lastUpdated"
-      ).textContent = `Last updated: ${siteContent.info.lastUpdated}`;
+      document.getElementById("lastUpdated").textContent = `Last updated: ${c.info.lastUpdated}`;
 
-      // About
-      document.getElementById("aboutContent").innerHTML =
-        // Entries that are already a list (e.g. "<ul>...") render as-is; the rest become paragraphs
-        siteContent.about.paragraphs.map((p) => /^<(ul|ol)\b/.test(p) ? p : `<p>${p}</p>`).join("");
+      // Hero: who I am, what I do, and the next step, in one screen
+      document.getElementById("heroHeadline").textContent = c.hero.headline;
+      document.getElementById("heroCredentials").textContent = c.hero.credentials;
+      document.getElementById("heroIntro").innerHTML = c.hero.intro;
+      document.getElementById("heroAvailability").innerHTML =
+        `<span class="availability-dot" aria-hidden="true"></span>${c.hero.availability}`;
+      // GitHub already sits in the icon row under the photo, so the hero keeps two actions
+      document.getElementById("heroCtas").innerHTML = [
+        `<a href="#pet-projects" class="cta cta-primary">View projects</a>`,
+        resume ? ext(resume.url, "Resume", "cta") : "",
+      ].join("");
 
-      // History
-      const historyContainer = document.getElementById("history");
-      historyContainer.innerHTML = siteContent.history.entries
-        .map((entry) => {
-          let courseworkHTML = "";
-          if (entry.coursework) {
-            // Handle both array format (multiple semesters) and object format (single semester)
-            const courseworkArray = Array.isArray(entry.coursework)
-              ? entry.coursework
-              : [entry.coursework];
+      // 600+ numbered courses are PhD-level, the rest master's-level
+      const courseLevel = (course) =>
+        parseInt((course.code.match(/(\d{3})/) || [])[1], 10) >= 600 ? "PhD-level" : "Master's-level";
 
-            courseworkHTML = courseworkArray.map((semesterData) => {
-              // Collect all courses with their level
-              const allCourses = [];
-              semesterData.categories.forEach((category) => {
-                const isPhD = category.title.toLowerCase().includes("phd");
-                category.courses.forEach((course) => {
-                  allCourses.push({
-                    ...course,
-                    isPhD: isPhD,
-                  });
-                });
-              });
+      const courseworkFor = (entry) => {
+        if (!entry.coursework) return "";
+        // Handle both array format (multiple semesters) and object format (single semester)
+        const semesters = Array.isArray(entry.coursework) ? entry.coursework : [entry.coursework];
+        // Grouped by level (PhD-level first); "*" marks courses in progress
+        const groups = [];
+        semesters.forEach((sem) => sem.categories.forEach((category) => category.courses.forEach((course) => {
+          const label = courseLevel(course);
+          let group = groups.find((g) => g.label === label);
+          if (!group) groups.push(group = { label, courses: [] });
+          group.courses.push(course);
+        })));
+        groups.sort((a, b) => (a.label === "PhD-level" ? -1 : 0) - (b.label === "PhD-level" ? -1 : 0));
+        const anyCurrent = groups.some((g) => g.courses.some((course) => course.current));
+        return `<div class="edu-courses">${groups.map((g) => `
+          <div class="edu-sem">
+            <div class="edu-sem-label">${g.label}</div>
+            <ul class="edu-course-list">
+              ${g.courses.map((course) => `
+                <li>
+                  <span class="edu-course-name">${course.name}${course.current ? '<span class="edu-current" title="currently taking">*</span>' : ""}</span>
+                  <span class="edu-course-code">${course.code}</span>
+                </li>`).join("")}
+            </ul>
+          </div>`).join("")}
+          ${anyCurrent ? `<div class="edu-footnote">* currently taking</div>` : ""}
+        </div>`;
+      };
 
-              const coursesList = allCourses
-                .map((course) => {
-                  const courseText = `<span class="course-code">${course.code}</span>: ${course.name}`;
-                  return course.isPhD
-                    ? `${courseText} <span class="phd-indicator">(PhD)</span>`
-                    : courseText;
-                })
-                .join(", ");
+      const orgHTML = (entry) => entry.org
+        ? ` <span class="exp-org">· ${entry.orgUrl ? ext(entry.orgUrl, entry.org) : entry.org}</span>`
+        : "";
 
-              return `
-          <div class="entry-coursework">
-            <span class="semester-title">${semesterData.semester}</span> - ${coursesList}
-          </div>
-        `;
-            }).join("");
-          }
+      // Experience (degrees live in the Education section further down)
+      document.getElementById("history").innerHTML = `
+        <div class="ctitle">experience</div>
+        ${c.history.entries.filter((e) => e.type !== "education").map((entry) => {
           const skillsHTML = entry.skills?.length
             ? `<div class="exp-skills">${entry.skills.map((s) => `<span class="skill-chip">${s}</span>`).join("")}</div>`
             : "";
           const bulletsHTML = entry.bullets?.length
             ? `<ul class="exp-bullets">${entry.bullets.map((b) => `<li>${b}</li>`).join("")}</ul>`
             : "";
-          const moreHTML = bulletsHTML || courseworkHTML
+          const moreHTML = bulletsHTML
             ? `<details class="exp-more">
-                <summary><span class="exp-more-closed">see ${bulletsHTML ? "more" : "coursework"}</span><span class="exp-more-open">see less</span></summary>
-                ${bulletsHTML}${courseworkHTML}
+                <summary><span class="exp-more-closed">see more</span><span class="exp-more-open">see less</span></summary>
+                ${bulletsHTML}
               </details>`
             : "";
           return `
@@ -299,11 +298,11 @@
           <div class="timespan">${entry.timespan}</div>
           <div class="ico">
             <div class="entry-dot"></div>
-            <img src="${entry.logo}" />
+            <img src="${entry.logo}" alt="${entry.org || entry.role} logo" />
           </div>
           <div class="desc">
             <div class="exp-head">
-              <strong>${entry.role}</strong>${entry.org ? ` <span class="exp-org">· ${entry.orgUrl ? `<a href="${entry.orgUrl}" target="_blank" rel="noopener noreferrer">${entry.org}</a>` : entry.org}</span>` : ""}
+              <strong>${entry.role}</strong>${orgHTML(entry)}
               ${entry.note ? `<span class="exp-note">${entry.note}</span>` : ""}
             </div>
             <div class="exp-date-inline">${entry.timespan}</div>
@@ -311,123 +310,111 @@
             ${skillsHTML}
             ${moreHTML}
           </div>
-        </div>
-      `;
-        })
-        .join("");
-
-      // Writing
-      const writingContainer = document.getElementById("writingContainer");
-      writingContainer.innerHTML = `
-        <div class="ctitle">${siteContent.writing.title}</div>
-        <div>${siteContent.writing.subtitle}</div>
-        <ul class="nodot">
-          ${siteContent.writing.articles
-          .map(
-            (article) =>
-              `<li>${article.date} <a href="${article.url}" target="_blank" rel="noopener noreferrer">${article.title}</a></li>`
-          )
-          .join("")}
-        </ul>
-        <p style="margin-top: 20px; font-size: 14px;">
-          <a href="${siteContent.writing.contentLink.url
-        }" style="color: var(--text-muted); text-decoration: none;">
-            ${siteContent.writing.contentLink.text}
-          </a>
-        </p>
+        </div>`;
+        }).join("")}
       `;
 
-      // Projects: top picks under "all", or every project in one area
+      // Selected work: four featured projects up front, or every project in one area
       const projectsContainer = document.getElementById("pet-projects");
-      const projects = siteContent.projects;
+      const projects = c.projects;
       const allProjects = ProjectsUI.sorted(projects.items);
-      const projectsFor = (filter) => filter === "all"
-        ? allProjects.slice(0, 6)
+      const featuredProjects = ProjectsUI.featured(projects.items);
+      const projectsFor = (filter) => filter === "featured"
+        ? featuredProjects
         : allProjects.filter((p) => p.category === filter);
       projectsContainer.innerHTML = `
-        <div class="ctitle fade-up">${projects.title}</div>
-        <div class="fade-up">${ProjectsUI.filterBar(projects, "all")}</div>
-        <div class="projects-grid-new" id="projectsGrid">
-          ${projectsFor("all").map((p, index) => ProjectsUI.card(p, { index })).join("")}
+        <div class="ctitle fade-up">selected work</div>
+        <div class="fade-up">${ProjectsUI.filterBar(projects, "featured",
+          { id: "featured", label: "featured", count: featuredProjects.length }, { hide: ["archive"] })}</div>
+        <div class="feature-list" id="projectsGrid">
+          ${projectsFor("featured").map((p) => ProjectsUI.featureRow(p, { projects })).join("")}
         </div>
-        <p style="margin-top: 30px; font-size: 14px; text-align: center;" class="fade-up">
-          <a href="projects.html" class="view-all-projects" id="viewAllProjects">→ view all my projects</a>
+        <p class="fade-up view-all-row">
+          <a href="projects.html" class="view-all-projects" id="viewAllProjects">→ all ${projects.items.length} projects, with details</a>
         </p>
       `;
       ProjectsUI.onFilter(projectsContainer, (filter) => {
         projectsContainer.querySelectorAll("[data-filter]").forEach((b) =>
           b.setAttribute("aria-selected", String(b.dataset.filter === filter)));
-        document.getElementById("projectsGrid").innerHTML =
-          projectsFor(filter).map((p) => ProjectsUI.card(p, { animate: false })).join("");
+        // Every tab uses the same rows; the area label only matters on "featured"
+        document.getElementById("projectsGrid").innerHTML = projectsFor(filter)
+          .map((p) => ProjectsUI.featureRow(p, filter === "featured" ? { projects } : {})).join("");
         document.getElementById("viewAllProjects").href =
-          filter === "all" ? "projects.html" : `projects.html#${filter}`;
+          filter === "featured" ? "projects.html" : `projects.html#${filter}`;
       });
 
-      // Publications
-      const publicationsContainer = document.getElementById(
-        "publicationsContainer"
-      );
-      publicationsContainer.innerHTML = `
-        <div class="ctitle">${siteContent.publications.title}</div>
-        ${siteContent.publications.items
-          .map(
-            (item) => `
+      // Research: interests + publications
+      document.getElementById("research").innerHTML = `
+        <div class="ctitle">${c.research.title}</div>
+        <p class="research-intro">${c.research.intro}</p>
+        <div class="section-label">Interests</div>
+        <ul class="research-interests">${c.research.interests.map((i) => `<li>${i}</li>`).join("")}</ul>
+        <div class="section-label">${c.publications.title}</div>
+        ${c.publications.items.map((item) => `
           <div class="pub">
-            <div class="pub-title">${item.url
-                ? `<a href="${item.url}" target="_blank" rel="noopener noreferrer">${item.title}</a>`
-                : item.title
-              }</div>
+            <div class="pub-title">${item.url ? ext(item.url, item.title) : item.title}</div>
             <div class="pub-venue">${item.venue}</div>
             <div class="pub-authors">${item.authors}</div>
-          </div>
-        `
-          )
-          .join("")}
+          </div>`).join("")}
       `;
 
-      // Misc
-      const miscContainer = document.getElementById("miscContainer");
-      miscContainer.innerHTML = `
-        <div class="ctitle">${siteContent.misc.title}</div>
-        ${siteContent.misc.items
-          .map((item) => {
-            let description = item.description || "";
-            // If there's a URL and linkText, replace linkText with a link
-            if (item.url && item.url.trim() !== "" && item.linkText) {
-              const linkRegex = new RegExp(
-                `(${item.linkText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`,
-                "gi"
-              );
-              description = description.replace(
-                linkRegex,
-                `<a href="${item.url}" target="_blank" rel="noopener noreferrer">$1</a>`
-              );
-            } else if (item.url && item.url.trim() !== "") {
-              // If there's a URL but no linkText, make the whole description a link
-              description = `<a href="${item.url}" target="_blank" rel="noopener noreferrer">${description}</a>`;
-            }
-            return `
-          <div class="misc-item">
-            <strong>${item.date}</strong> - ${description}
-          </div>
-        `;
-          })
-          .join("")}
+      // Updates
+      document.getElementById("miscContainer").innerHTML = `
+        <div class="ctitle">${c.misc.title}</div>
+        ${c.misc.items.map((item) => {
+          let description = item.description || "";
+          if (item.url && item.linkText) {
+            const linkRegex = new RegExp(`(${item.linkText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi");
+            description = description.replace(linkRegex, ext(item.url, "$1"));
+          } else if (item.url) {
+            description = ext(item.url, description);
+          }
+          return `<div class="misc-item"><strong>${item.date}</strong> - ${description}</div>`;
+        }).join("")}
       `;
 
-      // Contact (commented out)
-      // document.getElementById("contactTitle").textContent =
-      //   siteContent.contact.title;
-      // document.getElementById("contactDescription").textContent =
-      //   siteContent.contact.description;
-      // document.getElementById("name").placeholder =
-      //   siteContent.contact.placeholders.name;
-      // document.getElementById("email").placeholder =
-      //   siteContent.contact.placeholders.email;
-      // document.getElementById("message").placeholder =
-      //   siteContent.contact.placeholders.message;
-      // document.getElementById("submitBtn").textContent =
-      //   siteContent.contact.submitButton;
+      // Writing
+      document.getElementById("writingContainer").innerHTML = `
+        <div class="ctitle">${c.writing.title}</div>
+        <div>${c.writing.subtitle}</div>
+        <ul class="nodot">
+          ${c.writing.articles.map((a) => `<li>${a.date} ${ext(a.url, a.title)}</li>`).join("")}
+        </ul>
+        <p class="writing-more"><a href="${c.writing.contentLink.url}">${c.writing.contentLink.text}</a></p>
+      `;
+
+      // Education: compact, near the bottom
+      document.getElementById("education").innerHTML = `
+        <div class="ctitle">education</div>
+        ${c.history.entries.filter((e) => e.type === "education").map((entry) => {
+          const coursework = courseworkFor(entry);
+          return `
+          <div class="edu-item">
+            <img class="edu-logo" src="${entry.logo}" alt="${entry.org} logo" loading="lazy" />
+            <div class="edu-body">
+              <div class="edu-top">
+                <div class="exp-head"><strong>${entry.role}</strong>${orgHTML(entry)}
+                  ${entry.note ? `<span class="exp-note">${entry.note}</span>` : ""}</div>
+                <div class="edu-date">${entry.timespan}</div>
+              </div>
+              ${entry.summary ? `<div class="exp-summary">${entry.summary}</div>` : ""}
+              ${coursework}
+            </div>
+          </div>`;
+        }).join("")}
+      `;
+
+      // Contact: a clear closing call to action
+      document.getElementById("contact").innerHTML = `
+        <div class="ctitle">${c.contact.title}</div>
+        <p class="contact-text">${c.contact.text}</p>
+        <div class="cta-row">
+          <a href="mailto:${c.contact.email}" class="cta cta-primary">${c.contact.email}</a>
+          ${social("linkedin") ? ext(social("linkedin").url, "LinkedIn", "cta") : ""}
+          ${social("github") ? ext(social("github").url, "GitHub", "cta") : ""}
+          ${resume ? ext(resume.url, "Resume", "cta") : ""}
+        </div>
+      `;
 
       try {
         renderPlainView();
@@ -455,11 +442,17 @@
       const coursework = (entry) => {
         if (!entry.coursework) return "";
         const semesters = Array.isArray(entry.coursework) ? entry.coursework : [entry.coursework];
-        return "Coursework:" + list(semesters.map((sem) =>
-          `${sem.semester}: ` + sem.categories
-            .flatMap((cat) => cat.courses.map((course) => `${course.code} ${course.name}`))
-            .join(", ")
-        ));
+        // Grouped by level; "*" marks courses in progress
+        const levels = { "PhD-level": [], "Master's-level": [] };
+        // 600+ numbered courses are PhD-level, the rest master's-level
+        semesters.forEach((sem) => sem.categories.forEach((cat) => cat.courses.forEach((course) =>
+          levels[parseInt((course.code.match(/(\d{3})/) || [])[1], 10) >= 600 ? "PhD-level" : "Master's-level"].push(course))));
+        const anyCurrent = Object.values(levels).flat().some((course) => course.current);
+        return "Coursework:" + list(Object.entries(levels)
+          .filter(([, courses]) => courses.length)
+          .map(([level, courses]) => `${level}: ` +
+            courses.map((course) => `${course.name}${course.current ? "*" : ""}`).join(", "))) +
+          (anyCurrent ? "<p><small>* currently taking</small></p>" : "");
       };
 
       const timeline = (items) => entries(items.map((e) =>
@@ -612,29 +605,6 @@
         });
     </script>
     -->
-
-  <!-- attempt hiding from spambots :p -->
-  <script type="text/javascript">
-    const rot13 = (message) => {
-      const alpha =
-        "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLM";
-      return message.replace(
-        /[a-z]/gi,
-        (letter) => alpha[alpha.indexOf(letter) + 13]
-      );
-    };
-    var e_is_shown = false;
-    document.getElementById("iemail").addEventListener("click", function () {
-      let demail = document.getElementById("demail");
-      let msg =
-        "naqerj.xnecngul" +
-        "@" +
-        "tznvy.pbz<oe>V'z fbeel ohg V trg jnl gbb zhpu rznvy naq vg vf birejuryzvat. V bayl znantr gb ercyl gb ~1% bs vg, naq vs jr qba'g xabj rnpu bgure crefbanyyl, vg vf n ybg pybfre gb 0%. Cyrnfr qba'g \"gnxr lbhe fubg\", naq fbeel :(";
-      demail.innerHTML = rot13(msg);
-      demail.style.opacity = e_is_shown ? 0 : 1;
-      e_is_shown = !e_is_shown;
-    });
-  </script>
 
   <!-- Dark Mode Toggle Functionality -->
   <script type="text/javascript">

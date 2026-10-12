@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" width="640" height="400" role="img" aria-label="Post-training results">
+<rect width="640" height="400" fill="#fcfcfb"/>
+<text x="32" y="46" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="20" font-weight="600" fill="#0b0b0b">Post-training results</text>
+<text x="32" y="70" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" fill="#52514e">Qwen2.5-1.5B-Instruct · base vs. SFT → DPO → GRPO with QLoRA · 500 eval prompts</text>
+<line x1="72" y1="320.0" x2="600" y2="320.0" stroke="#e4e3df"/>
+<text x="62" y="324.0" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="11" fill="#8a8984" text-anchor="end">0%</text>
+<line x1="72" y1="267.5" x2="600" y2="267.5" stroke="#e4e3df"/>
+<text x="62" y="271.5" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="11" fill="#8a8984" text-anchor="end">25%</text>
+<line x1="72" y1="215.0" x2="600" y2="215.0" stroke="#e4e3df"/>
+<text x="62" y="219.0" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="11" fill="#8a8984" text-anchor="end">50%</text>
+<line x1="72" y1="162.5" x2="600" y2="162.5" stroke="#e4e3df"/>
+<text x="62" y="166.5" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="11" fill="#8a8984" text-anchor="end">75%</text>
+<line x1="72" y1="110.0" x2="600" y2="110.0" stroke="#e4e3df"/>
+<text x="62" y="114.0" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="11" fill="#8a8984" text-anchor="end">100%</text>
+<rect x="80" y="88" width="12" height="12" rx="3" fill="#2a78d6"/><text x="98" y="98" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="12" fill="#52514e">tuned</text>
+<rect x="148.5" y="88.5" width="11" height="11" rx="3" fill="#ffffff" stroke="#8a8984" stroke-dasharray="3 2"/><text x="166" y="98" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="12" fill="#52514e">base model</text>
+<path d="M161.5,320 V210.6 a4,4 0 0 1 4,-4 h49 a4,4 0 0 1 4,4 V320" fill="#ffffff" stroke="#8a8984" stroke-dasharray="3 2"/>
+<text x="190.0" y="198.6" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" fill="#52514e" text-anchor="middle">54%</text>
+<path d="M221,320 V172.8 a4,4 0 0 1 4,-4 h50 a4,4 0 0 1 4,4 V320 z" fill="#2a78d6"/>
+<text x="250.0" y="160.8" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0b0b0b" text-anchor="middle">72%</text>
+<text x="220" y="342" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" fill="#52514e" text-anchor="middle">Held-out task accuracy</text>
+<path d="M391.5,320 V151.8 a4,4 0 0 1 4,-4 h49 a4,4 0 0 1 4,4 V320" fill="#ffffff" stroke="#8a8984" stroke-dasharray="3 2"/>
+<text x="420.0" y="139.8" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" fill="#52514e" text-anchor="middle">82%</text>
+<path d="M451,320 V122.4 a4,4 0 0 1 4,-4 h50 a4,4 0 0 1 4,4 V320 z" fill="#2a78d6"/>
+<text x="480.0" y="110.4" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0b0b0b" text-anchor="middle">96%</text>
+<text x="450" y="342" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" fill="#52514e" text-anchor="middle">Format compliance</text>
+<line x1="72" y1="320" x2="600" y2="320" stroke="#b9b8b2"/>
+<text x="32" y="378" font-family="Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="12.5" fill="#52514e">Also: 71% preference win-rate over the base model · 1.9× serving throughput on vLLM</text>
+</svg>
