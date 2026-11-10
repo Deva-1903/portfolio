@@ -3023,3 +3023,22 @@ html.dark-theme .feature-media:not(.feature-placeholder) {
 .pcn-media img {
   box-sizing: border-box;
 }
+
+/* ===== Footer skyline (assets/skyline.svg is injected inline so it follows the theme) ===== */
+.skyline-wrap {
+  overflow: hidden;
+  line-height: 0;
+  margin-top: 8px;
+}
+
+.skyline-wrap .skyline {
+  display: block;
+  /* phones: keep the drawing readable and crop the sides rather than shrink it */
+  width: max(100%, 820px);
+  height: auto;
+  aspect-ratio: 1440 / 240;
+  /* wide screens: cap the height; the hills and trees continue past the sides */
+  max-height: 260px;
+  margin-left: 50%;
+  transform: translateX(-50%);
+}

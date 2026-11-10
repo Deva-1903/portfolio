@@ -806,6 +806,17 @@
         transition: color 0.3s ease, border-color 0.3s ease;
       "></footer>
 
+  <!-- Footer skyline: inlined (not an <img>) so its colors follow the light/dark theme -->
+  <div class="skyline-wrap" id="skyline" aria-hidden="true"></div>
+  <script>
+    fetch("./assets/skyline.svg")
+      .then((r) => (r.ok ? r.text() : ""))
+      .then((svg) => {
+        document.getElementById("skyline").innerHTML = svg;
+      })
+      .catch(() => {});
+  </script>
+
   <!-- Ask-my-AI chat widget -->
   <script src="./assets/agent-widget.js" defer></script>
   <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ad1857cb23e34fe6b58c975e866b25d4"}'></script><!-- End Cloudflare Web Analytics -->
