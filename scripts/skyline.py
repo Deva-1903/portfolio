@@ -15,14 +15,17 @@ Buildings, left to right, each simplified from photos on Wikimedia Commons:
                                 tall diagonal steeple
   Campus Center                 Breuer concrete slab, punched windows, cantilevered top floors
   W. E. B. Du Bois Library      slim brick tower, 7 deep bays per face, notched crown
-  Central heating plant stack
   Lederle Graduate Research Tower  cream block of punched windows between solid shafts
   LGRC lowrise + Computer Science building  low, ribbon windows, angled ends
+
+Each building is a <g class="sk-bldg" data-name="..."> so the page can show its
+name on hover/tap (see the skyline script in index.html).
 """
 import random
 import sys
 
 BASE = 240          # viewBox height; buildings run to the bottom edge
+VIEW_X, VIEW_W = 60, 1290      # visible frame: just wide enough for the buildings
 WING_L, WING_R = -700, 2140   # hills and trees continue past the 0..1440 viewBox
 
 rng = random.Random(11)
@@ -300,12 +303,6 @@ def du_bois(x=806, y=22, w=66, d=20, e=7):
     return s
 
 
-def smokestack(x=938, top=96):
-    return [poly("sk-stack", [(x - 2, BASE), (x - 0.4, top), (x + 4.4, top), (x + 6, BASE)]),
-            poly("sk-stack-s", [(x + 2, BASE), (x + 2, top), (x + 4.4, top), (x + 6, BASE)]),
-            rect("sk-stack-top", x - 0.6, top, 5.2, 4)]
-
-
 def lederle(x=982):
     """Lederle Graduate Research Tower: punched-window block between solid service shafts."""
     s = []
@@ -396,7 +393,6 @@ STYLE = """
   --sk-panel:#e5e8eb;--sk-panel-s:#c4c9ce;--sk-panel-blue:#a9bccb;--sk-panel-line:#d5d9dd;--sk-top:#ebe5da;
   --sk-win:#8398ab;--sk-win-s:#708497;--sk-win-off:#788d9f;--sk-ribbon:#62778a;--sk-ribbon-s:#566a7c;--sk-ribbon-off:#62778a;
   --sk-trim:#f4efe7;--sk-trim-s:#d9d1c4;--sk-clock:#f8f5ef;--sk-hands:#3b3f4a;--sk-beacon:#c0503f;
-  --sk-stack:#a07f70;--sk-stack-s:#876a5d;--sk-stack-top:#5b4d48;
   --sk-tree-b:#8ba385;--sk-tree-b-s:#718b6b;--sk-tree-f:#6b8765;--sk-tree-f-s:#546e4f;
   --sk-speck:#2a221d;--sk-speck-o:.42;--sk-night:0;--sk-star:#e6f1ff;--sk-moon:#f3e7c4;
 }
@@ -409,7 +405,6 @@ html.dark-theme .skyline,html[data-theme="dark"] .skyline{
   --sk-panel:#36425a;--sk-panel-s:#2a3449;--sk-panel-blue:#2c3d58;--sk-panel-line:#2f3a50;--sk-top:#2c364a;
   --sk-win:#f2c46b;--sk-win-s:#d6a656;--sk-win-off:#1c2538;--sk-ribbon:#e9bb66;--sk-ribbon-s:#c99a50;--sk-ribbon-off:#1c2538;
   --sk-trim:#4b5772;--sk-trim-s:#3a4560;--sk-clock:#f6e7b8;--sk-hands:#3a2f2a;--sk-beacon:#ff5a4a;
-  --sk-stack:#3a3038;--sk-stack-s:#2e262d;--sk-stack-top:#241e25;
   --sk-tree-b:#26443f;--sk-tree-b-s:#1e3733;--sk-tree-f:#203b36;--sk-tree-f-s:#182e2a;
   --sk-speck:#000;--sk-speck-o:.5;--sk-night:1;
 }
@@ -430,12 +425,12 @@ html.dark-theme .skyline,html[data-theme="dark"] .skyline{
 .sk-hands{fill:none;stroke:var(--sk-hands);stroke-width:1;stroke-linecap:round}
 .sk-rib{fill:none;stroke:var(--sk-sand);stroke-width:1.3;stroke-linejoin:round}
 .sk-beacon{fill:var(--sk-beacon)}
-.sk-stack{fill:var(--sk-stack)}.sk-stack-s{fill:var(--sk-stack-s)}.sk-stack-top{fill:var(--sk-stack-top)}
 .sk-tree-b{fill:var(--sk-tree-b)}.sk-tree-b-s{fill:var(--sk-tree-b-s)}
 .sk-tree-f{fill:var(--sk-tree-f)}.sk-tree-f-s{fill:var(--sk-tree-f-s)}
 .sk-speck{flood-color:var(--sk-speck);flood-opacity:var(--sk-speck-o)}
 .sk-night{opacity:var(--sk-night)}.sk-star{fill:var(--sk-star)}.sk-moon{fill:var(--sk-moon)}
 .skyline *{transition:fill .3s ease,stroke .3s ease,opacity .3s ease}
+.skyline.sk-focus .sk-bldg:not(.sk-on){opacity:.45}
 """.strip()
 
 
@@ -450,12 +445,25 @@ def grain(fid, k, t, freq):
             f'<feMerge><feMergeNode in="SourceGraphic"/><feMergeNode in="s"/></feMerge></filter>')
 
 
+def named(name, shapes):
+    return f'<g class="sk-bldg" data-name="{name}">{"".join(shapes)}</g>'
+
+
 def main(out_path):
     sky = night_sky()
     hl = hills()
-    back_bldg = southwest_tower(96, 84, "sk-p-sw2", w=40, d=12)
-    bldg = (southwest_tower(150, 64, "sk-p-sw1") + stockbridge() + chapel() + campus_center()
-            + du_bois() + smokestack() + lederle() + lgrc_lowrise() + cs_building())
+    sw = "Southwest Residential Area"
+    back_bldg = named(sw, southwest_tower(96, 84, "sk-p-sw2", w=40, d=12))
+    bldg = "".join([
+        named(sw, southwest_tower(150, 64, "sk-p-sw1")),
+        named("Stockbridge Hall", stockbridge()),
+        named("Old Chapel", chapel()),
+        named("Murray D. Lincoln Campus Center", campus_center()),
+        named("W. E. B. Du Bois Library", du_bois()),
+        named("Lederle Graduate Research Tower", lederle()),
+        named("Lederle Graduate Research Center", lgrc_lowrise()),
+        named("Computer Science Building", cs_building()),
+    ])
     back = tree_row(WING_L, WING_R, (24, 36), 14, 23, 228, "sk-tree-b", tall_p=0.18)
     front = tree_row(WING_L + 10, WING_R, (22, 34), 16, 27, 250, "sk-tree-f")
 
@@ -463,17 +471,18 @@ def main(out_path):
     defs.insert(1, grain("sk-grain-strong", 3.2, 0.5, 0.9))
 
     svg = (
-        '<svg class="skyline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 240" '
+        f'<svg class="skyline" xmlns="http://www.w3.org/2000/svg" viewBox="{VIEW_X} 0 {VIEW_W} {BASE}" '
         'preserveAspectRatio="xMidYMax meet" aria-hidden="true" focusable="false">\n'
         "<!-- Generated by scripts/skyline.py; edit that and re-run. Colors are CSS variables "
         "(top of <style>): light theme = day, dark theme = night. -->\n"
         f"<style>{STYLE}</style>\n"
         f"<defs>{''.join(defs)}</defs>\n"
-        f"<!-- night sky (dark theme only) -->\n{sky}\n"
-        f"<!-- Holyoke Range -->\n<g filter=\"url(#sk-grain)\">{hl}</g>\n"
-        f"<!-- campus -->\n<g filter=\"url(#sk-grain)\"><g opacity=\".8\">{''.join(back_bldg)}</g>"
-        f"{''.join(bldg)}</g>\n"
-        f"<!-- trees -->\n<g filter=\"url(#sk-grain-strong)\">{back}"
+        f"<!-- night sky (dark theme only) -->\n<g pointer-events=\"none\">{sky}</g>\n"
+        f"<!-- Holyoke Range -->\n<g filter=\"url(#sk-grain)\" pointer-events=\"none\">{hl}</g>\n"
+        f"<!-- campus: one labelled group per building -->\n<g filter=\"url(#sk-grain)\">"
+        f"<g opacity=\".8\">{back_bldg}</g>{bldg}</g>\n"
+        f"<!-- trees (ignore the pointer so buildings behind them still get their label) -->\n"
+        f"<g filter=\"url(#sk-grain-strong)\" pointer-events=\"none\">{back}"
         f"{rect('sk-tree-f-s', WING_L, 234, WING_R - WING_L, BASE - 234 + 2)}{front}</g>\n"
         "</svg>\n"
     )

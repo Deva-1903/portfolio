@@ -2989,10 +2989,10 @@ html.dark-theme .feature-media:not(.feature-placeholder) {
   height: 17px;
 }
 
-.footer-updated {
-  margin-top: 6px;
+.contact-updated {
+  margin: 22px 0 0;
   font-size: 12.5px;
-  opacity: 0.8;
+  color: var(--text-muted);
 }
 
 /* --- Phones --- */
@@ -3034,11 +3034,31 @@ html.dark-theme .feature-media:not(.feature-placeholder) {
 .skyline-wrap .skyline {
   display: block;
   /* phones: keep the drawing readable and crop the sides rather than shrink it */
-  width: max(100%, 820px);
+  width: max(100%, 860px);
   height: auto;
-  aspect-ratio: 1440 / 240;
+  aspect-ratio: 1290 / 240;
   /* wide screens: cap the height; the hills and trees continue past the sides */
-  max-height: 260px;
+  max-height: 300px;
   margin-left: 50%;
   transform: translateX(-50%);
+}
+
+/* building name shown on hover / tap (fixed, so the cropped strip never clips it) */
+.skyline-tip {
+  position: fixed;
+  z-index: 50;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: var(--text-primary);
+  color: var(--bg-primary);
+  font: 500 12.5px/1.3 var(--font-sans);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, calc(-100% - 10px));
+  transition: opacity 0.15s ease;
+}
+
+.skyline-tip.show {
+  opacity: 1;
 }
