@@ -416,6 +416,7 @@
           ${social("github") ? ext(social("github").url, "GitHub", "cta") : ""}
           ${resume ? ext(resume.url, "Resume", "cta") : ""}
         </div>
+        <p class="contact-updated">Last updated ${c.info.lastUpdated}</p>
       `;
 
       try {
@@ -423,11 +424,6 @@
       } catch (error) {
         console.error("Failed to render plain view:", error);
       }
-
-      // Footer
-      // "Last updated" lives here now instead of a floating (i) button
-      document.getElementById("footer").innerHTML =
-        `<div class="footer-updated">Last updated ${siteContent.info.lastUpdated}</div>`;
     }
 
     // Plain version: browser-default HTML, one page per section (?plain=<page>)
@@ -796,15 +792,67 @@
     </div>
   </div>
 
-  <footer id="footer" style="
-        text-align: center;
-        padding: 20px 0;
-        color: var(--text-muted);
-        font-size: 0.9em;
-        border-top: 1px solid var(--border-light);
-        margin-top: 40px;
-        transition: color 0.3s ease, border-color 0.3s ease;
-      "></footer>
+  <!-- Footer skyline: inlined (not an <img>) so its colors follow the light/dark theme -->
+  <footer class="skyline-wrap" id="skyline" role="img"
+    aria-label="Illustrated UMass Amherst skyline: Southwest Residential Area towers, Stockbridge Hall, Old Chapel, Campus Center, W. E. B. Du Bois Library, Lederle Graduate Research Tower and Center, and the Computer Science Building">
+  </footer>
+  <script>
+    // Hover (or tap) a building to see its name; the others dim while it is named.
+    function initSkyline(wrap) {
+      const svg = wrap.querySelector("svg");
+      const tip = document.createElement("div");
+      tip.className = "skyline-tip";
+      tip.setAttribute("aria-hidden", "true");
+      wrap.appendChild(tip);
+      let current = null;
+
+      const hide = () => {
+        if (!current) return;
+        current.classList.remove("sk-on");
+        svg.classList.remove("sk-focus");
+        tip.classList.remove("show");
+        current = null;
+      };
+
+      const show = (bldg) => {
+        if (bldg === current) return;
+        hide();
+        current = bldg;
+        bldg.classList.add("sk-on");
+        svg.classList.add("sk-focus");
+        tip.textContent = bldg.dataset.name;
+        // Anchor above the building's top, kept on screen when the strip is cropped (phones)
+        const r = bldg.getBoundingClientRect();
+        const half = tip.offsetWidth / 2;
+        const x = Math.min(Math.max(r.left + r.width / 2, half + 8), window.innerWidth - half - 8);
+        tip.style.left = `${x}px`;
+        tip.style.top = `${r.top}px`;
+        tip.classList.add("show");
+      };
+
+      svg.addEventListener("pointerover", (e) => {
+        const bldg = e.target.closest(".sk-bldg");
+        bldg ? show(bldg) : hide();
+      });
+      svg.addEventListener("pointerleave", (e) => {
+        if (e.pointerType !== "touch") hide();
+      });
+      // Touch: a tap shows the name until the next tap elsewhere or a scroll
+      document.addEventListener("pointerdown", (e) => {
+        if (!e.target.closest || !e.target.closest(".sk-bldg")) hide();
+      });
+      window.addEventListener("scroll", hide, { passive: true });
+    }
+
+    fetch("./assets/skyline.svg")
+      .then((r) => (r.ok ? r.text() : ""))
+      .then((svg) => {
+        const wrap = document.getElementById("skyline");
+        wrap.innerHTML = svg;
+        if (svg) initSkyline(wrap);
+      })
+      .catch(() => {});
+  </script>
 
   <!-- Ask-my-AI chat widget -->
   <script src="./assets/agent-widget.js" defer></script>
