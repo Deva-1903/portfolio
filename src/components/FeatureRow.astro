@@ -1,0 +1,69 @@
+---
+// Project row: figure on the left, story on the right (stacks on phones).
+// Projects without a figure get a quiet name tile so every row lines up.
+import { areaLabel, type Project } from "../lib/site";
+
+interface Props {
+  project: Project;
+  /** Show the project's area above its name */
+  showArea?: boolean;
+  /** Add the highlight bullets (projects page) */
+  detailed?: boolean;
+}
+
+const { project: p, showArea = false, detailed = false } = Astro.props;
+const any = p as Project & { url?: string; demo?: string; report?: string; image?: string; imageAlt?: string };
+const links = [
+  any.url && { href: any.url, label: "code ↗" },
+  any.demo && { href: any.demo, label: "live ↗" },
+  any.report && { href: any.report, label: "report ↗" },
+].filter(Boolean) as { href: string; label: string }[];
+const target = any.url || any.demo || any.report;
+const summary = p.summary || `${p.name} ${p.description}`;
+---
+
+<article class="feature-row visible">
+  {
+    any.image ? (
+      <div class="feature-media">
+        {target ? (
+          <a href={target} target="_blank" rel="noopener noreferrer" tabindex="-1">
+            <img src={any.image} alt={any.imageAlt || ""} loading="lazy" decoding="async" />
+          </a>
+        ) : (
+          <img src={any.image} alt={any.imageAlt || ""} loading="lazy" decoding="async" />
+        )}
+      </div>
+    ) : (
+      <div class="feature-media feature-placeholder" aria-hidden="true">
+        <span>{p.name}</span>
+      </div>
+    )
+  }
+  <div class="feature-body">
+    {showArea && <div class="pcn-area">{areaLabel(p.category)}</div>}
+    <h3 class="feature-title">{p.name}</h3>
+    {p.stack && <div class="feature-stack">{p.stack}</div>}
+    <p class="feature-desc" set:html={summary} />
+    {
+      detailed && p.highlights?.length > 0 && (
+        <ul class="feature-highlights">
+          {p.highlights.map((h) => (
+            <li set:html={h} />
+          ))}
+        </ul>
+      )
+    }
+    {
+      links.length > 0 && (
+        <div class="feature-links">
+          {links.map((l) => (
+            <a href={l.href} target="_blank" rel="noopener noreferrer" class="pcn-footer-link">
+              {l.label}
+            </a>
+          ))}
+        </div>
+      )
+    }
+  </div>
+</article>

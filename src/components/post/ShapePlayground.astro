@@ -1,0 +1,412 @@
+---
+// Type two shapes, pick + (broadcasting) or @ (matmul), see the result shape or why it fails.
+// The rules follow NumPy (and PyTorch, which uses the same ones).
+interface Props {
+  a?: string;
+  b?: string;
+  op?: "add" | "matmul";
+}
+const { a = "3, 1", b = "1, 4", op = "add" } = Astro.props;
+const presets = [
+  { a: "3, 1", b: "1, 4", op: "add" },
+  { a: "8, 3, 32, 32", b: "3, 1, 1", op: "add" },
+  { a: "3, 4", b: "3", op: "add" },
+  { a: "4, 1", b: "4", op: "add" },
+  { a: "32, 784", b: "784, 10", op: "matmul" },
+  { a: "2, 5, 8", b: "8, 16", op: "matmul" },
+  { a: "32, 784", b: "512, 10", op: "matmul" },
+  { a: "3", b: "3", op: "matmul" },
+];
+---
+
+<div class="sp" data-shape-playground data-op={op}>
+  <p class="sp-title">Shape playground</p>
+  <p class="sp-hint">Type shapes as numbers separated by commas. Leave a box empty for a scalar.</p>
+  <div class="sp-controls">
+    <label class="sp-field">
+      <span>A</span>
+      <input type="text" class="sp-a" value={a} spellcheck="false" autocomplete="off" aria-label="Shape of A" />
+    </label>
+    <div class="sp-ops" role="group" aria-label="Operation">
+      <button type="button" data-op="add" aria-pressed={op === "add" ? "true" : "false"}>A + B</button>
+      <button type="button" data-op="matmul" aria-pressed={op === "matmul" ? "true" : "false"}>A @ B</button>
+    </div>
+    <label class="sp-field">
+      <span>B</span>
+      <input type="text" class="sp-b" value={b} spellcheck="false" autocomplete="off" aria-label="Shape of B" />
+    </label>
+  </div>
+  <div class="sp-out" aria-live="polite">
+    <div class="sp-steps"></div>
+    <p class="sp-result"></p>
+  </div>
+  <div class="sp-presets">
+    <span>Try:</span>
+    {presets.map((p) => (
+      <button type="button" data-a={p.a} data-b={p.b} data-preset-op={p.op}>
+        ({p.a}) {p.op === "add" ? "+" : "@"} ({p.b})
+      </button>
+    ))}
+  </div>
+</div>
+
+<script>
+  type Shape = number[];
+
+  const fmt = (s: Shape) => (s.length === 1 ? `(${s[0]},)` : `(${s.join(", ")})`);
+  const npFmt = (s: Shape) => (s.length === 1 ? `(${s[0]},)` : `(${s.join(",")})`);
+
+  function parse(text: string): Shape | null {
+    const cleaned = text.replace(/torch\.Size|[()[\]]/g, " ").trim();
+    if (!cleaned) return [];
+    const parts = cleaned.split(/[\s,x×*]+/).filter(Boolean);
+    if (parts.length > 8 || !parts.every((p) => /^\d{1,7}$/.test(p))) return null;
+    return parts.map(Number);
+  }
+
+  // Right-align, pad with 1s, then each pair must be equal or contain a 1
+  function broadcast(a: Shape, b: Shape) {
+    const n = Math.max(a.length, b.length);
+    const pa = [...Array(n - a.length).fill(1), ...a];
+    const pb = [...Array(n - b.length).fill(1), ...b];
+    const cols = pa.map((x, i) => {
+      const y = pb[i];
+      const padA = i < n - a.length;
+      const padB = i < n - b.length;
+      if (x === y) return { x, y, padA, padB, out: x, note: "same" };
+      if (x === 1) return { x, y, padA, padB, out: y, note: `A: 1→${y}` };
+      if (y === 1) return { x, y, padA, padB, out: x, note: `B: 1→${x}` };
+      return { x, y, padA, padB, out: null, note: "✗" };
+    });
+    const ok = cols.every((c) => c.out !== null);
+    return { cols, ok, shape: ok ? cols.map((c) => c.out as number) : null };
+  }
+
+  // classList, not className: keeps Astro's scoping attribute/class on the element
+  function setState(node: HTMLElement, state: "ok" | "bad") {
+    node.classList.remove("ok", "bad");
+    node.classList.add(state);
+  }
+
+  function el(tag: string, cls: string, text = "") {
+    const node = document.createElement(tag);
+    if (cls) node.className = cls;
+    if (text) node.textContent = text;
+    return node;
+  }
+
+  function renderAdd(root: HTMLElement, a: Shape, b: Shape) {
+    const steps = root.querySelector(".sp-steps") as HTMLElement;
+    const result = root.querySelector(".sp-result") as HTMLElement;
+    const r = broadcast(a, b);
+    const n = r.cols.length;
+
+    steps.append(el("p", "sp-step", "1. Line the shapes up from the right; pad the shorter one with 1s on the left (in italics)."));
+    steps.append(el("p", "sp-step", "2. In every column the sizes must be equal, or one of them must be 1 (that one gets stretched)."));
+    if (n === 0) {
+      result.textContent = "Both are scalars: the result is a scalar, shape ().";
+      setState(result, "ok");
+      return;
+    }
+    const grid = el("div", "sp-grid");
+    grid.style.gridTemplateColumns = `auto repeat(${n}, minmax(3.2em, auto))`;
+    const row = (label: string, cells: { text: string; cls: string }[]) => {
+      grid.append(el("span", "sp-rowlabel", label));
+      cells.forEach((c) => grid.append(el("span", `sp-cell ${c.cls}`, c.text)));
+    };
+    row("A", r.cols.map((c) => ({ text: String(c.x), cls: c.padA ? "pad" : "" })));
+    row("B", r.cols.map((c) => ({ text: String(c.y), cls: c.padB ? "pad" : "" })));
+    row("check", r.cols.map((c) => ({ text: c.note, cls: c.out === null ? "bad note" : "note" })));
+    row("result", r.cols.map((c) => ({ text: c.out === null ? "✗" : String(c.out), cls: c.out === null ? "bad" : "res" })));
+    steps.append(grid);
+
+    if (r.ok && r.shape) {
+      result.textContent = `A + B works: ${fmt(a)} + ${fmt(b)} → ${fmt(r.shape)}`;
+      setState(result, "ok");
+    } else {
+      const bad = r.cols.find((c) => c.out === null)!;
+      result.textContent =
+        `Can't broadcast: in the ✗ column the sizes are ${bad.x} and ${bad.y}; they must match or one must be 1. ` +
+        `NumPy says: ValueError: operands could not be broadcast together with shapes ${npFmt(a)} ${npFmt(b)}`;
+      setState(result, "bad");
+    }
+  }
+
+  function renderMatmul(root: HTMLElement, a: Shape, b: Shape) {
+    const steps = root.querySelector(".sp-steps") as HTMLElement;
+    const result = root.querySelector(".sp-result") as HTMLElement;
+    const fail = (msg: string) => {
+      result.textContent = msg;
+      setState(result, "bad");
+    };
+    const step = (text: string) => steps.append(el("p", "sp-step", text));
+
+    if (a.length === 0 || b.length === 0) {
+      return fail("@ needs at least one axis on each side. To scale by a scalar, use * instead.");
+    }
+    // 1-D inputs are promoted to matrices, and the added axis is removed again at the end
+    const A2 = a.length === 1 ? [1, a[0]] : a;
+    const B2 = b.length === 1 ? [b[0], 1] : b;
+    if (a.length === 1) step(`A is 1-D ${fmt(a)}: treated as a row ${fmt(A2)}; that extra 1 is dropped from the result.`);
+    if (b.length === 1) step(`B is 1-D ${fmt(b)}: treated as a column ${fmt(B2)}; that extra 1 is dropped from the result.`);
+
+    const [m, kA] = A2.slice(-2);
+    const [kB, p] = B2.slice(-2);
+    step(`Matrix part: the last two axes. A is (${m}, ${kA}), B is (${kB}, ${p}).`);
+    if (kA !== kB) {
+      return fail(
+        `Inner sizes don't match: A's last axis is ${kA} but B's second-to-last is ${kB}. They must be equal. ` +
+        `NumPy says: ValueError: matmul: Input operand 1 has a mismatch in its core dimension 0, with gufunc signature ` +
+        `(n?,k),(k,m?)->(n?,m?) (size ${kB} is different from ${kA})`);
+    }
+    step(`Inner sizes match (${kA} = ${kB}) and disappear: (${m}, ${kA}) @ (${kB}, ${p}) → (${m}, ${p}).`);
+
+    const batchA = A2.slice(0, -2);
+    const batchB = B2.slice(0, -2);
+    let batch: Shape = [];
+    if (batchA.length || batchB.length) {
+      const r = broadcast(batchA, batchB);
+      if (!r.ok || !r.shape) {
+        const bad = r.cols.find((c) => c.out === null)!;
+        return fail(`The batch axes ${fmt(batchA)} and ${fmt(batchB)} don't broadcast: ${bad.x} vs ${bad.y}, and neither is 1.`);
+      }
+      batch = r.shape;
+      step(`Batch part: everything before the last two axes, broadcast together: ${fmt(batchA)} and ${fmt(batchB)} → ${fmt(batch)}.`);
+    }
+
+    const out = [...batch, ...(a.length === 1 ? [] : [m]), ...(b.length === 1 ? [] : [p])];
+    result.textContent = `A @ B works: ${fmt(a)} @ ${fmt(b)} → ${out.length ? fmt(out) : "() (a single number)"}`;
+    setState(result, "ok");
+  }
+
+  function init(root: HTMLElement) {
+    const inA = root.querySelector(".sp-a") as HTMLInputElement;
+    const inB = root.querySelector(".sp-b") as HTMLInputElement;
+    const opButtons = root.querySelectorAll<HTMLButtonElement>(".sp-ops button");
+    let op = root.dataset.op === "matmul" ? "matmul" : "add";
+
+    const update = () => {
+      const steps = root.querySelector(".sp-steps") as HTMLElement;
+      const result = root.querySelector(".sp-result") as HTMLElement;
+      steps.replaceChildren();
+      opButtons.forEach((btn) => btn.setAttribute("aria-pressed", String(btn.dataset.op === op)));
+      const a = parse(inA.value);
+      const b = parse(inB.value);
+      if (!a || !b) {
+        result.textContent = `Couldn't read ${!a ? "A" : "B"}. Use whole numbers separated by commas, like 3, 4.`;
+        setState(result, "bad");
+        return;
+      }
+      if (op === "add") renderAdd(root, a, b);
+      else renderMatmul(root, a, b);
+    };
+
+    inA.addEventListener("input", update);
+    inB.addEventListener("input", update);
+    opButtons.forEach((btn) => btn.addEventListener("click", () => {
+      op = btn.dataset.op === "matmul" ? "matmul" : "add";
+      update();
+    }));
+    root.querySelectorAll<HTMLButtonElement>(".sp-presets button").forEach((btn) =>
+      btn.addEventListener("click", () => {
+        inA.value = btn.dataset.a ?? "";
+        inB.value = btn.dataset.b ?? "";
+        op = btn.dataset.presetOp === "matmul" ? "matmul" : "add";
+        update();
+      }));
+    update();
+  }
+
+  document.querySelectorAll<HTMLElement>("[data-shape-playground]").forEach(init);
+</script>
+
+<style>
+  .sp {
+    margin: 32px 0;
+    padding: 18px 20px 16px;
+    border: 1px solid var(--border-medium);
+    border-radius: 12px;
+    background: var(--bg-secondary);
+    font-family: var(--font-sans);
+  }
+
+  .sp-title {
+    margin: 0;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .sp-hint {
+    margin: 4px 0 14px;
+    font-size: 14px;
+    color: var(--text-secondary);
+  }
+
+  .sp-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 14px;
+  }
+
+  .sp-field {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .sp-field input {
+    width: 9.5em;
+    padding: 7px 10px;
+    font: 15px var(--font-mono);
+    color: var(--text-primary);
+    background: var(--bg-primary);
+    border: 1px solid var(--border-medium);
+    border-radius: 8px;
+  }
+
+  .sp-field input:focus,
+  .sp button:focus-visible {
+    outline: 2px solid var(--hl);
+    outline-offset: 1px;
+  }
+
+  .sp-ops {
+    display: inline-flex;
+    border: 1px solid var(--border-medium);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .sp-ops button {
+    padding: 7px 12px;
+    font: 14px var(--font-mono);
+    color: var(--text-secondary);
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+  }
+
+  .sp-ops button + button {
+    border-left: 1px solid var(--border-medium);
+  }
+
+  .sp-ops button[aria-pressed="true"] {
+    color: var(--text-primary);
+    background: var(--hl-soft);
+    font-weight: 600;
+  }
+
+  .sp-out {
+    margin-top: 14px;
+  }
+
+  .sp-steps :global(.sp-step) {
+    margin: 4px 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+  }
+
+  .sp-steps :global(.sp-grid) {
+    display: inline-grid;
+    gap: 4px 6px;
+    margin: 10px 0 2px;
+    font-family: var(--font-mono);
+    font-size: 14px;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .sp-steps :global(.sp-rowlabel) {
+    padding-right: 8px;
+    color: var(--text-muted);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    align-self: center;
+  }
+
+  .sp-steps :global(.sp-cell) {
+    padding: 3px 6px;
+    text-align: center;
+    border: 1px solid var(--border-light);
+    border-radius: 5px;
+    color: var(--text-primary);
+    background: var(--bg-primary);
+  }
+
+  .sp-steps :global(.sp-cell.pad) {
+    font-style: italic;
+    color: var(--text-muted);
+    border-style: dashed;
+  }
+
+  .sp-steps :global(.sp-cell.note) {
+    font-size: 12px;
+    color: var(--text-muted);
+    border-color: transparent;
+    background: transparent;
+  }
+
+  .sp-steps :global(.sp-cell.res) {
+    background: var(--hl-soft);
+    border-color: var(--hl);
+    font-weight: 600;
+  }
+
+  .sp-steps :global(.sp-cell.bad) {
+    color: var(--text-primary);
+    border: 1px dashed var(--text-primary);
+    font-weight: 700;
+  }
+
+  .sp-result {
+    margin: 12px 0 0;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 14.5px;
+    line-height: 1.55;
+    overflow-wrap: anywhere;
+    color: var(--text-primary);
+  }
+
+  .sp-result.ok {
+    background: var(--hl-soft);
+    font-weight: 600;
+  }
+
+  .sp-result.bad {
+    border: 1px dashed var(--text-primary);
+  }
+
+  .sp-presets {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .sp-presets button {
+    padding: 3px 9px;
+    font: 12.5px var(--font-mono);
+    color: var(--text-secondary);
+    background: transparent;
+    border: 1px solid var(--border-medium);
+    border-radius: 999px;
+    cursor: pointer;
+  }
+
+  .sp-presets button:hover {
+    color: var(--text-primary);
+    border-color: var(--text-secondary);
+  }
+</style>

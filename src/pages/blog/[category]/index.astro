@@ -1,0 +1,34 @@
+---
+// One category's posts, e.g. /blog/ml-fundamentals/
+import Base from "../../../layouts/Base.astro";
+import PostRow from "../../../components/PostRow.astro";
+import site from "../../../data/site.json";
+import { blogCategories, getPosts } from "../../../lib/content";
+
+export async function getStaticPaths() {
+  return blogCategories.map((category) => ({ params: { category: category.id }, props: { category } }));
+}
+
+const { category } = Astro.props;
+const posts = (await getPosts()).filter((p) => p.data.category === category.id);
+---
+
+<Base title={`${category.label} - Blog - ${site.header.name}`} description={category.description} active="blog">
+  <main class="container hero-section hub">
+    <a href="/blog/" class="back-link">← all posts</a>
+    <div class="ctitle">{category.label}</div>
+    <p class="blogs-intro">{category.description}</p>
+    {
+      posts.length > 0 ? (
+        <div class="blog-list">
+          {posts.map((post) => (
+            <PostRow post={post} showCategory={false} />
+          ))}
+        </div>
+      ) : (
+        <p class="empty-note">First post landing soon.</p>
+      )
+    }
+    <p class="blog-upcoming">{site.blog.upcoming}</p>
+  </main>
+</Base>

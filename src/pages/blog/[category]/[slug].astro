@@ -1,0 +1,51 @@
+---
+// A blog post: /blog/<category>/<slug>/
+import { render } from "astro:content";
+import PostLayout from "../../../layouts/PostLayout.astro";
+import { categoryOf, categoryUrl, formatDate, getPosts, postSlug, postUrl, readingTime, type Post } from "../../../lib/content";
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post) => {
+    // Neighbors within the same category, oldest → newest reading order
+    const sameCategory = posts.filter((p) => p.data.category === post.data.category).reverse();
+    const i = sameCategory.findIndex((p) => p.id === post.id);
+    return {
+      params: { category: post.data.category, slug: postSlug(post) },
+      props: { post, prev: sameCategory[i - 1], next: sameCategory[i + 1] },
+    };
+  });
+}
+
+interface Props {
+  post: Post;
+  prev?: Post;
+  next?: Post;
+}
+
+const { post, prev, next } = Astro.props;
+const { Content, headings } = await render(post);
+const { title, description, date, refreshed, category, tags } = post.data;
+const cat = categoryOf(category)!;
+const neighbor = (p?: Post) => (p ? { title: p.data.title, href: postUrl(p) } : undefined);
+---
+
+<PostLayout
+  title={title}
+  description={description}
+  active="blog"
+  crumbs={[
+    { label: "blog", href: "/blog/" },
+    { label: cat.label, href: categoryUrl(category) },
+  ]}
+  headings={headings}
+  meta={[formatDate(date), readingTime(post.body), ...tags]}
+  refreshed={refreshed ? formatDate(refreshed) : undefined}
+  prev={neighbor(prev)}
+  next={neighbor(next)}
+  backHref="/blog/"
+  backLabel="all posts"
+>
+  <Content />
+  <p slot="end" class="blog-upcoming">More {cat.label} posts upcoming!</p>
+</PostLayout>

@@ -1,0 +1,64 @@
+---
+// Footer skyline: inlined (not an <img>) so its colors follow the light/dark theme.
+// Regenerate the drawing with: python3 scripts/skyline.py src/assets/skyline.svg
+import svg from "../assets/skyline.svg?raw";
+---
+
+<footer
+  class="skyline-wrap"
+  id="skyline"
+  role="img"
+  aria-label="Illustrated UMass Amherst skyline: Southwest Residential Area towers, Stockbridge Hall, Old Chapel, Campus Center, W. E. B. Du Bois Library, Lederle Graduate Research Tower and Center, and the Computer Science Building"
+  set:html={svg}
+/>
+
+<script>
+  // Hover (or tap) a building to see its name; the others dim while it is named.
+  const wrap = document.getElementById("skyline");
+  const svg = wrap?.querySelector("svg");
+  if (wrap && svg) {
+    const tip = document.createElement("div");
+    tip.className = "skyline-tip";
+    tip.setAttribute("aria-hidden", "true");
+    wrap.appendChild(tip);
+    let current: HTMLElement | null = null;
+
+    const hide = () => {
+      if (!current) return;
+      current.classList.remove("sk-on");
+      svg.classList.remove("sk-focus");
+      tip.classList.remove("show");
+      current = null;
+    };
+
+    const show = (bldg: HTMLElement) => {
+      if (bldg === current) return;
+      hide();
+      current = bldg;
+      bldg.classList.add("sk-on");
+      svg.classList.add("sk-focus");
+      tip.textContent = bldg.dataset.name || "";
+      // Anchor above the building's top, kept on screen when the strip is cropped (phones)
+      const r = bldg.getBoundingClientRect();
+      const half = tip.offsetWidth / 2;
+      const x = Math.min(Math.max(r.left + r.width / 2, half + 8), window.innerWidth - half - 8);
+      tip.style.left = `${x}px`;
+      tip.style.top = `${r.top}px`;
+      tip.classList.add("show");
+    };
+
+    svg.addEventListener("pointerover", (e) => {
+      const bldg = (e.target as Element).closest<HTMLElement>(".sk-bldg");
+      bldg ? show(bldg) : hide();
+    });
+    svg.addEventListener("pointerleave", (e) => {
+      if (e.pointerType !== "touch") hide();
+    });
+    // Touch: a tap shows the name until the next tap elsewhere or a scroll
+    document.addEventListener("pointerdown", (e) => {
+      const t = e.target as Element | null;
+      if (!t?.closest || !t.closest(".sk-bldg")) hide();
+    });
+    window.addEventListener("scroll", hide, { passive: true });
+  }
+</script>

@@ -1,0 +1,86 @@
+---
+// Every post, grouped by category, plus what I've written elsewhere.
+import Base from "../../layouts/Base.astro";
+import FilterTabs from "../../components/FilterTabs.astro";
+import PostRow from "../../components/PostRow.astro";
+import site from "../../data/site.json";
+import { blogCategories, categoryUrl, getPosts } from "../../lib/content";
+
+const posts = await getPosts();
+const categories = blogCategories.map((c) => ({
+  ...c,
+  posts: posts.filter((p) => p.data.category === c.id),
+}));
+---
+
+<Base title={`Blog - ${site.header.name}`} description={site.blog.intro} active="blog">
+  <main class="container hero-section hub">
+    <a href="/?classic#blog" class="back-link">← back to home</a>
+
+    <div data-tabs data-tabs-hash>
+      <div class="ctitle">{site.blog.title}</div>
+      <p class="blogs-intro">{site.blog.intro}</p>
+      <div class="hub-links">
+        <a href="/blog/rss.xml">RSS feed</a>
+        <a href={site.writing.contentLink.url}>content suggestions</a>
+      </div>
+
+      <FilterTabs
+        label="Filter posts by category"
+        active="all"
+        tabs={[
+          { id: "all", label: "all", count: posts.length },
+          ...categories.filter((c) => c.posts.length).map((c) => ({ id: c.id, label: c.label, count: c.posts.length })),
+        ]}
+      />
+
+      {
+        categories.map((c) => (
+          <section class="category-block" data-group={`all ${c.id}`}>
+            <div class="category-head">
+              <h2 class="category-title">
+                <a href={categoryUrl(c.id)}>{c.label}</a>
+              </h2>
+              <span class="category-count">
+                {c.posts.length} {c.posts.length === 1 ? "post" : "posts"}
+              </span>
+            </div>
+            <p class="category-desc">{c.description}</p>
+            {c.posts.length > 0 ? (
+              <div class="blog-list">
+                {c.posts.map((post) => (
+                  <PostRow post={post} showCategory={false} />
+                ))}
+              </div>
+            ) : (
+              <p class="empty-note">First post landing soon.</p>
+            )}
+          </section>
+        ))
+      }
+      <p class="blog-upcoming">{site.blog.upcoming}</p>
+    </div>
+
+    <div class="section-label" style="margin-top: 44px;">Elsewhere</div>
+    <p class="home-sub">{site.writing.subtitle}.</p>
+    <ul class="nodot">
+      {
+        site.writing.articles.map((a) => (
+          <li>
+            {a.date}{" "}
+            <a href={a.url} target="_blank" rel="noopener noreferrer">
+              {a.title}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </main>
+</Base>
+
+<script>
+  document.querySelector("[data-tabs]")?.addEventListener("tabchange", (e) => {
+    const id = (e as CustomEvent<string>).detail;
+    history.replaceState(null, "", id === "all" ? location.pathname : `#${id}`);
+  });
+</script>

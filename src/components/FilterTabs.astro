@@ -1,0 +1,46 @@
+---
+// Tabs that show one group at a time. Every group is rendered up front; a tab shows
+// the element with the matching [data-group] inside the nearest [data-tabs] wrapper.
+// Used for project areas (homepage, /projects/) and blog categories (/blog/).
+interface Props {
+  tabs: { id: string; label: string; count?: number }[];
+  active: string;
+  label: string;
+}
+
+const { tabs, active, label } = Astro.props;
+---
+
+<div class="project-filters" role="tablist" aria-label={label}>
+  {
+    tabs.map((t) => (
+      <button type="button" role="tab" class="project-filter" data-filter={t.id} aria-selected={String(t.id === active)}>
+        {t.label}
+        {t.count !== undefined && <span class="project-filter-count">{t.count}</span>}
+      </button>
+    ))
+  }
+</div>
+
+<script>
+  // Each [data-tabs] wrapper: clicking a tab shows the groups whose data-group lists
+  // that tab id (space-separated, e.g. data-group="all inference") and fires "tabchange".
+  document.querySelectorAll<HTMLElement>("[data-tabs]").forEach((wrap) => {
+    const select = (id: string) => {
+      wrap.querySelectorAll<HTMLElement>("[data-filter]").forEach((b) =>
+        b.setAttribute("aria-selected", String(b.dataset.filter === id)));
+      wrap.querySelectorAll<HTMLElement>("[data-group]").forEach((g) => {
+        const groups = (g.dataset.group || "").split(" ");
+        g.hidden = !groups.includes(id);
+      });
+      wrap.dispatchEvent(new CustomEvent("tabchange", { detail: id }));
+    };
+    wrap.querySelectorAll<HTMLElement>("[data-filter]").forEach((b) =>
+      b.addEventListener("click", () => select(b.dataset.filter as string)));
+    // A #hash naming a tab opens it (e.g. /projects/#inference)
+    const fromHash = decodeURIComponent(location.hash.slice(1));
+    if (wrap.dataset.tabsHash !== undefined && wrap.querySelector(`[data-filter="${CSS.escape(fromHash)}"]`)) {
+      select(fromHash);
+    }
+  });
+</script>

@@ -1,0 +1,198 @@
+---
+// Plain version: browser-default HTML, one page per section (?plain=<page>).
+// Every page is rendered at build time; a small script shows the one in the URL.
+import site from "../data/site.json";
+import { coursesByLevel, sortedProjects, updateHTML } from "../lib/site";
+import { categoryOf, formatDate, postUrl, type Post } from "../lib/content";
+
+interface Props {
+  posts: Post[];
+}
+
+const { posts } = Astro.props;
+const c = site;
+
+const link = (url: string, text: string) => `<a href="${url}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+const list = (items: string[], cls = "") =>
+  `<ul${cls ? ` class="${cls}"` : ""}>${items.map((i) => `<li>${i}</li>`).join("")}</ul>`;
+// Multi-line entries (jobs, degrees, projects) get vertical space between them
+const entries = (items: string[]) => list(items, "pv-entries");
+
+const coursework = (entry: any) => {
+  const groups = coursesByLevel(entry);
+  if (!groups.length) return "";
+  const anyCurrent = groups.some((g) => g.courses.some((course) => course.current));
+  return (
+    "Coursework:" +
+    list(groups.map((g) => `${g.label}: ` + g.courses.map((course) => `${course.name}${course.current ? "*" : ""}`).join(", "))) +
+    (anyCurrent ? "<p><small>* currently taking</small></p>" : "")
+  );
+};
+
+const timeline = (items: any[]) =>
+  entries(
+    items.map(
+      (e) =>
+        `<b>${e.role}</b>${e.org ? `, ${e.orgUrl ? link(e.orgUrl, e.org) : e.org}` : ""}${e.note ? ` (${e.note})` : ""} <i>${e.timespan}</i>` +
+        (e.summary ? `<p>${e.summary}</p>` : "") +
+        (e.skills?.length ? `<p>Skills: ${e.skills.join(", ")}</p>` : "") +
+        (e.bullets?.length ? list(e.bullets) : "") +
+        coursework(e),
+    ),
+  );
+
+const projects = sortedProjects();
+const projectAreas = (c.projects.categories || []).filter((a) => projects.some((p) => p.category === a.id));
+
+const pages: Record<string, { title: string; intro: string; body: string }> = {
+  experience: {
+    title: "Work Experience",
+    intro:
+      'My work and research experience, most recent first. My degrees and coursework are on the <a href="?plain=education">education</a> page.',
+    body: timeline(c.history.entries.filter((e) => e.type !== "education")),
+  },
+  education: {
+    title: "Education",
+    intro: "Where I studied, and the courses I've taken.",
+    body: timeline(c.history.entries.filter((e) => e.type === "education")),
+  },
+  projects: {
+    title: "Projects",
+    intro:
+      "Things I've built, grouped by area. Jump to: " +
+      projectAreas.map((a) => `<a href="#area-${a.id}">${a.label}</a>`).join(", ") +
+      ".",
+    body: projectAreas
+      .map(
+        (area) => `
+        <h3 id="area-${area.id}">${area.label}</h3>
+        ${entries(
+          projects
+            .filter((p) => p.category === area.id)
+            .map((p: any) => {
+              const links = [p.url ? link(p.url, "repo") : "", p.demo ? link(p.demo, "demo") : "", p.report ? link(p.report, "report") : ""]
+                .filter(Boolean)
+                .join(", ");
+              return (
+                `<b>${p.name}</b>${p.status === "in-progress" ? " (in progress)" : ""}` +
+                `${p.stack ? ` <i>${p.stack}</i>` : ""}` +
+                `<p>${p.summary || `${p.name} ${p.description}`}${links ? ` (${links})` : ""}</p>` +
+                (p.highlights?.length ? list(p.highlights) : "")
+              );
+            }),
+        )}`,
+      )
+      .join(""),
+  },
+  publications: {
+    title: "Publications",
+    intro: "Research papers I've published.",
+    body: list(
+      c.publications.items.map((p) => `<b>${p.url ? link(p.url, p.title) : p.title}</b><br><i>${p.venue}</i><br>${p.authors}`),
+    ),
+  },
+  blog: {
+    title: "Blog",
+    intro: `${c.blog.intro} ${c.blog.upcoming}`,
+    body:
+      "<h3>Posts</h3>" +
+      list(
+        posts.map(
+          (p) =>
+            `${formatDate(p.data.date)}: <a href="${postUrl(p)}">${p.data.title}</a> (${categoryOf(p.data.category)?.label})<br>${p.data.description}`,
+        ),
+      ) +
+      "<h3>Elsewhere</h3>" +
+      `<p>${c.writing.subtitle}:</p>` +
+      list(c.writing.articles.map((a) => `${a.date}: ${link(a.url, a.title)}`)),
+  },
+  updates: {
+    title: "Updates",
+    intro: "Things that happened recently.",
+    body: list(c.misc.items.map((item) => `<b>${item.date}</b>: ${updateHTML(item)}`)),
+  },
+};
+
+const socialLinks = c.header.socialLinks.map((s) => link(s.url, s.platform));
+const home = `
+  <img src="${c.header.profileImage}" alt="${c.header.name}" class="pv-photo" />
+  <h2>${c.header.name}</h2>
+  <p>${c.plain.intro}</p>
+
+  Some things about me:
+  ${list(c.plain.about)}
+
+  Site navigation:
+  ${list([
+    'Timeline of my <a href="?plain=experience">work experience</a>',
+    'My <a href="?plain=education">educational background</a> and coursework',
+    'Some <a href="?plain=projects">projects</a> I\'ve built',
+    'My published <a href="?plain=publications">research papers</a>',
+    'My <a href="?plain=blog">blog</a>: notes on what I\'ve learned',
+    'Recent <a href="?plain=updates">updates</a>',
+    `Elsewhere: ${socialLinks.slice(0, -1).join(", ")}, and my ${socialLinks[socialLinks.length - 1]}`,
+  ])}
+
+  <span>${c.plain.contact}</span>`;
+
+const fancyLink = `<p><small><a href="#" data-style="fancy">switch to the classic version</a></small></p>`;
+---
+
+<div id="plainView">
+  <section data-plain-page="" set:html={home + fancyLink} />
+  {
+    Object.entries(pages).map(([key, page]) => (
+      <section
+        data-plain-page={key}
+        data-plain-title={`${c.header.name}: ${page.title}`}
+        hidden
+        set:html={`
+          <h2><a href="?plain" class="sitenav">${c.header.name}</a> &gt; ${page.title}</h2>
+          <p>${page.intro}</p>
+          ${page.body}
+          ${fancyLink}`}
+      />
+    ))
+  }
+</div>
+
+<script>
+  // Old links: ?plain=writing now lives on the blog page
+  const aliases: Record<string, string> = { writing: "blog" };
+  const defaultTitle = document.title;
+
+  function showPlainPage() {
+    const raw = new URLSearchParams(location.search).get("plain") || "";
+    const key = aliases[raw] || raw;
+    const sections = document.querySelectorAll<HTMLElement>("#plainView [data-plain-page]");
+    const match = Array.from(sections).find((s) => s.dataset.plainPage === key) ? key : "";
+    sections.forEach((s) => (s.hidden = s.dataset.plainPage !== match));
+    const shown = Array.from(sections).find((s) => !s.hidden);
+    if (document.documentElement.classList.contains("plain-mode")) {
+      document.title = shown?.dataset.plainTitle || defaultTitle;
+    }
+  }
+
+  // style: "fancy" (classic) or "plain"
+  function setSiteStyle(style: "fancy" | "plain") {
+    document.documentElement.classList.toggle("plain-mode", style === "plain");
+    try {
+      localStorage.setItem("siteStyle", style);
+    } catch (e) {}
+    if (/[?&](plain|classic)\b/.test(location.search)) {
+      history.replaceState(null, "", location.pathname);
+    }
+    document.title = defaultTitle;
+    if (style === "plain") showPlainPage();
+    window.scrollTo(0, 0);
+  }
+
+  showPlainPage();
+  document.getElementById("styleToggle")?.addEventListener("click", () => setSiteStyle("plain"));
+  document.querySelectorAll<HTMLElement>("#plainView [data-style]").forEach((a) =>
+    a.addEventListener("click", (e) => {
+      e.preventDefault();
+      setSiteStyle(a.dataset.style as "fancy" | "plain");
+    }),
+  );
+</script>

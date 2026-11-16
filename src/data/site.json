@@ -4,7 +4,7 @@
     "nameAudio": "DAY-vuh AA-nund",
     "tagline": "I design systems that make ML actually scale.",
     "location": "Amherst, Massachusetts",
-    "profileImage": "../assets/img.jpeg",
+    "profileImage": "/assets/img.jpeg",
     "socialLinks": [
       {
         "platform": "twitter",
@@ -46,7 +46,7 @@
     "contact": "You can reach me at <a href=\"mailto:devaanand@umass.edu\">devaanand@umass.edu</a>. Design inspired by <a href=\"https://nat.org/\">Nat Friedman</a> and <a href=\"https://pratikratadiya.in/\">Pratik Ratadiya</a>."
   },
   "info": {
-    "lastUpdated": "2026-10-12"
+    "lastUpdated": "2026-11-16"
   },
   "hero": {
     "headline": "Building reliable AI systems. Understanding how models behave.",
@@ -160,7 +160,7 @@
       },
       {
         "timespan": "Jul 2026 - Present",
-        "logo": "./assets/caml_logo.png",
+        "logo": "/assets/caml_logo.png",
         "role": "Graduate Research Assistant",
         "org": "Culture and Morality Lab, UMass Amherst",
         "orgUrl": "https://cultureandmorality.org/",
@@ -187,7 +187,7 @@
       },
       {
         "timespan": "Jul 2026 - Sep 2026",
-        "logo": "./assets/theralign.jpeg",
+        "logo": "/assets/theralign.jpeg",
         "role": "Founding Software Engineer Intern",
         "org": "TherAlign Health",
         "orgUrl": "https://theralignhealth.com/",
@@ -254,7 +254,7 @@
       },
       {
         "timespan": "Nov 2022 - May 2023",
-        "logo": "./assets/cario.jpg",
+        "logo": "/assets/cario.jpg",
         "role": "Backend Developer Intern",
         "org": "Cario Growth Services",
         "skills": [
@@ -309,8 +309,20 @@
     ],
     "contentLink": {
       "text": "→ my content suggestions",
-      "url": "content.html"
+      "url": "/content/"
     }
+  },
+  "blog": {
+    "title": "blog",
+    "intro": "My notes on things I've learned. I keep them here so I can come back and refresh anytime, and I write them so anyone can learn from them, even starting from zero.",
+    "upcoming": "More blogs upcoming!",
+    "categories": [
+      {
+        "id": "ml-fundamentals",
+        "label": "ML fundamentals",
+        "description": "The building blocks I use every day in ML work: arrays and tensors, the math behind models, and the tools around them. Explained from scratch, with code you can run."
+      }
+    ]
   },
   "projects": {
     "title": "projects",
@@ -356,7 +368,7 @@
         "description": "is a mechanistic interpretability study (CS 602) of how prefilling attacks weaken refusal in a safety-aligned LLM. Extracts the refusal direction via difference-in-means on a held-out set, traces its residual-stream projection per layer/token, and runs causal interventions (cross-condition patching + additive injection) via PyTorch forward hooks. Behavioral refusal drops 0.92 → 0.32 at k=3, the late-layer signal shifts monotone-by-depth, but both interventions fail to restore refusal (0/300): a clean null showing the late-layer signal is a readout, not the causal lever.",
         "report": "https://github.com/Deva-1903/refusal-decay/blob/main/reports/08-final-paper.pdf",
         "featured": 1,
-        "image": "assets/projects/refusal-decay.png",
+        "image": "/assets/projects/refusal-decay.png",
         "imageAlt": "Line chart: mean projection onto the refusal direction at layer 27 across 46 generated tokens, for harmful prompts with prefill k=0, 3, and 10; the k=0 curve starts highest (about +4.5) and all three drift negative."
       },
       {
@@ -372,7 +384,7 @@
           "1.9× throughput (GPU utilization 52% → 84%), monitored with Prometheus + Grafana."
         ],
         "description": "is an end-to-end LLM post-training and serving stack. It takes Qwen2.5-1.5B-Instruct through supervised fine-tuning, DPO, and GRPO with QLoRA (tuning 1.4% of parameters at 15.8 GB peak GPU), lifting held-out task accuracy 54% → 72%, format compliance 82% → 96%, and a 71% preference win-rate over the base model across 500 eval prompts. The serving layer puts a FastAPI gateway with Redis caching and async micro-batching in front of vLLM - 520 tok/s across 24 concurrent requests, 640 ms p95 time-to-first-token, and 1.9× throughput (GPU utilization 52% → 84%), instrumented with Prometheus + Grafana.",
-        "image": "assets/projects/align-ops.svg",
+        "image": "/assets/projects/align-ops.svg",
         "imageAlt": "Bar chart comparing the base model to the post-trained model on 500 eval prompts: held-out task accuracy 54% to 72%, format compliance 82% to 96%; also a 71% preference win-rate and 1.9× serving throughput."
       },
       {
@@ -390,7 +402,7 @@
         "description": "is a from-scratch study of quantized matmul kernels on Apple Silicon: from a naive fp32 baseline at 3 GFLOP/s to a 4x4 register-blocked int8 micro-kernel at 394 GFLOP/s - a 132× speedup and ~2.5× over compiler auto-vectorization - via ARM NEON sdot intrinsics. Adds GGUF-style INT4 block quantization (6.4× smaller weights than fp32), SNR analysis showing per-channel scaling contains weight outliers per-tensor scaling can't (40 vs 19 dB), roofline analysis that diagnosed and broke a shared memory-bandwidth ceiling (~4× less memory traffic), bit-exact verification against a scalar reference, and p50/p99/p999 tail-latency methodology.",
         "order": 3,
         "featured": 2,
-        "image": "assets/projects/neon-gemm.svg",
+        "image": "/assets/projects/neon-gemm.svg",
         "imageAlt": "Bar chart of GEMM throughput (512×512×512, p50, Apple M4 Pro): fp32 naive 3 GFLOP/s; int8 one accumulator 61; int8 four accumulators 155; int8 4×4 register-tiled 394 (132×); int4 weights 96."
       },
       {
@@ -407,7 +419,7 @@
         ],
         "description": "is a server-provisioning control plane in Go: REST + gRPC over one service layer, idempotent workflows, three-role RBAC, and a transactional audit log. Benchmarked at ~19,700 provisions/min across 2,500+ simulated servers at 300 concurrent ops; Redis-TTL heartbeat liveness (500/s sustained over gRPC) detects silently failed servers in 19s with zero false positives, and an async workflow engine (FOR UPDATE SKIP LOCKED claims, capped backoff + jitter) drove 5,250 operations to 100% eventual success through a 3% injected failure rate. CI runs go test -race against real Postgres and Redis containers.",
         "order": 4,
-        "image": "assets/projects/provisioning-platform.svg",
+        "image": "/assets/projects/provisioning-platform.svg",
         "imageAlt": "Bar chart of end-to-end seconds per phase for 2,500 simulated servers: register 0.59 s, provision the fleet 7.6 s, config rollout 7.6 s, detect 125 failed servers 19 s, recover 10 s, decommission 250 servers 1.7 s."
       },
       {
@@ -425,7 +437,7 @@
         "description": "is a multi-tenant compute scheduler with weighted Dominant Resource Fairness and GPU-aware best-fit bin-packing. On a simulated 32-GPU fleet it sustains 542 succeeded jobs/min under a 500-job flood while holding every backlogged tenant within ~1 GPU of its weight-ideal share, at p50 11 ms / p95 66 ms scheduling latency and ~75% utilization. Preemption was tuned by measurement (an unrestricted threshold caused 688 preemptions at p95 15 s; restricting to an urgent band cut the identical workload to 4 at p95 66 ms), and crash recovery reloads queued jobs from PostgreSQL and requeues running work (at-least-once). Includes a Kubernetes executor mode (implemented; benchmarks ran on the sim executor).",
         "order": 5,
         "featured": 3,
-        "image": "assets/projects/gpu-scheduler.svg",
+        "image": "/assets/projects/gpu-scheduler.svg",
         "imageAlt": "Grouped bar chart of average GPUs held per tenant versus weight-ideal share during a 500-job flood on a 32-GPU fleet: weight 3 held 15.2 (ideal 16.0), weight 2 held 10.3 (ideal 10.7), weight 1 held 6.2 (ideal 5.3)."
       },
       {
@@ -441,7 +453,7 @@
           "Reproduced Coz causal profiling, allocator false-sharing (Hoard vs ptmalloc2/jemalloc/mimalloc), and measurement-bias experiments."
         ],
         "description": "is my consolidated CS 690PF (Performance Engineering) coursework: hand-tuned matmul (loop reorder/unroll/blocking, manual AVX SIMD via __m256, cache-aware tiling with hardware-tuned Kc/Mc/Nc + Mr/Nr micro-kernels, OpenMP multithreading), profiled with perf, perf c2c, Cachegrind, and TMA. Also reproduces Coz causal profiling, Hoard vs ptmalloc2/jemalloc/mimalloc false-sharing, and Mytkowicz measurement-bias experiments.",
-        "image": "assets/projects/cs690pf.png",
+        "image": "/assets/projects/cs690pf.png",
         "imageAlt": "Line chart of false-sharing benchmark throughput (mean writes per second) from 1 to 32 threads for glibc, jemalloc, and mimalloc allocators."
       },
       {
@@ -457,7 +469,7 @@
           "Cutting gradient variance ~10× didn't help Adam: ill-conditioning, not noise, was the bottleneck."
         ],
         "description": "is a CS 651 optimization research project (team) asking when natural-gradient VI actually beats Adam on ill-conditioned posteriors. Matched-compute black-box VI with mean-field + LRD Gaussian families and three optimizers (Adam / closed-form NGVI / EMA Diagonal-Fisher). NGVI's ELBO gain over Adam grows with curvature (κ≈180 → +0.28 nats; κ≈2566 → +2.32); antithetic sampling cut gradient variance ~10× but couldn't lift Adam off ill-conditioned plateaus, showing that ill-conditioning, not noise, was the binding constraint.",
-        "image": "assets/projects/ngvi.png",
+        "image": "/assets/projects/ngvi.png",
         "imageAlt": "Four-panel figure of ELBO convergence over 5,000 iterations on the Eight Schools model, comparing centered and non-centered parameterizations for BBVI with Adam, natural-gradient VI, diagonal-Fisher VI, and variance-reduced BBVI."
       },
       {
@@ -475,7 +487,7 @@
         ],
         "description": "is a full-stack platform for CCR (Contextualized Construct Representations) psychological text analysis: upload a corpus, pick a validated construct, embed items + texts with sentence-transformers, and get per-item cosine-similarity loadings, distributions, and CSV export with a per-run reproducibility record (model version, item hash, package versions). Hardened ingestion (encoding fallback, delimiter sniffing, row/size caps), DB-backed job queue with orphaned-job recovery, and 17 end-to-end tests running in ~1s via a deterministic fake embedding backend.",
         "featured": 4,
-        "image": "assets/projects/ccr-platform.jpg",
+        "image": "/assets/projects/ccr-platform.jpg",
         "imageAlt": "Screenshot of the live CCR platform home page: Theory-Driven Psychological Text Analysis, with steps to upload texts, pick a validated scale, and get scores."
       },
       {
@@ -492,7 +504,7 @@
           "150+ automated tests and provider fallback across LLM backends."
         ],
         "description": "is a provenance-first entity discovery system: takes a free-text topic query and returns a ranked table of real-world entities with per-cell evidence - source URL, snippet, and confidence score - across a multi-stage pipeline covering typed retrieval planning, page rerank, evidence-regime classification, deterministic extraction with LLM fallback, and output verification. Hardened with 150+ automated tests, provider routing/fallback across LLM backends, and a reviewer-facing trust UI.",
-        "image": "assets/projects/agentic-search.jpg",
+        "image": "/assets/projects/agentic-search.jpg",
         "imageAlt": "Screenshot of the AgenticSearch web app: a topic search box with examples and a six-step how-it-works pipeline from query normalization to rank and verify."
       },
       {
@@ -508,7 +520,7 @@
           "Streams chat over WebSockets, with history stored in Durable Objects."
         ],
         "description": "is a RAG-based research assistant on Cloudflare: paste URLs, it fetches each page, strips HTML, chunks and embeds with bge-base-en-v1.5, stores everything in D1, and answers your questions via cosine similarity retrieval - using only what it actually read. Chat streams over WebSockets via AIChatAgent with history persisted in Durable Object storage.",
-        "image": "assets/projects/research-scout.jpg",
+        "image": "/assets/projects/research-scout.jpg",
         "imageAlt": "Screenshot of the Research Scout app showing a research session card for a Cloudflare Agents deep dive."
       },
       {
@@ -538,7 +550,7 @@
           "Tail-latency ratio (P99/P50) down from 2.14× to 1.74× using AQE, skew handling, column pruning, and partitioning."
         ],
         "description": "is a performance deep-dive on the NYC TLC taxi dataset (~1.4B records) that cuts end-to-end ETL runtime ~25% (17–19 min → 14.3 min) and drops the analytics P99/P50 tail-latency ratio 2.14× → 1.74×. Broadcast joins over the ~265-zone lookup collapse shuffle stages (minutes → ~0.05s); AQE, skew-join handling, schema-aware batched reads, column pruning, year/month partitioning + Snappy, and pre-computed derived fields do the rest. Documented as a repeatable optimization playbook (naive vs tuned).",
-        "image": "assets/projects/spark-etl.svg",
+        "image": "/assets/projects/spark-etl.svg",
         "imageAlt": "Bar chart of end-to-end ETL runtime on ~1.4B NYC taxi records: naive pipeline 17 to 19 minutes, tuned pipeline 14.3 minutes (about 25% faster); tail-latency ratio P99/P50 from 2.14× to 1.74×."
       },
       {

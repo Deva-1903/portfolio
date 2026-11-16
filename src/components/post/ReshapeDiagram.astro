@@ -1,0 +1,102 @@
+---
+// np.arange(6) reshaped to (2, 3) and (3, 2), next to the transpose of the (2, 3):
+// the same shape as reshape(3, 2) but a different arrangement.
+const cw = 36;
+const ch = 30;
+const gridTop = 118;
+const panels = [
+  { label: "reshape(2, 3)", cx: 75, grid: [[0, 1, 2], [3, 4, 5]] },
+  { label: "reshape(3, 2)", cx: 220, grid: [[0, 1], [2, 3], [4, 5]] },
+  { label: "reshape(2, 3).T", cx: 365, grid: [[0, 3], [1, 4], [2, 5]] },
+];
+const marked = new Set([0, 1, 2]);
+---
+
+<figure class="diagram">
+  <svg viewBox="0 0 440 252" role="img"
+    aria-label="np.arange(6) is the strip 0 to 5. reshape(2, 3) fills it row by row into [[0, 1, 2], [3, 4, 5]]. reshape(3, 2) fills it row by row into [[0, 1], [2, 3], [4, 5]]. The transpose of the (2, 3) array is [[0, 3], [1, 4], [2, 5]]: the same (3, 2) shape as reshape(3, 2) but a different arrangement.">
+    <text class="code" x="92" y="50" text-anchor="end">arange(6)</text>
+    {[0, 1, 2, 3, 4, 5].map((v) => (
+      <g>
+        <rect class={marked.has(v) ? "cell hl" : "cell"} x={100 + v * 40} y="28" width="40" height="34" />
+        <text class="num" x={120 + v * 40} y="50" text-anchor="middle">{v}</text>
+      </g>
+    ))}
+    <text class="lbl" x="220" y="88" text-anchor="middle">the same six numbers, filled in row by row</text>
+
+    {panels.map((p) => {
+      const w = p.grid[0].length * cw;
+      const left = p.cx - w / 2;
+      return (
+        <g>
+          <text class="code" x={p.cx} y="108" text-anchor="middle">{p.label}</text>
+          {p.grid.map((row, r) => row.map((v, c) => (
+            <g>
+              <rect class={marked.has(v) ? "cell hl" : "cell"} x={left + c * cw} y={gridTop + r * ch} width={cw} height={ch} />
+              <text class="num" x={left + c * cw + cw / 2} y={gridTop + r * ch + ch / 2 + 5} text-anchor="middle">{v}</text>
+            </g>
+          )))}
+        </g>
+      );
+    })}
+    <path class="bracket" d="M 184 216 v 8 h 217 v -8" />
+    <text class="lbl" x="292" y="242" text-anchor="middle">same shape (3, 2), different arrangement</text>
+  </svg>
+  <figcaption>Follow the shaded 0, 1, 2. <code>reshape</code> keeps them in reading order; the transpose turns them into a column.</figcaption>
+</figure>
+
+<style>
+  .diagram {
+    margin: 28px auto;
+    max-width: 520px;
+  }
+
+  svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .cell {
+    fill: var(--bg-secondary);
+    stroke: var(--border-medium);
+    stroke-width: 1;
+  }
+
+  .cell.hl {
+    fill: var(--hl-soft);
+    stroke: var(--hl);
+  }
+
+  .num {
+    font-family: var(--font-mono);
+    font-size: 15px;
+    fill: var(--text-primary);
+  }
+
+  .code {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    fill: var(--text-primary);
+  }
+
+  .lbl {
+    font-family: var(--font-sans);
+    font-size: 12.5px;
+    fill: var(--text-secondary);
+  }
+
+  .bracket {
+    fill: none;
+    stroke: var(--text-muted);
+    stroke-width: 1.2;
+  }
+
+  figcaption {
+    margin-top: 10px;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--text-muted);
+    text-align: center;
+  }
+</style>
