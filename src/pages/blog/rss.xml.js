@@ -14,7 +14,7 @@ export async function GET(context) {
       description: post.data.description,
       pubDate: post.data.date,
       link: postUrl(post),
-      categories: [categoryOf(post.data.category)?.label, ...post.data.tags].filter(Boolean),
+      categories: [categoryOf(post.data.category)?.label].filter(Boolean),
     })),
   });
 }

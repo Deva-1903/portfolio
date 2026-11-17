@@ -25,7 +25,7 @@ interface Props {
 
 const { post, prev, next } = Astro.props;
 const { Content, headings } = await render(post);
-const { title, description, date, refreshed, category, tags } = post.data;
+const { title, description, date, category } = post.data;
 const cat = categoryOf(category)!;
 const neighbor = (p?: Post) => (p ? { title: p.data.title, href: postUrl(p) } : undefined);
 ---
@@ -39,8 +39,7 @@ const neighbor = (p?: Post) => (p ? { title: p.data.title, href: postUrl(p) } : 
     { label: cat.label, href: categoryUrl(category) },
   ]}
   headings={headings}
-  meta={[formatDate(date), readingTime(post.body), ...tags]}
-  refreshed={refreshed ? formatDate(refreshed) : undefined}
+  meta={[formatDate(date), readingTime(post.body)]}
   prev={neighbor(prev)}
   next={neighbor(next)}
   backHref="/blog/"

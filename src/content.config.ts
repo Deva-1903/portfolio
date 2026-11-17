@@ -17,9 +17,6 @@ const blog = defineCollection({
     description: z.string(),
     category: z.enum(blogCategoryIds),
     date: z.coerce.date(),
-    // When I last went back over the post (shown as "Refreshed ...")
-    refreshed: z.coerce.date().optional(),
-    tags: z.array(z.string()).default([]),
     draft: z.boolean().default(false),
   }),
 });

@@ -33,8 +33,6 @@ npm run build    # static site in dist/
    description: "One or two sentences for lists and link previews."
    category: ml-fundamentals   # an id from site.json → blog.categories
    date: 2026-11-16
-   refreshed: 2026-11-16       # optional: shows "Refreshed <date>"
-   tags: ["NumPy", "PyTorch"]
    draft: true                 # drafts only show up in `npm run dev`
    ---
    ```

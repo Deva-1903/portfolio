@@ -11,6 +11,7 @@ const categories = blogCategories.map((c) => ({
   ...c,
   posts: posts.filter((p) => p.data.category === c.id),
 }));
+const withPosts = categories.filter((c) => c.posts.length);
 ---
 
 <Base title={`Blog - ${site.header.name}`} description={site.blog.intro} active="blog">
@@ -25,14 +26,19 @@ const categories = blogCategories.map((c) => ({
         <a href={site.writing.contentLink.url}>content suggestions</a>
       </div>
 
-      <FilterTabs
-        label="Filter posts by category"
-        active="all"
-        tabs={[
-          { id: "all", label: "all", count: posts.length },
-          ...categories.filter((c) => c.posts.length).map((c) => ({ id: c.id, label: c.label, count: c.posts.length })),
-        ]}
-      />
+      {
+        // Category tabs only help once there's more than one category to choose from
+        withPosts.length > 1 && (
+          <FilterTabs
+            label="Filter posts by category"
+            active="all"
+            tabs={[
+              { id: "all", label: "all", count: posts.length },
+              ...withPosts.map((c) => ({ id: c.id, label: c.label, count: c.posts.length })),
+            ]}
+          />
+        )
+      }
 
       {
         categories.map((c) => (

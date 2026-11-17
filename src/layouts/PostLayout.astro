@@ -22,7 +22,6 @@ interface Props {
   active: "blog";
   /** Already formatted bits shown under the title, e.g. date and read time */
   meta: string[];
-  refreshed?: string;
   prev?: Neighbor;
   next?: Neighbor;
   backHref: string;
@@ -31,7 +30,7 @@ interface Props {
   toc?: boolean;
 }
 
-const { title, description, crumbs, headings, active, meta, refreshed, prev, next, backHref, backLabel, toc = true } =
+const { title, description, crumbs, headings, active, meta, prev, next, backHref, backLabel, toc = true } =
   Astro.props;
 const sections = headings.filter((h) => h.depth === 2);
 const showToc = toc && sections.length >= 3;
@@ -58,7 +57,6 @@ const showToc = toc && sections.length >= 3;
         <p class="post-dek">{description}</p>
         <div class="post-meta">
           {meta.map((m) => <span>{m}</span>)}
-          {refreshed && <span class="refreshed">Refreshed {refreshed}</span>}
         </div>
         <slot name="header" />
       </header>

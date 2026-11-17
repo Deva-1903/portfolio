@@ -1,208 +1,72 @@
 ---
 title: "Arrays and Tensor Shapes"
-description: "NumPy and PyTorch from zero: axes, reshape, transpose, matrix products, broadcasting, vectorization, the PyTorch equivalents, and how to read shape errors. My refresher notes, with runnable code for every idea."
+description: "Axes, reshape, transpose, matrix products, broadcasting, vectorization, the PyTorch equivalents, and how to read shape errors."
 category: ml-fundamentals
 date: 2026-11-16
-refreshed: 2026-11-16
-tags: ["NumPy", "PyTorch", "fundamentals"]
 ---
 
-import Callout from "../../components/post/Callout.astro";
 import AxesDiagram from "../../components/post/AxesDiagram.astro";
 import ReshapeDiagram from "../../components/post/ReshapeDiagram.astro";
 import BroadcastDiagram from "../../components/post/BroadcastDiagram.astro";
 import MatmulDiagram from "../../components/post/MatmulDiagram.astro";
 import ShapePlayground from "../../components/post/ShapePlayground.astro";
 
-Most bugs I've hit in ML code were shape bugs. A tensor had its axes in the wrong order, a vector was `(n,)` when it should have been `(n, 1)`, or a sum ran along the wrong axis and quietly produced a number that looked fine. None of this is hard once the handful of rules is in your head. These notes are those rules.
+## 1. Shapes
 
-<Callout type="note" title="Refreshed on Nov 16, 2026">
+An **array** is a grid of numbers that all have the same type. A **tensor** is PyTorch's version of the same thing; it can also run on a GPU and track gradients for training.
 
-These are my own notes. I refreshed all of this on **November 16, 2026** and wrote it down so I can come back and reload it into my head anytime. I also wrote it so that someone who has never touched NumPy can start at the top and learn it: every idea comes with what it is, why it matters, where you'll use it, and code you can run.
-
-Every code block runs as shown. The outputs underneath are real, from NumPy 2.x and PyTorch 2.x.
-
-</Callout>
-
-<Callout type="summary" title="Refresh in 60 seconds">
-
-- **Shape** is a tuple saying how many items sit along each axis. `(32, 3, 224, 224)` is 32 images, 3 color channels, 224 × 224 pixels.
-- **`axis=k`** means "do this along axis k", and that axis disappears from the result. `keepdims=True` keeps it as size 1.
-- **`reshape`** pours the same numbers, in row-major order, into a new shape. The total count must not change; `-1` means "work it out".
-- **`transpose` / `permute`** reorder the axes. Reshape never does that, even when the shapes look right.
-- **`@`** is matrix multiplication: `(m, n) @ (n, p) → (m, p)`. Inner sizes must match. Leading axes are batch axes. `*` is element by element.
-- **Broadcasting**: line shapes up from the right; each pair of sizes must be equal or one of them 1; the 1s get stretched.
-- **Vectorize**: replace Python loops with whole-array operations. Often 10 to 100 times faster.
-- **PyTorch** follows the same rules with different names: `axis` → `dim`, NumPy's `transpose(axes)` → `permute`, `expand_dims` → `unsqueeze`. Default float is `float32`.
-- **Shape errors**: find the two shapes in the message, find the axis that disagrees, print shapes right before the failing line.
-
-</Callout>
-
-## 0. Setup: arrays, tensors and shapes
-
-### What it is
-
-An **array** is a grid of numbers where every number has the same type. A list of 5 temperatures is a 1-D array. A spreadsheet of 100 rows and 3 columns is a 2-D array. A color photo is a 3-D array: height × width × 3 color channels.
-
-A **tensor** is PyTorch's name for the same thing, with two extra powers: it can live on a GPU, and it can remember how it was computed so PyTorch can work out gradients for training. Everything about shapes in this post applies to both.
-
-Every array has:
-
-- a **shape**: a tuple with the length of each axis, like `(100, 3)`
-- an **ndim**: the number of axes (the length of the shape)
-- a **size**: the total number of elements (all the shape numbers multiplied)
-- a **dtype**: the type of every element, like `int64` or `float32`
-
-### Why it matters
-
-In ML, every piece of data is an array, and every operation has rules about which shapes it accepts. A model layer that expects `(batch, features)` will either crash or silently do the wrong thing when handed something else. Knowing your shapes at every line is the main skill.
-
-### Where you'll use it
-
-Everywhere: loading a dataset, writing a model, computing a loss, plotting results. The first thing I do with any new dataset or model is print shapes.
-
-### Install
+Every array has a **shape**: how many items sit along each axis.
 
 ```bash
 pip install numpy torch
 ```
-
-If you don't want to install anything, [Google Colab](https://colab.research.google.com) has both already. For a GPU build of PyTorch, pick the right command at [pytorch.org](https://pytorch.org/get-started/locally/).
-
-### Your first array
 
 ```python
 import numpy as np
 
 a = np.array([[1, 2, 3],
               [4, 5, 6]])
-print(a)
-print("shape:", a.shape)   # (rows, columns)
-print("ndim: ", a.ndim)    # number of axes
-print("size: ", a.size)    # total number of elements
-print("dtype:", a.dtype)   # type of every element
+print(a.shape)   # (rows, columns)
+print(a.ndim)    # number of axes
+print(a.size)    # total number of elements
+print(a.dtype)   # type of every element
 ```
 
 ```output
-[[1 2 3]
- [4 5 6]]
-shape: (2, 3)
-ndim:  2
-size:  6
-dtype: int64
+(2, 3)
+2
+6
+int64
 ```
 
-A shape is read from the outside in. `(2, 3)` means "2 of something, and each of those has 3 numbers": 2 rows of 3.
+**Where you use it:** everywhere. The first thing to check with any dataset or model is the shape of what goes in and what comes out.
 
-Arrays can have any number of axes:
+Axis names you'll see in code and papers:
 
-```python
-scalar = np.array(7.0)
-vector = np.array([1.0, 2.0, 3.0])
-matrix = np.zeros((2, 3))
-cube = np.ones((2, 3, 4))
-
-for name, x in [("scalar", scalar), ("vector", vector), ("matrix", matrix), ("cube", cube)]:
-    print(f"{name:7s} ndim={x.ndim}  shape={x.shape}  size={x.size}")
-```
-
-```output
-scalar  ndim=0  shape=()  size=1
-vector  ndim=1  shape=(3,)  size=3
-matrix  ndim=2  shape=(2, 3)  size=6
-cube    ndim=3  shape=(2, 3, 4)  size=24
-```
-
-`(2, 3, 4)` is 2 blocks, each with 3 rows, each with 4 numbers. A scalar has shape `()`: no axes at all.
-
-A few ways to make arrays that I use all the time:
-
-```python
-print(np.arange(6))                    # 0, 1, ..., 5
-print(np.arange(12).reshape(3, 4))     # reshape is section 2
-print(np.zeros((2, 2)))
-rng = np.random.default_rng(0)         # seeded, so the numbers repeat every run
-x = rng.normal(size=(2, 3))            # random numbers from a bell curve
-print(x.shape, x.dtype)
-```
-
-```output
-[0 1 2 3 4 5]
-[[ 0  1  2  3]
- [ 4  5  6  7]
- [ 8  9 10 11]]
-[[0. 0.]
- [0. 0.]]
-(2, 3) float64
-```
-
-### Naming the axes
-
-Shapes are easier to think about when each axis has a name. These letters show up in almost every paper and codebase:
-
-| Letter | Usually means | Typical size |
-| --- | --- | --- |
-| `B` or `N` | batch: how many examples at once | 32 |
-| `C` | channels (3 for RGB images) | 3 |
-| `H`, `W` | height and width of an image | 224 |
-| `T` or `L` | time steps, or sequence length in tokens | 128 |
-| `D` (or `d_model`) | features per item, embedding size | 768 |
-| `K` | number of classes | 10 |
-
-And these are the shapes you'll meet most:
-
-| Data | Shape |
+| Name | Meaning |
 | --- | --- |
-| Tabular dataset (rows of features) | `(N, D)` |
-| One grayscale image | `(H, W)` |
-| Batch of RGB images, from image libraries (PIL, OpenCV, matplotlib) | `(N, H, W, C)` |
-| Batch of RGB images, as PyTorch conv layers want them | `(N, C, H, W)` |
-| Batch of token ids (text) | `(B, T)` |
-| Token embeddings | `(B, T, D)` |
-| Classifier scores (logits) | `(N, K)` |
+| `N` or `B` | batch: number of examples |
+| `C` | channels (3 for RGB) |
+| `H`, `W` | image height and width |
+| `T` | sequence length |
+| `D` | features, or embedding size |
 
-### Gotchas
+So a batch of images in PyTorch is `(N, C, H, W)`, and a batch of token embeddings is `(B, T, D)`.
 
-**`(3,)`, `(1, 3)` and `(3, 1)` are three different shapes.** `(3,)` is a 1-D vector: just 3 numbers, neither a row nor a column. Many bugs come from treating them as the same thing.
+**Gotcha:** `(3,)`, `(1, 3)` and `(3, 1)` are three different shapes. `(3,)` is a plain 1-D vector, neither a row nor a column.
 
 ```python
 v = np.array([1, 2, 3])
-print(v.shape)                 # 1-D: just 3 numbers
-print(v.reshape(1, 3).shape)   # a row: 1 row of 3
-print(v.reshape(3, 1).shape)   # a column: 3 rows of 1
+print(v.shape, v.reshape(1, 3).shape, v.reshape(3, 1).shape)
 ```
 
 ```output
-(3,)
-(1, 3)
-(3, 1)
+(3,) (1, 3) (3, 1)
 ```
 
-**A one-element tuple needs a comma.** In Python `(5)` is just the number 5. The shape of a 1-D array of length 5 is written `(5,)`.
+## 2. Axes
 
-### Check yourself
-
-<details>
-<summary>A batch of 64 RGB images, 32 × 32 pixels, in PyTorch layout. What are its shape, ndim and size?</summary>
-
-Shape `(64, 3, 32, 32)`, ndim 4, size 64 × 3 × 32 × 32 = 196,608.
-
-</details>
-
-<details>
-<summary>What is the shape of `np.array([[1, 2], [3, 4], [5, 6]])`?</summary>
-
-`(3, 2)`: 3 inner lists (rows), each with 2 numbers.
-
-</details>
-
-## 1. Axes
-
-### What it is
-
-An **axis** is one direction you can move along in an array. Axis numbers are positions in the shape: for shape `(3, 4)`, axis 0 has length 3 and axis 1 has length 4. In a 2-D array, moving along axis 0 means going down the rows; moving along axis 1 means going across the columns.
-
-Functions like `sum`, `mean`, `max` and `argmax` take an `axis` argument. **The rule I use: the axis you name is the one that disappears.** `a.sum(axis=0)` on a `(3, 4)` array adds down the rows, so axis 0 (the 3) disappears and you get 4 numbers, one per column.
+Functions like `sum`, `mean`, `max` and `argmax` take an `axis`. **The axis you name is the one that disappears.**
 
 <AxesDiagram />
 
@@ -210,149 +74,36 @@ Functions like `sum`, `mean`, `max` and `argmax` take an `axis` argument. **The 
 import numpy as np
 
 a = np.arange(12).reshape(3, 4)
-print(a)
-print("sum(axis=0):", a.sum(axis=0), "shape", a.sum(axis=0).shape)
-print("sum(axis=1):", a.sum(axis=1), "shape", a.sum(axis=1).shape)
-print("sum():      ", a.sum())
+print(a.sum(axis=0))   # down the rows: one value per column, shape (4,)
+print(a.sum(axis=1))   # across the columns: one value per row, shape (3,)
 ```
 
 ```output
-[[ 0  1  2  3]
- [ 4  5  6  7]
- [ 8  9 10 11]]
-sum(axis=0): [12 15 18 21] shape (4,)
-sum(axis=1): [ 6 22 38] shape (3,)
-sum():       66
+[12 15 18 21]
+[ 6 22 38]
 ```
 
-With no axis, the function reduces over everything and gives a single number.
+**Where you use it:**
 
-### Why it matters
+- `X.mean(axis=0)` on an `(N, D)` dataset gives the mean of each feature.
+- `logits.argmax(axis=1)` on `(N, K)` class scores gives the predicted class of each example.
+- `axis=-1` is the last axis, whatever comes in front of it.
 
-Data has meaning along each axis: one axis is "which example", another is "which feature" or "which class". Reducing along the wrong one gives a perfectly valid array of the wrong thing, and nothing warns you.
-
-### Where you'll use it
-
-- **Feature statistics**: `X.mean(axis=0)` on an `(N, D)` dataset gives the mean of each feature, shape `(D,)`. That's the first step of standardizing data.
-- **Losses**: per-example losses of shape `(N,)` are averaged with `.mean()` into one number.
-- **Predictions**: `logits.argmax(axis=1)` picks the best class for each example.
-- **Softmax** runs along the class axis, usually `axis=-1`.
-- **Images**: averaging over height and width gives one number per channel (that's global average pooling in CNNs).
-
-### keepdims
-
-Reducing removes the axis. `keepdims=True` keeps it with size 1 instead, so the result still lines up with the original array. That's exactly what you want when you're about to subtract or divide by the result (why it lines up is broadcasting, section 5).
+`keepdims=True` keeps the reduced axis as size 1, so the result still lines up with the original array. That's what you want when you subtract it back (see broadcasting):
 
 ```python
-row_means = a.mean(axis=1)
-print(row_means, row_means.shape)
-row_means_kept = a.mean(axis=1, keepdims=True)
-print(row_means_kept.shape)
-print(a - row_means_kept)      # subtract each row's mean from that row
+print(a.mean(axis=1, keepdims=True).shape)
 ```
 
 ```output
-[1.5 5.5 9.5] (3,)
 (3, 1)
-[[-1.5 -0.5  0.5  1.5]
- [-1.5 -0.5  0.5  1.5]
- [-1.5 -0.5  0.5  1.5]]
 ```
 
-### Negative axes
+**Gotcha:** leaving out `axis` reduces over everything and gives a single number.
 
-`axis=-1` is the last axis, `-2` the second to last. I use `-1` a lot because it means "the last one" no matter how many batch axes sit in front.
+## 3. Reshape
 
-```python
-x = np.ones((2, 3, 4))
-print(x.sum(axis=-1).shape)    # same as axis=2
-print(x.sum(axis=-2).shape)    # same as axis=1
-```
-
-```output
-(2, 3)
-(2, 4)
-```
-
-### A batch of images
-
-You can pass a tuple of axes to reduce several at once.
-
-```python
-rng = np.random.default_rng(0)
-images = rng.integers(0, 256, size=(8, 32, 32, 3))   # (N, H, W, C)
-print(images.shape)
-
-brightness = images.mean(axis=(1, 2, 3))   # reduce H, W, C: one number per image
-print(brightness.shape)
-
-channel_mean = images.mean(axis=(0, 1, 2)) # reduce N, H, W: one number per channel
-print(channel_mean.shape)
-```
-
-```output
-(8, 32, 32, 3)
-(8,)
-(3,)
-```
-
-### argmax over classes
-
-A classifier outputs one score per class for each example: an `(N, K)` array of logits. The predicted class is the position of the largest score along the class axis.
-
-```python
-logits = np.array([[2.0, 0.5, 0.1],
-                   [0.2, 0.3, 3.0],
-                   [1.0, 4.0, 0.5],
-                   [0.9, 0.8, 0.7]])   # (N=4 examples, K=3 classes)
-preds = logits.argmax(axis=1)           # best class for each example
-print(preds, preds.shape)
-
-labels = np.array([0, 2, 1, 1])
-print("accuracy:", (preds == labels).mean())
-```
-
-```output
-[0 2 1 0] (4,)
-accuracy: 0.75
-```
-
-### Gotchas
-
-- **Forgetting `axis`** reduces over everything. `a.sum()` is one number, not a sum per row.
-- **The wrong axis can still have a sensible shape.** `logits.argmax(axis=0)` gives, for each class, the example with the highest score. If you happen to have as many examples as classes, the shape matches what you expected and the bug hides.
-- When unsure, write the shape with names in a comment, `# (N, K)`, and ask which name should disappear.
-
-### Check yourself
-
-<details>
-<summary>`x` has shape `(32, 10)`. What is `x.max(axis=1).shape`?</summary>
-
-`(32,)`. Axis 1 (the 10) disappears.
-
-</details>
-
-<details>
-<summary>Token embeddings have shape `(B, T, D) = (4, 7, 16)`. What does `x.mean(axis=1)` give, and what is it used for?</summary>
-
-Shape `(4, 16)`: one vector per sequence, the average over its 7 tokens. That's mean pooling, a common way to turn a sequence of token vectors into one sentence vector.
-
-</details>
-
-<details>
-<summary>What is `np.ones((5, 3)).sum(axis=0, keepdims=True).shape`?</summary>
-
-`(1, 3)`. Axis 0 is kept, with size 1.
-
-</details>
-
-## 2. Reshape
-
-### What it is
-
-`reshape` gives you the same numbers arranged in a new shape. No math happens. The one rule: **the total number of elements can't change**, so the new shape's numbers must multiply to the same size.
-
-The order matters: NumPy reads the elements in **row-major order** (left to right along the last axis, then the next row, like reading a page) and fills the new shape in that same order.
+`reshape` puts the same numbers into a new shape. The total count can't change. One size can be `-1`, meaning "work this one out". The numbers are read and filled in row-major order: along the last axis first, like reading a page.
 
 <ReshapeDiagram />
 
@@ -360,114 +111,35 @@ The order matters: NumPy reads the elements in **row-major order** (left to righ
 import numpy as np
 
 a = np.arange(6)
-print(a)
 print(a.reshape(2, 3))
-print(a.reshape(3, 2))
-print(a.reshape(1, 6).shape, a.reshape(6, 1).shape)
+print(a.reshape(3, -1).shape)
 ```
 
 ```output
-[0 1 2 3 4 5]
 [[0 1 2]
  [3 4 5]]
-[[0 1]
- [2 3]
- [4 5]]
-(1, 6) (6, 1)
+(3, 2)
 ```
 
-### -1: let NumPy work it out
+**Where you use it:**
 
-One size can be `-1`, and NumPy fills in whatever makes the total come out right.
+- Flattening images for a dense layer: `(N, 28, 28)` becomes `(N, 784)`.
+- Adding a size-1 axis: `x[None]` turns one example into a batch of one, and `v[:, None]` turns a vector into a column. `squeeze` removes size-1 axes.
 
 ```python
-b = np.arange(12)
-print(b.reshape(3, -1).shape)      # 12 / 3 = 4
-print(b.reshape(-1, 6).shape)
-print(b.reshape(2, 2, -1).shape)
-print(b.reshape(-1).shape)         # flatten to 1-D
-```
+images = np.zeros((64, 28, 28))
+print(images.reshape(64, -1).shape)
 
-```output
-(3, 4)
-(2, 6)
-(2, 2, 3)
-(12,)
-```
-
-### Why it matters
-
-Different tools want the same data in different shapes. A fully connected layer wants each example as one flat vector; a conv layer wants a grid; attention wants the embedding split into heads. Reshape converts between them for free.
-
-### Where you'll use it
-
-- **Flattening images** for a simple neural network: MNIST digits `(N, 28, 28)` become `(N, 784)`.
-- **Splitting attention heads**: `(B, T, D)` becomes `(B, T, heads, D / heads)`.
-- **scikit-learn** wants features as a 2-D `(N, D)` array, so a single feature `x` of shape `(N,)` becomes `x.reshape(-1, 1)`.
-
-```python
-images = np.zeros((64, 28, 28))            # 64 MNIST digits
-flat = images.reshape(images.shape[0], -1)
-print(flat.shape)
-
-x = np.zeros((2, 10, 512))                 # (B, T, D) token embeddings
-heads = x.reshape(2, 10, 8, 64)            # split D=512 into 8 heads of 64
-print(heads.shape)
+v = np.array([1, 2, 3])
+print(v[None, :].shape, v[:, None].shape)
 ```
 
 ```output
 (64, 784)
-(2, 10, 8, 64)
+(1, 3) (3, 1)
 ```
 
-### Adding and removing size-1 axes
-
-You'll often need an extra axis of size 1, for example to turn a single example into a batch of one, or a vector into a column. Indexing with `None` (also spelled `np.newaxis`) inserts one; `squeeze` removes them.
-
-```python
-v = np.array([1, 2, 3])                    # (3,)
-print(v[None, :].shape)                    # (1, 3): a row
-print(v[:, None].shape)                    # (3, 1): a column
-print(np.expand_dims(v, axis=0).shape)     # same as v[None, :]
-
-img = np.zeros((1, 28, 28, 1))
-print(img.squeeze().shape)                 # drops every size-1 axis
-print(img.squeeze(axis=0).shape)           # drops just axis 0
-```
-
-```output
-(1, 3)
-(3, 1)
-(1, 3)
-(28, 28)
-(28, 28, 1)
-```
-
-I prefer `squeeze(axis=...)` with an explicit axis. A bare `squeeze()` also drops axes that are size 1 by accident, like a batch of one.
-
-### Views and copies
-
-`reshape` usually doesn't copy the data. It returns a **view**: a new shape on top of the same memory. Change one, and the other changes too.
-
-```python
-a = np.arange(6)
-b = a.reshape(2, 3)
-b[0, 0] = 100
-print(a)                                   # a changed too
-print(np.shares_memory(a, b))
-c = a.reshape(2, 3).copy()                 # an independent copy
-print(np.shares_memory(a, c))
-```
-
-```output
-[100   1   2   3   4   5]
-True
-False
-```
-
-### Gotcha: reshape is not transpose
-
-This is the classic one. Both of these give a `(3, 2)` array, but only one swaps rows and columns:
+**Gotcha: reshape is not transpose.** Both of these give shape `(3, 2)`, but only `.T` turns rows into columns. Reshape just pours `1 2 3 4 5 6` into the new shape.
 
 ```python
 m = np.array([[1, 2, 3],
@@ -485,205 +157,42 @@ print(m.T)
  [3 6]]
 ```
 
-`reshape(3, 2)` keeps reading order: `1 2 3 4 5 6` poured into 3 rows of 2. The transpose `.T` turns rows into columns. If you meant to swap axes and used reshape, the shape looks right, there's no error, and your data is scrambled. Section 3 covers transposes.
+## 4. Transpose
 
-And when the sizes don't add up, you get an error:
-
-```python
-np.arange(12).reshape(5, 2)
-```
-
-```output
-ValueError: cannot reshape array of size 12 into shape (5,2)
-```
-
-### Check yourself
-
-<details>
-<summary>What is `np.arange(24).reshape(2, 3, -1).shape`?</summary>
-
-`(2, 3, 4)`, since 24 / (2 × 3) = 4.
-
-</details>
-
-<details>
-<summary>You have one image of shape `(28, 28)`, and a model wants `(N, 1, 28, 28)`. How do you get there?</summary>
-
-`img[None, None]` or `img.reshape(1, 1, 28, 28)`: a batch of 1, with 1 channel.
-
-</details>
-
-<details>
-<summary>Can a `(6, 4)` array be reshaped to `(8, 3)`? To `(5, 5)`?</summary>
-
-`(8, 3)` yes (24 elements either way). `(5, 5)` no: that's 25 elements, and reshape can't create or drop data.
-
-</details>
-
-## 3. Transpose
-
-### What it is
-
-Transposing **reorders the axes**. For a 2-D array, `.T` swaps rows and columns: the element at `[i, j]` moves to `[j, i]`.
+Transposing **reorders the axes**. On a 2-D array, `.T` swaps rows and columns. With more axes, `transpose` takes the new order: `x.transpose(2, 0, 1)` means "new axes = old axis 2, then 0, then 1". The data isn't moved, so it's instant.
 
 ```python
 import numpy as np
 
-m = np.array([[1, 2, 3],
-              [4, 5, 6]])
-print(m.T)
-print(m.shape, "->", m.T.shape)
-```
-
-```output
-[[1 4]
- [2 5]
- [3 6]]
-(2, 3) -> (3, 2)
-```
-
-For more axes, `transpose` takes the new order of the old axes. The way I read `x.transpose(2, 0, 1)`: "the new shape is (old axis 2, old axis 0, old axis 1)".
-
-```python
-x = np.zeros((2, 3, 4))
-print(x.transpose(2, 0, 1).shape)     # (old 2, old 0, old 1)
-print(x.transpose().shape)            # no arguments: reverse all axes
-print(np.swapaxes(x, 1, 2).shape)     # swap just two axes
-print(np.moveaxis(x, -1, 0).shape)    # move one axis to a new position
-```
-
-```output
-(4, 2, 3)
-(4, 3, 2)
-(2, 4, 3)
-(4, 2, 3)
-```
-
-### Why it matters
-
-Different libraries agree on what the data is but disagree on axis order. Transposing is how you convert between them without scrambling anything. It also shows up inside the math itself, most famously in attention.
-
-### Where you'll use it
-
-- **Images**: PIL, OpenCV and matplotlib use `(H, W, C)`; PyTorch conv layers want `(C, H, W)`. The conversion is a transpose, never a reshape.
-- **Attention**: scores are `Q @ K.T`, every query against every key.
-- **Sequence models**: some PyTorch layers (`nn.LSTM`, `nn.MultiheadAttention`) default to sequence-first `(T, B, D)`; most code is batch-first `(B, T, D)`. Swap axes 0 and 1 to convert.
-- **Linear algebra**: linear regression's normal equations use `X.T @ X`.
-
-Converting an image to channels-first:
-
-```python
-rng = np.random.default_rng(0)
-img = rng.integers(0, 256, size=(32, 48, 3))    # (H, W, C): H=32, W=48, C=3
-chw = img.transpose(2, 0, 1)                    # (C, H, W)
-print(chw.shape)
-print(np.array_equal(chw[1], img[:, :, 1]))     # channel 1 is the same picture
-
-batch = np.zeros((16, 32, 48, 3))               # (N, H, W, C)
-print(batch.transpose(0, 3, 1, 2).shape)        # (N, C, H, W)
+img = np.zeros((32, 48, 3))          # (H, W, C): how image libraries store it
+print(img.transpose(2, 0, 1).shape)  # (C, H, W): what PyTorch conv layers want
 ```
 
 ```output
 (3, 32, 48)
-True
-(16, 3, 32, 48)
 ```
 
-And the wrong way, with reshape:
+**Where you use it:**
+
+- Images: converting between `(H, W, C)` and `(C, H, W)`.
+- Attention scores: `Q @ K.T`.
+- Switching between batch-first `(B, T, D)` and sequence-first `(T, B, D)`: swap axes 0 and 1.
+
+**Gotcha:** `.T` on 3 or more axes reverses all of them. To swap only the last two, use `np.swapaxes(x, -1, -2)` (in PyTorch, `x.mT`).
 
 ```python
-wrong = img.reshape(3, 32, 48)
-print(wrong.shape)                              # the shape looks right...
-print(np.array_equal(wrong[1], img[:, :, 1]))   # ...but the channels are scrambled
+q = np.zeros((2, 5, 8))
+print(q.T.shape, np.swapaxes(q, -1, -2).shape)
 ```
 
 ```output
-(3, 32, 48)
-False
+(8, 5, 2) (2, 8, 5)
 ```
 
-In memory, an `(H, W, C)` image is stored pixel by pixel: `R G B R G B ...`. Reshape chops that stream into 3 equal chunks, so each "channel" is a third of the picture with all colors mixed together.
+## 5. Matrix products
 
-### Under the hood: strides
-
-A transpose doesn't move any data, which is why it's instant even on huge arrays. NumPy only changes the **strides**: how many bytes to jump to take one step along each axis.
-
-```python
-m = np.arange(6, dtype=np.int64).reshape(2, 3)
-print(m.strides, m.flags["C_CONTIGUOUS"])
-print(m.T.strides, m.T.flags["C_CONTIGUOUS"])
-print(np.shares_memory(m, m.T))
-```
-
-```output
-(24, 8) True
-(8, 24) False
-True
-```
-
-For `m`, one step down a row jumps 3 elements × 8 bytes = 24 bytes, and one step along a row jumps 8 bytes. The transpose just swaps those numbers. The result is no longer **contiguous** (its elements aren't stored in its own row-major order), and that matters for PyTorch's `view` in section 7.
-
-### Gotchas
-
-**`.T` on a 1-D array does nothing.** A `(3,)` vector has only one axis, so there is nothing to swap. To get a column, add an axis.
-
-```python
-v = np.array([1, 2, 3])
-print(v.T.shape)
-print(v[:, None].shape)
-```
-
-```output
-(3,)
-(3, 1)
-```
-
-**`.T` on 3 or more axes reverses all of them.** For `(B, T, D)` that gives `(D, T, B)`, which is almost never what you want. To transpose just the last two axes (the usual intent), use `swapaxes(-1, -2)` in NumPy, or `.mT` in PyTorch.
-
-```python
-q = np.zeros((2, 5, 8))               # (B, T, D)
-print(q.T.shape)                      # reverses everything
-print(np.swapaxes(q, -1, -2).shape)   # just the last two
-```
-
-```output
-(8, 5, 2)
-(2, 8, 5)
-```
-
-### Check yourself
-
-<details>
-<summary>`x` has shape `(10, 64, 64, 3)`. What is `x.transpose(0, 3, 1, 2).shape`?</summary>
-
-`(10, 3, 64, 64)`: images moved from channels-last to channels-first.
-
-</details>
-
-<details>
-<summary>You have `(T, B, D)` and want `(B, T, D)`. What do you write?</summary>
-
-`x.transpose(1, 0, 2)` or `np.swapaxes(x, 0, 1)`. In PyTorch, `x.transpose(0, 1)`.
-
-</details>
-
-<details>
-<summary>Why does `img.reshape(C, H, W)` not give channels-first?</summary>
-
-Reshape keeps the elements in memory order, which for an `(H, W, C)` image is `R G B R G B ...`. It just cuts that stream into C chunks, mixing the colors. Only a transpose moves each channel into its own block.
-
-</details>
-
-## 4. Matrix products
-
-### What it is
-
-There are two kinds of multiplication on arrays, and mixing them up is a classic bug:
-
-- **`*` is element-wise**: it multiplies numbers in matching positions. The shapes must match (or broadcast, section 5).
-- **`@` is matrix multiplication**: each output number is a dot product of a row of the left matrix with a column of the right one.
-
-The shape rule for `@`: **`(m, n) @ (n, p) → (m, p)`**. The inner sizes must match, and they disappear. The outer sizes stay.
+- `*` multiplies **element by element**. The shapes must match (or broadcast).
+- `@` is **matrix multiplication**: `(m, n) @ (n, p) → (m, p)`. The inner sizes must match, and they disappear.
 
 <MatmulDiagram />
 
@@ -691,204 +200,61 @@ The shape rule for `@`: **`(m, n) @ (n, p) → (m, p)`**. The inner sizes must m
 import numpy as np
 
 A = np.array([[1, 2, 3],
-              [4, 5, 6]])          # (2, 3)
-B = np.array([[1, 0],
-              [0, 1],
-              [1, 1]])             # (3, 2)
-print(A @ B)
+              [4, 5, 6]])   # (2, 3)
+B = np.ones((3, 2))         # (3, 2)
 print((A @ B).shape)
+print(A * A)                # element by element
 ```
 
 ```output
-[[ 4  5]
- [10 11]]
 (2, 2)
-```
-
-Top-left entry: row 0 of `A` dotted with column 0 of `B` is 1·1 + 2·0 + 3·1 = 4.
-
-Element-wise, for comparison:
-
-```python
-print(A * A)                       # same shape, position by position
-print(A * 10)                      # scales every entry
-```
-
-```output
 [[ 1  4  9]
  [16 25 36]]
-[[10 20 30]
- [40 50 60]]
 ```
 
-### Vectors
+**Where you use it:** almost all of a neural network's compute is matrix products.
 
-A **dot product** of two vectors multiplies matching entries and adds them up. A 1-D array on the right of `@` acts like a column, on the left like a row, and that extra axis is dropped from the result.
-
-```python
-u = np.array([1, 2, 3])
-w = np.array([4, 5, 6])
-print(u @ w)                       # 1*4 + 2*5 + 3*6
-print(np.dot(u, w))                # same thing
-print(A @ u, (A @ u).shape)        # (2, 3) @ (3,) -> (2,)
-```
-
-```output
-32
-32
-[14 32] (2,)
-```
-
-An **outer product** goes the other way: every entry of one vector times every entry of the other.
-
-```python
-print(np.outer(u, w))
-print(u[:, None] * w[None, :])     # the same, with broadcasting
-```
-
-```output
-[[ 4  5  6]
- [ 8 10 12]
- [12 15 18]]
-[[ 4  5  6]
- [ 8 10 12]
- [12 15 18]]
-```
-
-### Why it matters
-
-Matrix multiplication is the workhorse of deep learning. Almost all of a model's compute is matmuls, and GPUs are basically matmul machines. If you can read `@` shapes, you can read most model code.
-
-### Where you'll use it
-
-- **Linear (dense) layers**: `y = X @ W + b`. With `X` of shape `(N, D_in)`, `W` of shape `(D_in, D_out)` and `b` of shape `(D_out,)`, the output is `(N, D_out)`.
-- **Attention**: `scores = Q @ K.T / sqrt(d)`, every token against every token.
-- **Similarity search**: with normalized embeddings, `E @ E.T` holds the cosine similarity of every pair.
-- Linear regression, PCA, rotating points in graphics.
-
-A linear layer by hand:
+- A linear layer: `X @ W + b`, with `(N, D_in) @ (D_in, D_out) → (N, D_out)`.
+- Attention scores: `Q @ K.T`.
+- Similarity between every pair of embeddings: `E @ E.T`.
 
 ```python
 rng = np.random.default_rng(0)
-X = rng.normal(size=(4, 3))        # 4 examples, 3 features      (N, D_in)
-W = rng.normal(size=(3, 2))        # maps 3 features to 2        (D_in, D_out)
-b = np.zeros(2)                    # one bias per output         (D_out,)
-y = X @ W + b
-print(y.shape)
+X = rng.normal(size=(4, 3))   # 4 examples, 3 features
+W = rng.normal(size=(3, 2))   # maps 3 features to 2
+b = np.zeros(2)
+print((X @ W + b).shape)
 ```
 
 ```output
 (4, 2)
 ```
 
-### Batched matmul
-
-`@` treats every axis except the last two as **batch axes**: it does one matrix product per batch entry. Batch axes broadcast (section 5), so one weight matrix can be shared across a whole batch.
+Extra axes in front are treated as a batch: `(B, m, n) @ (n, p) → (B, m, p)`.
 
 ```python
-Q = rng.normal(size=(2, 5, 8))     # (B, T, d): 2 sequences, 5 tokens, 8 numbers each
-K = rng.normal(size=(2, 5, 8))
-scores = Q @ np.swapaxes(K, -1, -2) / np.sqrt(8)   # (B, T, d) @ (B, d, T)
-print(scores.shape)                # each token against each token, per sequence
-
-W = rng.normal(size=(8, 16))
-print((Q @ W).shape)               # one (8, 16) matrix applied to every token
+Q = np.zeros((2, 5, 8))
+print((Q @ np.zeros((8, 16))).shape)
 ```
 
 ```output
-(2, 5, 5)
 (2, 5, 16)
 ```
 
-<ShapePlayground a="2, 5, 8" b="8, 16" op="matmul" />
+**Gotcha:** on square matrices, `*` and `@` both run without an error and give different answers. Be sure which one you mean.
 
-### einsum
+## 6. Broadcasting
 
-`einsum` names every axis with a letter. Letters that appear in the inputs but not in the output are multiplied and summed over. It's the most readable way I know to write a complicated product, because the shapes are right there in the string.
+Broadcasting combines arrays of different shapes without copying data. The rule:
 
-```python
-A = np.arange(6).reshape(2, 3)
-B = np.arange(12).reshape(3, 4)
-print(np.allclose(np.einsum("ij,jk->ik", A, B), A @ B))   # matmul
-print(np.einsum("i,i->", u, w))                           # dot product
-print(np.einsum("ij->ji", A).shape)                       # transpose
-print(np.einsum("ij->i", A))                              # sum each row
-print(np.einsum("btd,bsd->bts", Q, K).shape)              # attention scores
-```
-
-```output
-True
-32
-(3, 2)
-[ 3 12]
-(2, 5, 5)
-```
-
-### Gotchas
-
-- **`*` vs `@` on square matrices**: both run without error and give completely different results. When in doubt, check the result against a tiny example by hand.
-- **`np.dot` vs `@`**: they agree for 1-D and 2-D arrays but differ for 3-D and up. Prefer `@` (which is `np.matmul`).
-- **`(n,) @ (n,)` is a single number**, not a matrix. For an outer product use `np.outer` or broadcasting.
-
-When the inner sizes don't match:
-
-```python
-np.ones((5, 3)) @ np.ones((4, 2))
-```
-
-```output
-ValueError: matmul: Input operand 1 has a mismatch in its core dimension 0, with gufunc signature (n?,k),(k,m?)->(n?,m?) (size 4 is different from 3)
-```
-
-"Operand 1" is the second input (counting from 0), and "core dimension 0" is its first matrix axis. It has size 4, but it needed to match the 3 at the end of operand 0.
-
-### Check yourself
-
-<details>
-<summary>`(32, 784) @ (784, 128)` gives what shape?</summary>
-
-`(32, 128)`. That's a batch of 32 flattened images going through a layer with 128 outputs.
-
-</details>
-
-<details>
-<summary>`(10, 4, 6) @ (6, 2)` gives what shape?</summary>
-
-`(10, 4, 2)`. The `(6, 2)` matrix is applied to each of the 10 `(4, 6)` matrices.
-
-</details>
-
-<details>
-<summary>`A` and `B` both have shape `(5, 3)`. Why does `A @ B` fail, and what are two fixes?</summary>
-
-Inner sizes 3 and 5 don't match. `A.T @ B` gives `(3, 3)`; `A @ B.T` gives `(5, 5)`. Which one you want depends on the math. If you wanted element-wise, use `A * B`.
-
-</details>
-
-<details>
-<summary>For `u = [1, 2, 3]` and `w = [4, 5, 6]`, what are `u * w` and `u @ w`?</summary>
-
-`u * w` is `[4, 10, 18]`; `u @ w` is 32.
-
-</details>
-
-## 5. Broadcasting
-
-### What it is
-
-**Broadcasting** is how NumPy does element-wise operations on arrays of different shapes. Instead of making you copy data to match, it virtually stretches the size-1 axes.
-
-The rules:
-
-1. Line the two shapes up **from the right**.
-2. If one shape is shorter, pad it **on the left with 1s**.
-3. Compare each pair of sizes. They must be **equal**, or **one of them must be 1**. A 1 gets stretched to the other size.
-4. Anything else is an error.
+1. Line the shapes up **from the right**.
+2. Each pair of sizes must be **equal, or one of them must be 1**. The 1 gets stretched to match.
+3. A missing axis counts as 1.
 
 ```text
-A:      (8, 1, 6, 1)
-B:         (7, 1, 5)   ->  padded to (1, 7, 1, 5)
-result: (8, 7, 6, 5)
+(3, 4) + (4,)    → (3, 4)
+(3, 1) + (1, 4)  → (3, 4)
+(3, 4) + (3,)    → error: 4 vs 3
 ```
 
 <BroadcastDiagram />
@@ -896,18 +262,12 @@ result: (8, 7, 6, 5)
 ```python
 import numpy as np
 
-M = np.arange(12).reshape(3, 4)    # (3, 4)
-print(M + 100)                     # a scalar is stretched everywhere
-row = np.array([1, 2, 3, 4])       # (4,), treated as (1, 4)
-print(M + row)                     # added to every row
-col = np.array([[10], [20], [30]]) # (3, 1)
-print(M + col)                     # added to every column
+M = np.arange(12).reshape(3, 4)
+print(M + np.array([1, 2, 3, 4]))         # (3, 4) + (4,): added to every row
+print(M + np.array([[10], [20], [30]]))   # (3, 4) + (3, 1): added to every column
 ```
 
 ```output
-[[100 101 102 103]
- [104 105 106 107]
- [108 109 110 111]]
 [[ 1  3  5  7]
  [ 5  7  9 11]
  [ 9 11 13 15]]
@@ -916,181 +276,33 @@ print(M + col)                     # added to every column
  [38 39 40 41]]
 ```
 
-Both sides can stretch at once:
+**Where you use it:**
 
-```python
-a = np.array([[0], [10], [20]])    # (3, 1)
-b = np.array([[1, 2, 3, 4]])       # (1, 4)
-print(a + b)
-print((a + b).shape)
-```
+- Adding a bias: `X @ W + b`.
+- Standardizing features: `(X - X.mean(axis=0)) / X.std(axis=0)`.
+- Pairwise distances: `P[:, None, :] - Q[None, :, :]` is every point minus every other point.
 
-```output
-[[ 1  2  3  4]
- [11 12 13 14]
- [21 22 23 24]]
-(3, 4)
-```
-
-Try it yourself. Change the shapes and watch each column of the comparison:
+Try some shapes:
 
 <ShapePlayground />
 
-### Why it matters
-
-Broadcasting lets you write math the way it looks on paper, "subtract the mean from every row", without loops and without making copies. It's also behind some of the nastiest silent bugs, so it's worth knowing cold.
-
-### Where you'll use it
-
-- **Bias in a linear layer**: `X @ W + b` adds `(D,)` to every row of `(N, D)`.
-- **Standardizing features**: `(X - mean) / std`, with one mean and std per feature.
-- **Normalizing images per channel**: subtract a per-channel mean shaped `(1, C, 1, 1)` from `(N, C, H, W)`.
-- **Attention masks**: a `(B, 1, 1, T)` mask added to `(B, heads, T, T)` scores.
-- **Pairwise anything**: distances or similarities between every pair of points, with no loops.
-
-Standardizing two features, height and weight:
-
-```python
-X = np.array([[170.0, 65.0],
-              [180.0, 80.0],
-              [160.0, 55.0]])       # 3 people: height (cm), weight (kg)
-mu = X.mean(axis=0)                 # (2,)
-sigma = X.std(axis=0)               # (2,)
-Z = (X - mu) / sigma                # (3, 2) - (2,) -> (3, 2)
-print(Z.round(2))
-print(Z.mean(axis=0).round(2) + 0, Z.std(axis=0).round(2))
-```
-
-```output
-[[ 0.   -0.16]
- [ 1.22  1.3 ]
- [-1.22 -1.14]]
-[0. 0.] [1. 1.]
-```
-
-(The `+ 0` turns a printed `-0.` into `0.`; it's just cosmetic.)
-
-Per-channel image normalization, with the well-known ImageNet means and standard deviations:
-
-```python
-images = np.ones((8, 3, 32, 32))                   # (N, C, H, W)
-mean = np.array([0.485, 0.456, 0.406])             # one per channel
-std = np.array([0.229, 0.224, 0.225])
-normed = (images - mean.reshape(1, 3, 1, 1)) / std.reshape(1, 3, 1, 1)
-print(normed.shape)
-```
-
-```output
-(8, 3, 32, 32)
-```
-
-The reshape to `(1, 3, 1, 1)` puts the 3 under the channel axis. Without it, the 3 lines up with the last axis, the width (32), and fails:
-
-```python
-images - mean
-```
-
-```output
-ValueError: operands could not be broadcast together with shapes (8,3,32,32) (3,)
-```
-
-### When it fails, and the fix
-
-Say I want to subtract a different number from each row:
-
-```python
-M = np.arange(12).reshape(3, 4)
-per_row = np.array([1, 2, 3])      # one number per row: (3,)
-M - per_row
-```
-
-```output
-ValueError: operands could not be broadcast together with shapes (3,4) (3,)
-```
-
-Lined up from the right, `(3, 4)` against `(3,)` compares 4 with 3. The fix is to make it a column, `(3, 1)`, so it lines up with the rows:
-
-```python
-print(M - per_row[:, None])        # (3, 4) - (3, 1) works
-```
-
-```output
-[[-1  0  1  2]
- [ 2  3  4  5]
- [ 5  6  7  8]]
-```
-
-### Pairwise distances
-
-Add an axis to each side so they broadcast against each other: `(N, 1, D) - (1, M, D) → (N, M, D)`. Every point in `P` minus every point in `Q`.
-
-```python
-P = np.array([[0.0, 0.0], [3.0, 4.0], [1.0, 1.0]])   # 3 points in 2-D   (N, 2)
-Q = np.array([[0.0, 0.0], [6.0, 8.0]])               # 2 points          (M, 2)
-diff = P[:, None, :] - Q[None, :, :]                 # (3, 1, 2) - (1, 2, 2)
-dist = np.sqrt((diff ** 2).sum(axis=-1))             # (3, 2)
-print(diff.shape)
-print(dist.round(3))
-```
-
-```output
-(3, 2, 2)
-[[ 0.    10.   ]
- [ 5.     5.   ]
- [ 1.414  8.602]]
-```
-
-`dist[i, j]` is the distance from `P[i]` to `Q[j]`. This is the core of k-nearest neighbors and k-means.
-
-### Gotcha: the silent (n,) vs (n, 1) bug
-
-This one has cost me hours. A model outputs predictions of shape `(N, 1)`; the labels have shape `(N,)`. Subtracting them doesn't fail. It broadcasts to `(N, N)`:
+**Gotcha: the silent `(N,)` vs `(N, 1)` bug.** Predictions shaped `(N, 1)` minus labels shaped `(N,)` broadcast to `(N, N)`, with no error. The loss you compute from that is wrong.
 
 ```python
 y_true = np.array([1.0, 2.0, 3.0, 4.0])          # (4,)
-y_pred = np.array([[1.1], [1.9], [3.2], [3.8]])  # (4, 1), like a model's output
-err = y_pred - y_true
-print(err.shape)                                 # (4, 4), not (4,)!
-print("wrong MSE:", round(float((err ** 2).mean()), 4))
-print("right MSE:", round(float(((y_pred[:, 0] - y_true) ** 2).mean()), 4))
+y_pred = np.array([[1.1], [1.9], [3.2], [3.8]])  # (4, 1)
+print((y_pred - y_true).shape)
+print((y_pred[:, 0] - y_true).shape)             # fixed
 ```
 
 ```output
 (4, 4)
-wrong MSE: 2.375
-right MSE: 0.025
+(4,)
 ```
 
-No error, a plausible-looking number, and a model that trains badly. Whenever two arrays meet, I check both shapes.
+## 7. Vectorization
 
-### Check yourself
-
-<details>
-<summary>What is the shape of `(5, 1, 4)` + `(3, 1)`?</summary>
-
-Pad `(3, 1)` to `(1, 3, 1)`. Compare from the right: 4 vs 1 → 4, 1 vs 3 → 3, 5 vs 1 → 5. Result `(5, 3, 4)`.
-
-</details>
-
-<details>
-<summary>Does `(2, 3)` + `(2,)` work?</summary>
-
-No. From the right, 3 vs 2: not equal and neither is 1. If the `(2,)` is one number per row, use `b[:, None]` to make it `(2, 1)`.
-
-</details>
-
-<details>
-<summary>What is the shape of `(8, 3, 32, 32)` * `(3, 1, 1)`?</summary>
-
-`(8, 3, 32, 32)`. The `(3, 1, 1)` is padded to `(1, 3, 1, 1)`: one number per channel, stretched over the batch, height and width.
-
-</details>
-
-## 6. Vectorization
-
-### What it is
-
-**Vectorizing** means writing an operation on whole arrays instead of looping over elements in Python. The loop still happens, but inside NumPy's compiled C code, which is far faster than Python running one element at a time.
+Vectorizing means replacing a Python loop with one operation on the whole array. The loop still happens, but inside NumPy's compiled code, which is far faster.
 
 ```python nocheck
 import time
@@ -1100,712 +312,177 @@ x = np.random.default_rng(0).normal(size=1_000_000)
 
 start = time.perf_counter()
 total = 0.0
-for v in x:                          # Python loop, one element at a time
+for v in x:
     total += v * v
-loop_s = time.perf_counter() - start
+loop = time.perf_counter() - start
 
 start = time.perf_counter()
-total_vec = np.sum(x * x)            # one vectorized expression
-vec_s = time.perf_counter() - start
+total = (x * x).sum()
+vec = time.perf_counter() - start
 
-print(f"loop:       {loop_s * 1000:.1f} ms")
-print(f"vectorized: {vec_s * 1000:.2f} ms")
-print(f"speedup:    {loop_s / vec_s:.0f}x")
+print(f"loop: {loop * 1000:.0f} ms, vectorized: {vec * 1000:.1f} ms")
 ```
 
 ```output
-loop:       78.5 ms
-vectorized: 1.41 ms
-speedup:    56x
+loop: 74 ms, vectorized: 0.8 ms
 ```
 
-Those are my laptop's numbers; yours will differ, but the gap is always large.
+Your numbers will differ, but the gap is always large.
 
-### Why it matters
+**Where you use it:** activations, losses, metrics, data cleaning. If you're looping over the elements of an array, there's usually a one-liner.
 
-- **Speed**: 10 to 100 times faster is normal, and more on a GPU, where a Python loop over elements wastes the hardware completely.
-- **Clarity**: one line that looks like the math is easier to check than a nested loop.
-
-### Where you'll use it
-
-All of numerical Python: activation functions, losses, metrics, data cleaning, feature engineering. A rule of thumb I follow: if I'm writing a `for` loop over the elements of an array, there's probably a one-liner.
-
-### The building blocks
-
-**Element-wise math with `np.maximum`**: ReLU, the most common activation function, is `max(z, 0)` for every element.
+The tools I use most:
 
 ```python
 z = np.array([-2.0, -0.5, 0.0, 1.5, 3.0])
-print(np.maximum(z, 0))              # ReLU
+print(np.maximum(z, 0))               # ReLU
+print(np.where(z > 0, z, 0.01 * z))   # if/else per element (leaky ReLU)
+print(z[z > 0])                       # boolean mask: keep the positives
 ```
 
 ```output
 [0.  0.  0.  1.5 3. ]
-```
-
-**`np.where(condition, a, b)`** is a vectorized if/else: `a` where the condition holds, `b` elsewhere.
-
-```python
-scores = np.array([35, 82, 67, 91, 48])
-print(np.where(scores >= 50, "pass", "fail"))
-print(np.where(z > 0, z, 0.01 * z))  # leaky ReLU
-```
-
-```output
-['fail' 'pass' 'pass' 'pass' 'fail']
 [-0.02  -0.005  0.     1.5    3.   ]
+[1.5 3. ]
 ```
 
-**Boolean masks**: a comparison gives an array of `True`/`False`, which can pick out elements, count them, or update them in place.
+Softmax turns each row of scores into probabilities that add up to 1. It uses axis, keepdims and broadcasting together:
 
 ```python
-mask = scores >= 50
-print(mask)
-print(scores[mask])                  # only the passing scores
-print(mask.sum(), mask.mean())       # how many, and what fraction
-scores[scores < 50] = 50             # raise every low score to 50
-print(scores)
-```
-
-```output
-[False  True  True  True False]
-[82 67 91]
-3 0.6
-[50 82 67 91 50]
-```
-
-To combine conditions use `&` (and), `|` (or), `~` (not), with parentheses around each comparison: `(x > 2) & (x < 5)`. Python's `and` / `or` don't work on arrays.
-
-### Example: pairwise distances, loop vs vectorized
-
-```python
-def pairwise_loop(P, Q):
-    out = np.zeros((len(P), len(Q)))
-    for i in range(len(P)):
-        for j in range(len(Q)):
-            out[i, j] = np.sqrt(((P[i] - Q[j]) ** 2).sum())
-    return out
-
-def pairwise_vec(P, Q):
-    diff = P[:, None, :] - Q[None, :, :]       # (N, 1, D) - (1, M, D) -> (N, M, D)
-    return np.sqrt((diff ** 2).sum(axis=-1))   # (N, M)
-
-rng = np.random.default_rng(0)
-P, Q = rng.normal(size=(200, 16)), rng.normal(size=(300, 16))
-print(np.allclose(pairwise_loop(P, Q), pairwise_vec(P, Q)))
-```
-
-```output
-True
-```
-
-```python nocheck
-import timeit
-print(f"loop:       {timeit.timeit(lambda: pairwise_loop(P, Q), number=1) * 1000:.0f} ms")
-print(f"vectorized: {timeit.timeit(lambda: pairwise_vec(P, Q), number=20) / 20 * 1000:.2f} ms")
-```
-
-```output
-loop:       61 ms
-vectorized: 1.94 ms
-```
-
-### Example: softmax
-
-**Softmax** turns a row of scores into probabilities: exponentiate each score, then divide by the row's total. It's the last step of almost every classifier. The vectorized version needs the right `axis` and `keepdims=True`, and one trick for numerical stability:
-
-```python
-def softmax_naive(z):
-    e = np.exp(z)
-    return e / e.sum(axis=-1, keepdims=True)
-
 def softmax(z):
-    z = z - z.max(axis=-1, keepdims=True)    # same answer, but exp can't overflow
+    z = z - z.max(axis=-1, keepdims=True)   # keeps exp from overflowing
     e = np.exp(z)
     return e / e.sum(axis=-1, keepdims=True)
 
 logits = np.array([[1.0, 2.0, 3.0],
-                   [1000.0, 1001.0, 1002.0]])   # (N=2, K=3)
-print(softmax_naive(logits).round(4))
-print(softmax(logits).round(4))
-print(softmax(logits).sum(axis=-1))
+                   [1.0, 1.0, 1.0]])
+print(softmax(logits).round(3))
 ```
 
 ```output
-RuntimeWarning: overflow encountered in exp
-RuntimeWarning: invalid value encountered in divide
-[[0.09   0.2447 0.6652]
- [   nan    nan    nan]]
-[[0.09   0.2447 0.6652]
- [0.09   0.2447 0.6652]]
-[1. 1.]
+[[0.09  0.245 0.665]
+ [0.333 0.333 0.333]]
 ```
 
-`exp(1000)` is too big for a float, so the naive version produces `inf / inf = nan`. Subtracting each row's max first doesn't change the answer (softmax ignores a constant shift) and keeps every exponent at most 0. Both rows give the same probabilities because their scores differ by the same amounts.
+**Gotcha:** combine conditions with `&`, `|` and `~`, with parentheses: `(x > 0) & (x < 5)`. Python's `and` and `or` don't work on arrays.
 
-And `keepdims=True` matters: `e.sum(axis=-1)` has shape `(2,)`, which can't broadcast against `(2, 3)`. With `keepdims` it's `(2, 1)`, one total per row.
+## 8. PyTorch equivalents
 
-### Gotchas
+Tensors follow the same shape rules. Mostly the names change:
 
-- **Memory**: broadcasting builds the full intermediate array. Pairwise distances between 10,000 and 10,000 points in 128-D make a `(10000, 10000, 128)` float64 array: about 102 GB. The fix is the expansion `|p - q|² = |p|² - 2 p·q + |q|²`, which only needs a matmul and an `(N, M)` result:
-
-```python
-def pairwise_matmul(P, Q):
-    sq = (P ** 2).sum(-1)[:, None] - 2 * P @ Q.T + (Q ** 2).sum(-1)[None, :]   # (N, M)
-    return np.sqrt(np.maximum(sq, 0))    # clip tiny negatives from rounding
-
-print(np.allclose(pairwise_matmul(P, Q), pairwise_vec(P, Q)))
-```
-
-```output
-True
-```
-
-- **Not everything vectorizes.** When step `t` depends on step `t - 1` (a running balance, a recurrent network), there may be no single array expression. Look for a built-in first (`np.cumsum`, `np.cumprod`), and accept a loop when there isn't one.
-
-### Check yourself
-
-<details>
-<summary>Vectorize `[x if x > 0 else 0 for x in arr]`.</summary>
-
-`np.maximum(arr, 0)`, or `np.where(arr > 0, arr, 0)`.
-
-</details>
-
-<details>
-<summary>How do you count the values in `arr` that are between 2 and 5 (inclusive)?</summary>
-
-`((arr >= 2) & (arr <= 5)).sum()`. Note `&` instead of `and`, and the parentheses.
-
-</details>
-
-<details>
-<summary>Why subtract the max inside softmax?</summary>
-
-To keep `exp` from overflowing to infinity. Softmax gives the same result if you subtract the same number from every score in a row, so it's free.
-
-</details>
-
-## 7. PyTorch tensor equivalents
-
-### What it is
-
-A PyTorch **tensor** is an array with the same shape rules as NumPy (axes, reshape, broadcasting, `@` all work the same), plus GPU support and automatic gradients. Mostly the names change. This table is the part I come back to:
-
-| What | NumPy | PyTorch |
-| --- | --- | --- |
-| create | `np.array([[1, 2], [3, 4]])` | `torch.tensor([[1, 2], [3, 4]])` |
-| shape | `a.shape` → `(2, 3)` | `t.shape` or `t.size()` → `torch.Size([2, 3])` |
-| number of axes | `a.ndim` | `t.ndim` or `t.dim()` |
-| reduce along an axis | `a.sum(axis=1, keepdims=True)` | `t.sum(dim=1, keepdim=True)` |
-| reshape | `a.reshape(3, -1)` | `t.reshape(3, -1)` or `t.view(3, -1)` |
-| swap two axes | `np.swapaxes(a, 0, 1)` | `t.transpose(0, 1)` |
-| reorder all axes | `a.transpose(2, 0, 1)` | `t.permute(2, 0, 1)` |
-| transpose last two axes | `np.swapaxes(a, -1, -2)` | `t.mT` |
-| add a size-1 axis | `np.expand_dims(a, 0)` or `a[None]` | `t.unsqueeze(0)` or `t[None]` |
-| remove size-1 axes | `a.squeeze(0)` | `t.squeeze(0)` |
-| matrix product | `a @ b` | `t @ u` or `torch.matmul(t, u)` |
-| einsum | `np.einsum(...)` | `torch.einsum(...)` |
-| join along an axis | `np.concatenate([a, b], axis=0)` | `torch.cat([a, b], dim=0)` |
-| stack on a new axis | `np.stack([a, b])` | `torch.stack([a, b])` |
-| default float | `float64` | `float32` |
-| convert to the other library | `torch.from_numpy(a)` | `t.numpy()` |
-
-The trap in that table: **`transpose` means different things**. NumPy's `transpose(2, 0, 1)` reorders all axes, which is PyTorch's `permute`. PyTorch's `transpose(0, 1)` swaps exactly two, which is NumPy's `swapaxes`.
+| NumPy | PyTorch |
+| --- | --- |
+| `axis=`, `keepdims=` | `dim=`, `keepdim=` |
+| `a.transpose(2, 0, 1)` | `t.permute(2, 0, 1)` |
+| `np.swapaxes(a, 0, 1)` | `t.transpose(0, 1)` |
+| `np.expand_dims(a, 0)` or `a[None]` | `t.unsqueeze(0)` or `t[None]` |
+| `np.concatenate` | `torch.cat` |
+| default `float64` | default `float32` |
 
 ```python
 import numpy as np
 import torch
 
 t = torch.arange(12).reshape(3, 4)
-print(t)
-print(t.shape, t.ndim, t.dtype)
+print(t.shape)
 print(t.sum(dim=0))
-print(t.float().mean(dim=1, keepdim=True).shape)
-```
 
-```output
-tensor([[ 0,  1,  2,  3],
-        [ 4,  5,  6,  7],
-        [ 8,  9, 10, 11]])
-torch.Size([3, 4]) 2 torch.int64
-tensor([12, 15, 18, 21])
-torch.Size([3, 1])
-```
-
-PyTorch also accepts NumPy's `axis=` and `keepdims=` in most reductions, but `dim` and `keepdim` are what you'll read in real code. Note the `.float()`: `mean` refuses integer tensors.
-
-```python
 x = torch.zeros(2, 3, 4)
-print(x.permute(2, 0, 1).shape)          # like NumPy's x.transpose(2, 0, 1)
-print(x.transpose(1, 2).shape)           # swaps exactly two axes
-print(x.mT.shape)                        # transpose of the last two axes
-print(x.unsqueeze(0).shape)              # add a batch axis in front
-print(x.unsqueeze(-1).shape)             # or at the end
-print(torch.zeros(1, 3, 1).squeeze().shape)
+print(x.permute(2, 0, 1).shape, x.unsqueeze(0).shape)
 ```
 
 ```output
-torch.Size([4, 2, 3])
-torch.Size([2, 4, 3])
-torch.Size([2, 4, 3])
-torch.Size([1, 2, 3, 4])
-torch.Size([2, 3, 4, 1])
-torch.Size([3])
+torch.Size([3, 4])
+tensor([12, 15, 18, 21])
+torch.Size([4, 2, 3]) torch.Size([1, 2, 3, 4])
 ```
 
-### Why it matters
-
-You'll prototype in NumPy and train in PyTorch, or read papers in one and code in the other. Knowing the mapping means the shape knowledge carries over unchanged, and the few real differences (dtype, `view`, devices) stop being surprises.
-
-### Where you'll use it
-
-Every PyTorch model. Data usually starts as NumPy arrays (from pandas, images, files) and becomes tensors at the model's door, then comes back to NumPy for plotting and metrics.
-
-### view vs reshape
-
-`view` reshapes **without ever copying**, so it only works when the memory layout allows it. After a transpose or permute the tensor isn't contiguous (section 3), and `view` refuses. `reshape` copies when it has to.
+**Where you use it:** data is often prepared in NumPy and then fed to a PyTorch model. For example, a NumPy image into a conv layer:
 
 ```python
-a = torch.arange(6).reshape(2, 3)
-print(a.view(3, 2))                      # fine: a is contiguous
-b = a.T                                  # same memory, different strides
-print(b.is_contiguous())
-print(b.reshape(6))                      # reshape copies when needed
-print(b.contiguous().view(6))            # or make it contiguous first
-b.view(6)
+img = np.zeros((28, 28, 3))                                     # (H, W, C)
+t = torch.from_numpy(img).permute(2, 0, 1).unsqueeze(0).float()
+print(t.shape, t.dtype)                                         # (N, C, H, W)
 ```
 
 ```output
-tensor([[0, 1],
-        [2, 3],
-        [4, 5]])
-False
-tensor([0, 3, 1, 4, 2, 5])
-tensor([0, 3, 1, 4, 2, 5])
-RuntimeError: view size is not compatible with input tensor's size and stride (at least one dimension spans across two contiguous subspaces). Use .reshape(...) instead.
+torch.Size([1, 3, 28, 28]) torch.float32
 ```
 
-My default: use `reshape` unless I specifically need the no-copy guarantee.
+**Gotchas:**
 
-### Linear layers and broadcasting work the same
+- NumPy arrays default to `float64` but model weights are `float32`. Convert with `.float()`, or you get "mat1 and mat2 must have the same dtype".
+- `view` only works on memory that's laid out in order, which isn't the case after a transpose. `reshape` always works.
+- To go back to NumPy: `t.detach().cpu().numpy()`.
 
-```python
-torch.manual_seed(0)
-X = torch.randn(32, 784)                 # 32 flattened 28x28 images
-W = torch.randn(784, 10)
-b = torch.zeros(10)
-print((X @ W + b).shape)
+## 9. Reading shape errors
 
-layer = torch.nn.Linear(784, 10)         # the same thing as a layer
-print(layer.weight.shape)                # stored as (out, in)
-print(layer(X).shape)
-```
+Every shape error says the same thing: the operation needed the shapes to fit together in a certain way, and here's what it got. To fix one:
 
-```output
-torch.Size([32, 10])
-torch.Size([10, 784])
-torch.Size([32, 10])
-```
+1. Find the two shapes in the message.
+2. Find the axis that disagrees: from the right for broadcasting, the inner pair for `@`.
+3. Print the shapes just before the failing line, then fix with `[:, None]` or `unsqueeze`, `transpose` or `permute`, or `reshape`.
 
-Note that `nn.Linear` stores its weight as `(out_features, in_features)` and computes `X @ W.T + b`. It always acts on the **last** axis, so an input of `(B, T, 784)` works too and gives `(B, T, 10)`.
-
-### NumPy ↔ PyTorch
-
-`torch.from_numpy` shares memory with the NumPy array, like a view. `torch.tensor` always copies.
-
-```python
-a = np.array([1.0, 2.0, 3.0])
-t = torch.from_numpy(a)                  # shares memory with a
-a[0] = 100.0
-print(t)                                 # changed too
-t2 = torch.tensor(a)                     # always a copy
-a[1] = 200.0
-print(t2)                                # not changed
-```
-
-```output
-tensor([100.,   2.,   3.], dtype=torch.float64)
-tensor([100.,   2.,   3.], dtype=torch.float64)
-```
-
-Both tensors are `float64`, because that's NumPy's default. PyTorch layers use `float32`, and they won't mix:
-
-```python
-layer = torch.nn.Linear(3, 2)             # float32 weights
-x = torch.from_numpy(np.ones((4, 3)))     # float64 from NumPy
-layer(x)
-```
-
-```output
-RuntimeError: mat1 and mat2 must have the same dtype, but got Double and Float
-```
-
-```python
-print(layer(x.float()).shape)             # convert with .float() (float32)
-```
-
-```output
-torch.Size([4, 2])
-```
-
-Going back to NumPy, a tensor that's tracking gradients has to be detached first:
-
-```python
-w = torch.ones(3, requires_grad=True)
-w.numpy()
-```
-
-```output
-RuntimeError: Can't call numpy() on Tensor that requires grad. Use tensor.detach().numpy() instead.
-```
-
-```python
-print(w.detach().numpy())
-```
-
-```output
-[1. 1. 1.]
-```
-
-### Devices
-
-Tensors live on a device: the CPU or a GPU. Everything in one operation must be on the same device, and `.numpy()` only works on the CPU. This pattern runs anywhere:
-
-```python
-device = "cuda" if torch.cuda.is_available() else "cpu"
-x = torch.randn(4, 3, device=device)
-model = torch.nn.Linear(3, 2).to(device)
-out = model(x)
-print(out.shape)
-result = out.detach().cpu().numpy()      # the safe way back to NumPy
-print(type(result).__name__, result.shape)
-```
-
-```output
-torch.Size([4, 2])
-ndarray (4, 2)
-```
-
-On Apple silicon, `"mps"` is the GPU device (check with `torch.backends.mps.is_available()`).
-
-### Gotchas
-
-- `transpose` in PyTorch swaps two axes; `permute` reorders all of them.
-- `keepdim` (PyTorch) vs `keepdims` (NumPy).
-- NumPy defaults to `float64`, PyTorch to `float32`. Convert with `.float()`.
-- `view` needs contiguous memory. When in doubt, `reshape`.
-- Integer tensors can't be averaged: `.float()` first.
-- `t.shape` is a `torch.Size`, which behaves like a tuple: `t.shape[0]` and `B, T, D = t.shape` both work.
-
-### Check yourself
-
-<details>
-<summary>Turn a NumPy image of shape `(H, W, C)` into a `(1, C, H, W)` float32 tensor.</summary>
-
-`torch.from_numpy(img).permute(2, 0, 1).unsqueeze(0).float()`
-
-</details>
-
-<details>
-<summary>`t` has shape `(8, 16, 64)`. What is `t.transpose(1, 2).shape`?</summary>
-
-`(8, 64, 16)`. Only axes 1 and 2 swap.
-
-</details>
-
-<details>
-<summary>`layer(torch.from_numpy(arr))` fails with "mat1 and mat2 must have the same dtype". Why?</summary>
-
-`arr` is `float64` (NumPy's default) and the layer's weights are `float32`. Use `torch.from_numpy(arr).float()`.
-
-</details>
-
-## 8. Reading shape errors
-
-### What it is
-
-Shape errors are the most common errors in array code. They look intimidating, but they all say the same thing: *this operation needed the shapes to relate in a certain way, and here are the shapes it got.* Once you know where to look in the message, they're quick to fix.
-
-### Why it matters
-
-You'll see these every week. The difference between a two-minute fix and an hour of confusion is reading the message instead of guessing.
-
-### Where you'll use it
-
-Every time something breaks, and also when nothing breaks: the worst shape bugs (like the `(n,)` vs `(n, 1)` one) don't raise anything, so the habits at the end of this section are for those.
-
-### The method
-
-1. **Which operation?** Broadcasting (`+ - * /`), matmul (`@`, linear layers), reshape/view, or a layer with an expected layout (conv, loss).
-2. **Find the shapes in the message.** There are almost always two.
-3. **Find the axis that disagrees.** From the right for broadcasting; the inner pair for matmul.
-4. **Ask what you meant.** Print the shapes right before the failing line and name each axis.
-5. **Fix with the right tool**: `[:, None]` / `unsqueeze` for a missing axis, `transpose` / `permute` for the wrong order, `reshape` for flattening, `.float()` for dtype.
-
-### A gallery of real errors
-
-Each of these is the real message from running the code.
-
-**Broadcasting (NumPy).**
+The three I see most:
 
 ```python
 import numpy as np
 import torch
 import torch.nn as nn
 
-X = np.zeros((3, 4))
-per_row = np.zeros(3)
-X - per_row
+np.zeros((3, 4)) - np.zeros(3)
 ```
 
 ```output
 ValueError: operands could not be broadcast together with shapes (3,4) (3,)
 ```
 
-From the right: 4 vs 3. You meant one number per row, so make it a column: `per_row[:, None]`.
-
-**Matmul inner sizes (NumPy).**
-
-```python
-A = np.zeros((5, 3))
-B = np.zeros((4, 2))
-A @ B
-```
-
-```output
-ValueError: matmul: Input operand 1 has a mismatch in its core dimension 0, with gufunc signature (n?,k),(k,m?)->(n?,m?) (size 4 is different from 3)
-```
-
-"Operand 1" is `B`; its "core dimension 0" is its first matrix axis (4), which must equal the last axis of `A` (3).
-
-**Reshape to an impossible size.**
-
-```python
-np.zeros((4, 7)).reshape(5, -1)
-```
-
-```output
-ValueError: cannot reshape array of size 28 into shape (5,newaxis)
-```
-
-28 elements can't fill 5 rows evenly. (`newaxis` in the message is how NumPy prints the `-1`.)
-
-**A linear layer gets the wrong number of features (PyTorch).** Probably the most common PyTorch error there is:
+From the right, 4 vs 3. If you meant one number per row, make it a column with `[:, None]`.
 
 ```python
 layer = nn.Linear(512, 10)
-images = torch.zeros(32, 1, 28, 28)
-layer(images.reshape(32, -1))
+layer(torch.zeros(32, 784))
 ```
 
 ```output
 RuntimeError: mat1 and mat2 shapes cannot be multiplied (32x784 and 512x10)
 ```
 
-`mat1` is your input, flattened to 2-D: 32 rows of 784. `mat2` is the layer's weight (transposed): it expects 512 inputs. The inner sizes, 784 and 512, disagree. The layer was built for the wrong input size: use `nn.Linear(784, 10)`.
-
-**Element-wise mismatch (PyTorch).**
+The input has 784 features, but the layer was built for 512. Use `nn.Linear(784, 10)`.
 
 ```python
-a = torch.zeros(2, 4)
-b = torch.zeros(2, 3)
-a + b
-```
-
-```output
-RuntimeError: The size of tensor a (4) must match the size of tensor b (3) at non-singleton dimension 1
-```
-
-"Non-singleton dimension 1" means axis 1, where neither size is 1, so it can't broadcast.
-
-**view on a non-contiguous tensor.**
-
-```python
-x = torch.zeros(4, 8, 16)                # (B, T, D)
-x.transpose(1, 2).view(4, -1)
-```
-
-```output
-RuntimeError: view size is not compatible with input tensor's size and stride (at least one dimension spans across two contiguous subspaces). Use .reshape(...) instead.
-```
-
-The message even tells you the fix: use `.reshape(...)` (or `.contiguous().view(...)`).
-
-**Channels in the wrong place (conv layers).**
-
-```python
-conv = nn.Conv2d(in_channels=3, out_channels=16, kernel_size=3)
-img = torch.zeros(1, 28, 28, 3)          # (N, H, W, C), as image libraries give it
-conv(img)
+conv = nn.Conv2d(3, 16, kernel_size=3)
+conv(torch.zeros(1, 28, 28, 3))   # channels last
 ```
 
 ```output
 RuntimeError: Given groups=1, weight of size [16, 3, 3, 3], expected input[1, 28, 28, 3] to have 3 channels, but got 28 channels instead
 ```
 
-`Conv2d` always reads axis 1 as channels, so it saw 28 channels. The image is channels-last; permute it to channels-first:
+Conv layers read axis 1 as the channels. Permute the input to `(N, C, H, W)` first.
+
+**A habit that prevents most of these:** write the shape next to every line that changes it.
 
 ```python
-print(conv(img.permute(0, 3, 1, 2)).shape)
+x = torch.zeros(8, 3, 28, 28)   # (N, C, H, W)
+x = x.reshape(8, -1)            # (N, 2352)
+x = nn.Linear(2352, 10)(x)      # (N, 10)
+print(x.shape)
 ```
 
 ```output
-torch.Size([1, 16, 26, 26])
+torch.Size([8, 10])
 ```
 
-**An axis that doesn't exist.**
+## 10. Cheat sheet
 
-```python
-logits = torch.zeros(4, 10)
-logits.softmax(dim=2)
-```
-
-```output
-IndexError: Dimension out of range (expected to be in range of [-2, 1], but got 2)
-```
-
-A 2-D tensor only has axes `-2, -1, 0, 1`. The NumPy version of the same mistake:
-
-```python
-np.zeros((4, 10)).sum(axis=2)
-```
-
-```output
-AxisError: axis 2 is out of bounds for array of dimension 2
-```
-
-**The silent one: a loss that broadcasts.** These predictions are perfect, so the loss should be 0:
-
-```python
-pred = torch.tensor([[1.0], [2.0], [3.0], [4.0]])   # model output: (N, 1)
-target = torch.tensor([1.0, 2.0, 3.0, 4.0])         # labels: (N,)
-loss_fn = nn.MSELoss()
-print(loss_fn(pred, target))                        # broadcasts to (4, 4)
-print(loss_fn(pred.squeeze(-1), target))            # shapes match
-```
-
-```output
-UserWarning: Using a target size (torch.Size([4])) that is different to the input size (torch.Size([4, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
-tensor(2.5000)
-tensor(0.)
-```
-
-PyTorch only *warns* here; plenty of other code wouldn't even do that. Warnings that mention sizes are worth reading.
-
-### Debugging checklist
-
-- **Print shapes** of every input right before the failing line: `print(x.shape, w.shape)`.
-- **Use distinct sizes when testing.** With `torch.zeros(2, 3, 5)` you can tell which axis is which in an error message. With `(8, 8, 8)` you can't, and some bugs won't raise at all.
-- **Assert what you expect**: `assert x.shape == (B, T, D), x.shape` fails early, at the right line, with the actual shape in the message.
-- **Know each layer's layout**: `Conv2d` wants `(N, C, H, W)`. `Linear` acts on the last axis. `nn.LSTM` and `nn.MultiheadAttention` are sequence-first unless `batch_first=True`. `CrossEntropyLoss` wants logits `(N, K)` and integer class labels `(N,)`.
-- **Shrink the problem**: reproduce with tiny tensors in a notebook cell before touching the full model.
-
-### The shape-comment habit
-
-The single habit that prevents most of these: write the shape next to every line that changes it.
-
-```python
-def attention(q, k, v):
-    # q, k, v: (B, T, D)
-    B, T, D = q.shape
-    scores = q @ k.mT / D ** 0.5          # (B, T, T)
-    weights = scores.softmax(dim=-1)      # (B, T, T), each row sums to 1
-    out = weights @ v                     # (B, T, D)
-    assert out.shape == (B, T, D), out.shape
-    return out
-
-q = k = v = torch.randn(2, 5, 8)
-print(attention(q, k, v).shape)
-```
-
-```output
-torch.Size([2, 5, 8])
-```
-
-When something breaks, the comments tell you what each line *should* produce, and the assert tells you where reality first disagreed.
-
-### Check yourself
-
-<details>
-<summary>"mat1 and mat2 shapes cannot be multiplied (64x2048 and 512x256)". What's wrong?</summary>
-
-A batch of 64 inputs with 2048 features hit a linear layer built for 512 inputs. Usually the flatten size after a conv stack was miscalculated. Fix the layer to `nn.Linear(2048, 256)` (or use `nn.LazyLinear(256)`, which infers it).
-
-</details>
-
-<details>
-<summary>"operands could not be broadcast together with shapes (64,10) (64,)". What did the author probably mean?</summary>
-
-One number per row (per example): the `(64,)` should be a column. Use `b[:, None]`, or compute it with `keepdims=True` in the first place.
-
-</details>
-
-<details>
-<summary>Why test with shapes like `(2, 3, 5)` instead of `(4, 4, 4)`?</summary>
-
-So each axis has a different size: errors tell you exactly which axis is wrong, and transposition bugs raise instead of silently passing.
-
-</details>
-
-## 9. Cheat sheet
-
-### Shape rules
-
-| Operation | Rule | Example |
-| --- | --- | --- |
-| reduce along axis `k` | axis `k` disappears (or becomes 1 with `keepdims`) | `(N, D)` mean over axis 0 → `(D,)` |
-| reshape | total size unchanged, row-major order | `(N, 28, 28)` → `(N, 784)` |
-| transpose / permute | reorder axes, data unchanged | `(H, W, C)` → `(C, H, W)` |
-| add an axis | insert a 1 | `(3,)` with `[:, None]` → `(3, 1)` |
-| matmul | `(..., m, n) @ (..., n, p) → (..., m, p)` | `(B, T, D) @ (D, K)` → `(B, T, K)` |
-| broadcast | right-align; equal or 1 | `(3, 1) + (1, 4)` → `(3, 4)` |
-
-### NumPy → PyTorch
-
-| NumPy | PyTorch |
+| Operation | Rule |
 | --- | --- |
-| `axis`, `keepdims` | `dim`, `keepdim` |
-| `a.transpose(2, 0, 1)` | `t.permute(2, 0, 1)` |
-| `np.swapaxes(a, 0, 1)` | `t.transpose(0, 1)` |
-| `np.swapaxes(a, -1, -2)` | `t.mT` |
-| `np.expand_dims(a, 0)` | `t.unsqueeze(0)` |
-| `np.concatenate` | `torch.cat` |
-| `float64` default | `float32` default |
-| `torch.from_numpy(a)` (shares memory) | `t.detach().cpu().numpy()` |
+| `sum`, `mean`, ... with `axis=k` | axis `k` disappears (`keepdims=True` keeps it as 1) |
+| `reshape` | same total size, row-major order, `-1` fills in one size |
+| `transpose` / `permute` | reorders axes, never mixes data |
+| `@` | `(..., m, n) @ (..., n, p) → (..., m, p)` |
+| broadcasting | line up from the right; sizes equal or 1 |
+| NumPy → PyTorch | `axis` → `dim`, `transpose(axes)` → `permute`, `expand_dims` → `unsqueeze` |
 
-### Layouts to remember
-
-- Images: libraries give `(H, W, C)`; PyTorch conv layers want `(N, C, H, W)`. Convert with `permute(0, 3, 1, 2)`.
-- Text: token ids `(B, T)` → embeddings `(B, T, D)`.
-- Classifiers: logits `(N, K)`, softmax and argmax over `dim=-1`, labels `(N,)`.
-- `nn.Linear` acts on the last axis and stores its weight as `(out, in)`.
-
-### When something breaks
-
-Find the two shapes in the message → find the axis that disagrees → print shapes before the line → fix with `[:, None]` / `unsqueeze`, `transpose` / `permute`, `reshape`, or `.float()`.
-
-### Final check
-
-<details>
-<summary>`x` is `(B, T, D) = (4, 10, 32)`. What are `x.mean(axis=-1).shape`, `x.reshape(4, -1).shape`, and `(x @ np.ones((32, 8))).shape`?</summary>
-
-`(4, 10)`, `(4, 320)`, `(4, 10, 8)`.
-
-</details>
-
-<details>
-<summary>An image batch is `(16, 64, 64, 3)`. Write the line that makes it ready for `nn.Conv2d(3, ...)`.</summary>
-
-`torch.from_numpy(batch).permute(0, 3, 1, 2).float()` gives `(16, 3, 64, 64)` in float32.
-
-</details>
-
-<details>
-<summary>Predictions are `(N, 1)` and labels are `(N,)`. What goes wrong, and what's the fix?</summary>
-
-Subtracting them broadcasts to `(N, N)`, so the loss is computed over every prediction-label pair, with no error. Make the shapes match: `pred.squeeze(-1)` (or `labels[:, None]`).
-
-</details>
-
-That's the whole toolkit. Shapes stop being scary once you check them at every step, and most of the time the error message has already told you the answer. More ML fundamentals notes are coming.
+Layouts: images are `(H, W, C)` in image libraries and `(N, C, H, W)` in PyTorch; text is `(B, T, D)`; classifier scores are `(N, K)`.

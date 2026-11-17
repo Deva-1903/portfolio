@@ -104,21 +104,6 @@ html.dark-theme {
   max-width: 70ch;
 }
 
-.blog-tags {
-  margin-top: 10px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.blog-tag {
-  font-size: 12px;
-  padding: 1px 9px;
-  border: 1px solid var(--border-medium);
-  border-radius: 999px;
-  color: var(--text-secondary);
-}
-
 .blog-upcoming {
   margin: 18px 0 0;
   font-size: 15px;
@@ -351,14 +336,6 @@ html.dark-theme {
   gap: 6px 14px;
   font-size: 13.5px;
   color: var(--text-muted);
-}
-
-.post-meta .refreshed {
-  padding: 2px 10px;
-  border-radius: 999px;
-  background: var(--hl-soft);
-  color: var(--hl);
-  font-weight: 600;
 }
 
 @media (max-width: 700px) {

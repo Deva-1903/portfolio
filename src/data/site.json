@@ -314,13 +314,13 @@
   },
   "blog": {
     "title": "blog",
-    "intro": "My notes on things I've learned. I keep them here so I can come back and refresh anytime, and I write them so anyone can learn from them, even starting from zero.",
+    "intro": "My notes on topics I've covered or refreshed.",
     "upcoming": "More blogs upcoming!",
     "categories": [
       {
         "id": "ml-fundamentals",
         "label": "ML fundamentals",
-        "description": "The building blocks I use every day in ML work: arrays and tensors, the math behind models, and the tools around them. Explained from scratch, with code you can run."
+        "description": "Core building blocks for ML: arrays, tensors, and the math around them."
       }
     ]
   },
