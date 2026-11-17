@@ -1,0 +1,26 @@
+---
+// One blog post in a list: category · date · read time, title, summary.
+import { categoryOf, formatDate, postUrl, readingTime, type Post } from "../lib/content";
+
+interface Props {
+  post: Post;
+  showCategory?: boolean;
+}
+
+const { post, showCategory = true } = Astro.props;
+const { title, description, date, category, draft } = post.data;
+const meta = [
+  showCategory ? categoryOf(category)?.label : null,
+  formatDate(date),
+  readingTime(post.body),
+].filter(Boolean);
+---
+
+<a class="blog-row" href={postUrl(post)}>
+  <div class="blog-meta">
+    {meta.join(" · ")}
+    {draft && <span class="draft-badge">draft</span>}
+  </div>
+  <div class="blog-title">{title}</div>
+  <p class="blog-summary">{description}</p>
+</a>

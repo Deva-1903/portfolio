@@ -1,0 +1,49 @@
+---
+// UMass Amherst Web Ring: prev/next links are filled in from the ring's API.
+---
+
+<div id="umass-webring" class="umass-webring">
+  <div class="webring-container">
+    <a id="webring-prev" href="#" class="webring-link webring-prev" style="display: none;">← Prev</a>
+    <div class="webring-info">
+      <a href="https://umaring.mkr.cx/" target="_blank" rel="noopener noreferrer" class="webring-logo" title="UMass Amherst Web Ring">
+        <img
+          src="https://raw.githubusercontent.com/Deva-1903/umaring/main/umass.png"
+          alt="UMass Amherst Web Ring"
+          class="webring-button"
+          loading="lazy"
+        />
+      </a>
+    </div>
+    <a id="webring-next" href="#" class="webring-link webring-next" style="display: none;">Next →</a>
+  </div>
+</div>
+
+<script>
+  const WEBRING_API_URL = "https://umaring.mkr.cx/devaanand19";
+  const container = document.getElementById("umass-webring");
+
+  const link = (id: string, site: { url: string; name: string } | undefined, text: (n: string) => string, title: string) => {
+    const a = document.getElementById(id) as HTMLAnchorElement | null;
+    if (!a || !site) return;
+    a.href = site.url;
+    a.textContent = text(site.name);
+    a.title = `${title}: ${site.name}`;
+    a.style.display = "inline-block";
+  };
+
+  fetch(WEBRING_API_URL)
+    .then((r) => {
+      if (!r.ok) throw new Error("Failed to fetch webring data");
+      return r.json();
+    })
+    .then((data) => {
+      link("webring-prev", data.prev, (n) => `← ${n}`, "Previous");
+      link("webring-next", data.next, (n) => `${n} →`, "Next");
+      if (container) container.style.display = "block";
+    })
+    .catch((error) => {
+      console.error("Failed to load webring:", error);
+      if (container) container.style.display = "none";
+    });
+</script>

@@ -1,0 +1,227 @@
+---
+// Every page: head + meta, theme handling, nav, the dark-mode toggle, chat widget, analytics.
+import "../styles/global.css";
+import "../styles/blog.css";
+import site from "../data/site.json";
+import { social } from "../lib/site";
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  type?: "website" | "article";
+  /** On the homepage nav links are in-page anchors and the plain version is available */
+  home?: boolean;
+  /** Which nav item to mark as current */
+  active?: "projects" | "blog";
+}
+
+const {
+  title = site.header.name,
+  description = "MS CS at UMass Amherst. LLM inference & ML systems - vLLM serving, INT8/INT4 quantization, SIMD kernels, GPU scheduling - plus AI safety and interpretability. Ex-Wysa backend engineer.",
+  image = "/assets/img.jpeg",
+  type = "website",
+  home = false,
+  active,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const imageUrl = new URL(image, Astro.site);
+const resume = social("resume");
+
+// Off the homepage, "?classic" keeps a visitor who chose the plain version on the classic one
+const anchor = (id: string) => (home ? `#${id}` : `/?classic#${id}`);
+const nav = [
+  { label: "about", href: anchor("hero") },
+  { label: "experience", href: anchor("history") },
+  { label: "projects", href: home ? "#pet-projects" : "/projects/", key: "projects" },
+  { label: "research", href: anchor("research") },
+  { label: "blog", href: "/blog/", key: "blog" },
+  { label: "resume", href: resume?.url || "#", external: true },
+  { label: "contact", href: anchor("contact") },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={imageUrl} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageUrl} />
+    <link rel="alternate" type="application/rss+xml" title={`${site.header.name}: blog`} href="/blog/rss.xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Apply the saved theme before first paint (inline bg prevents a flash in Safari) -->
+    <script is:inline>
+      (function () {
+        try {
+          var theme = localStorage.getItem("theme") || "light";
+          var html = document.documentElement;
+          html.setAttribute("data-theme", theme);
+          if (theme === "dark") {
+            html.classList.add("dark-theme");
+            html.classList.remove("light-theme");
+            html.style.backgroundColor = "#111b2b";
+          } else {
+            html.classList.add("light-theme");
+            html.classList.remove("dark-theme");
+            html.style.backgroundColor = "#fffbf7";
+          }
+        } catch (e) {}
+      })();
+    </script>
+    {
+      home && (
+        <script is:inline>
+          // Classic is the default. ?plain / ?classic in the URL win, then the visitor's saved choice.
+          (function () {
+            var plain = false;
+            if (/[?&]plain\b/.test(location.search)) plain = true;
+            else if (/[?&]classic\b/.test(location.search)) plain = false;
+            else {
+              try {
+                plain = localStorage.getItem("siteStyle") === "plain";
+              } catch (e) {}
+            }
+            if (plain) document.documentElement.classList.add("plain-mode");
+          })();
+        </script>
+      )
+    }
+    <slot name="head" />
+  </head>
+
+  <body>
+    <slot name="before-nav" />
+
+    <nav class="navbar">
+      <div class="navbar-container">
+        <ul class="nav-links">
+          {
+            nav.map((item) => (
+              <li class="nav-item">
+                <a
+                  href={item.href}
+                  aria-current={item.key && item.key === active ? "page" : undefined}
+                  {...(item.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </nav>
+
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+      <svg class="theme-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle class="sun" cx="12" cy="12" r="5"></circle>
+        <path
+          class="sun"
+          d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"
+        ></path>
+        <path class="moon" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" style="display: none"></path>
+      </svg>
+    </button>
+
+    <slot />
+
+    <!-- Dark mode toggle (the inline style dance forces Safari to repaint) -->
+    <script is:inline>
+      (function () {
+        var themeToggle = document.getElementById("themeToggle");
+        var sunElements = document.querySelectorAll(".sun");
+        var moonElement = document.querySelector(".moon");
+        var currentTheme;
+        try {
+          currentTheme = localStorage.getItem("theme") || "light";
+        } catch (e) {
+          currentTheme = "light";
+        }
+
+        function applyTheme(theme) {
+          var htmlEl = document.documentElement;
+          var bodyEl = document.body;
+          htmlEl.setAttribute("data-theme", theme);
+          if (theme === "dark") {
+            htmlEl.classList.add("dark-theme");
+            htmlEl.classList.remove("light-theme");
+            if (bodyEl) {
+              bodyEl.classList.add("dark-theme");
+              bodyEl.classList.remove("light-theme");
+            }
+          } else {
+            htmlEl.classList.add("light-theme");
+            htmlEl.classList.remove("dark-theme");
+            if (bodyEl) {
+              bodyEl.classList.add("light-theme");
+              bodyEl.classList.remove("dark-theme");
+            }
+          }
+          if (bodyEl) {
+            var colors = theme === "dark" ? { bg: "#111b2b", text: "#e6f1ff" } : { bg: "#fffbf7", text: "#1a1a1a" };
+            bodyEl.style.backgroundColor = colors.bg;
+            bodyEl.style.color = colors.text;
+            void bodyEl.offsetHeight;
+            requestAnimationFrame(function () {
+              requestAnimationFrame(function () {
+                bodyEl.style.backgroundColor = "";
+                bodyEl.style.color = "";
+              });
+            });
+          }
+          try {
+            localStorage.setItem("theme", theme);
+          } catch (e) {}
+        }
+
+        function updateToggleIcon(theme) {
+          sunElements.forEach(function (el) {
+            el.style.display = theme === "dark" ? "none" : "block";
+          });
+          moonElement.style.display = theme === "dark" ? "block" : "none";
+        }
+
+        applyTheme(currentTheme);
+        updateToggleIcon(currentTheme);
+
+        themeToggle.addEventListener("click", function () {
+          var active =
+            document.documentElement.getAttribute("data-theme") ||
+            (document.documentElement.classList.contains("dark-theme") ? "dark" : "light");
+          var next = active === "dark" ? "light" : "dark";
+          applyTheme(next);
+          updateToggleIcon(next);
+        });
+      })();
+    </script>
+
+    <!-- Ask-my-AI chat widget -->
+    <script is:inline src="/assets/agent-widget.js" defer></script>
+    <!-- Cloudflare Web Analytics -->
+    <script
+      is:inline
+      type="module"
+      src="https://static.cloudflareinsights.com/beacon.min.js"
+      data-cf-beacon='{"token": "ad1857cb23e34fe6b58c975e866b25d4"}'></script>
+  </body>
+</html>

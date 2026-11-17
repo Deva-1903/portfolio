@@ -1,0 +1,186 @@
+---
+// A blog post page: header, auto table of contents
+// from the ## headings, the content, and links to neighbors.
+import Base from "./Base.astro";
+import site from "../data/site.json";
+
+interface Crumb {
+  label: string;
+  href: string;
+}
+
+interface Neighbor {
+  title: string;
+  href: string;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  crumbs: Crumb[];
+  headings: { depth: number; slug: string; text: string }[];
+  active: "blog";
+  /** Already formatted bits shown under the title, e.g. date and read time */
+  meta: string[];
+  prev?: Neighbor;
+  next?: Neighbor;
+  backHref: string;
+  backLabel: string;
+  /** Show a table of contents (needs 3+ sections to be worth it) */
+  toc?: boolean;
+}
+
+const { title, description, crumbs, headings, active, meta, prev, next, backHref, backLabel, toc = true } =
+  Astro.props;
+const sections = headings.filter((h) => h.depth === 2);
+const showToc = toc && sections.length >= 3;
+---
+
+<Base title={`${title} - ${site.header.name}`} description={description} type="article" active={active}>
+  <div class="read-progress" aria-hidden="true"></div>
+
+  <div class="post-shell">
+    <article class="post">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        {
+          crumbs.map((c, i) => (
+            <>
+              {i > 0 && " / "}
+              <a href={c.href}>{c.label}</a>
+            </>
+          ))
+        }
+      </nav>
+
+      <header class="post-header">
+        <h1 class="post-title">{title}</h1>
+        <p class="post-dek">{description}</p>
+        <div class="post-meta">
+          {meta.map((m) => <span>{m}</span>)}
+        </div>
+        <slot name="header" />
+      </header>
+
+      {
+        showToc && (
+          <details class="toc-inline">
+            <summary>On this page</summary>
+            <ol class="toc-list">
+              {sections.map((h) => (
+                <li>
+                  <a href={`#${h.slug}`}>{h.text}</a>
+                </li>
+              ))}
+            </ol>
+          </details>
+        )
+      }
+
+      <div class="prose">
+        <slot />
+      </div>
+
+      <footer class="post-end">
+        <slot name="end" />
+        {
+          (prev || next) && (
+            <nav class="post-nav" aria-label="More posts">
+              {prev && (
+                <a href={prev.href} class="prev">
+                  <span class="label">← Previous</span>
+                  {prev.title}
+                </a>
+              )}
+              {next && (
+                <a href={next.href} class="next">
+                  <span class="label">Next →</span>
+                  {next.title}
+                </a>
+              )}
+            </nav>
+          )
+        }
+        <p><a href={backHref} class="back-link">← {backLabel}</a></p>
+      </footer>
+    </article>
+
+    {
+      showToc && (
+        <aside class="toc-rail" aria-label="Table of contents">
+          <div class="toc-label">On this page</div>
+          <ol class="toc-list">
+            {sections.map((h) => (
+              <li>
+                <a href={`#${h.slug}`}>{h.text}</a>
+              </li>
+            ))}
+          </ol>
+        </aside>
+      )
+    }
+  </div>
+</Base>
+
+<script>
+  // Reading progress bar
+  const bar = document.querySelector<HTMLElement>(".read-progress");
+  const article = document.querySelector<HTMLElement>(".post");
+  if (bar && article) {
+    const update = () => {
+      const rect = article.getBoundingClientRect();
+      const total = rect.height - window.innerHeight;
+      const done = total > 0 ? Math.min(Math.max(-rect.top / total, 0), 1) : 1;
+      bar.style.transform = `scaleX(${done})`;
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+  }
+
+  // Highlight the section being read in the table of contents
+  const links = Array.from(document.querySelectorAll<HTMLAnchorElement>(".toc-list a"));
+  const targets = Array.from(new Set(links.map((a) => a.hash)))
+    .map((hash) => document.getElementById(decodeURIComponent(hash.slice(1))))
+    .filter((el): el is HTMLElement => !!el);
+  if (targets.length) {
+    const setActive = () => {
+      let current = targets[0];
+      for (const t of targets) if (t.getBoundingClientRect().top < 120) current = t;
+      links.forEach((a) => a.classList.toggle("active", a.hash === `#${current.id}`));
+    };
+    setActive();
+    window.addEventListener("scroll", setActive, { passive: true });
+  }
+
+  // Close the inline table of contents after picking a section
+  document.querySelectorAll<HTMLAnchorElement>(".toc-inline a").forEach((a) =>
+    a.addEventListener("click", () => a.closest("details")?.removeAttribute("open")),
+  );
+
+  // Copy buttons on code blocks (not on output panels)
+  document.querySelectorAll<HTMLPreElement>(".prose pre.astro-code:not(.is-output)").forEach((pre) => {
+    const wrap = document.createElement("div");
+    wrap.className = "code-wrap";
+    pre.parentNode?.insertBefore(wrap, pre);
+    wrap.appendChild(pre);
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "copy-btn";
+    btn.textContent = "copy";
+    btn.setAttribute("aria-label", "Copy code");
+    btn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(pre.innerText.replace(/\n$/, ""));
+        btn.textContent = "copied";
+        btn.classList.add("copied");
+      } catch {
+        btn.textContent = "press ⌘C";
+      }
+      setTimeout(() => {
+        btn.textContent = "copy";
+        btn.classList.remove("copied");
+      }, 1600);
+    });
+    wrap.appendChild(btn);
+  });
+</script>

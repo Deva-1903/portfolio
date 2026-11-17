@@ -10,9 +10,9 @@
 # MacOS
 .DS_Store
 
-# Node modules (if you add any build process)
+# Node modules
 node_modules/
-package-lock.json
+
 yarn.lock
 
 # Build outputs
@@ -23,3 +23,6 @@ build/
 *.log
 npm-debug.log*
 
+
+# Astro
+.astro/

@@ -1,0 +1,53 @@
+---
+// All projects, grouped by area; the tabs (or a #area link) narrow it to one area.
+import Base from "../layouts/Base.astro";
+import FeatureRow from "../components/FeatureRow.astro";
+import FilterTabs from "../components/FilterTabs.astro";
+import site from "../data/site.json";
+import { projectAreas, sortedProjects } from "../lib/site";
+
+const projects = sortedProjects();
+const areas = projectAreas();
+---
+
+<Base title={`All Projects - ${site.header.name}`} active="projects">
+  <main class="container hero-section">
+    <p style="margin: 10px 0 26px;">
+      <a href="/?classic#pet-projects" class="view-all-projects">← back to home</a>
+    </p>
+    <div id="all-projects" data-tabs data-tabs-hash>
+      <div class="ctitle">{site.projects.title}</div>
+      <FilterTabs
+        label="Filter projects by area"
+        active="all"
+        tabs={[{ id: "all", label: "all", count: site.projects.items.length }, ...areas]}
+      />
+      {
+        areas.map((area) => (
+          <div class="project-group" id={`area-${area.id}`} data-group={`all ${area.id}`}>
+            <h3 class="project-group-title">{area.label}</h3>
+            <div class="feature-list">
+              {projects
+                .filter((p) => p.category === area.id)
+                .map((p) => (
+                  <FeatureRow project={p} detailed />
+                ))}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </main>
+
+  <footer class="page-footer">
+    <div class="footer-updated">Last updated {site.info.lastUpdated}</div>
+  </footer>
+</Base>
+
+<script>
+  // Keep the URL in step with the selected area so it can be shared
+  document.getElementById("all-projects")?.addEventListener("tabchange", (e) => {
+    const id = (e as CustomEvent<string>).detail;
+    history.replaceState(null, "", id === "all" ? location.pathname : `#${id}`);
+  });
+</script>

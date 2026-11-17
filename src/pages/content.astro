@@ -1,0 +1,81 @@
+---
+// Things I recommend watching and reading.
+import Base from "../layouts/Base.astro";
+import site from "../data/site.json";
+
+const sections = [
+  {
+    title: "video content",
+    items: [
+      { title: "Deep Dive into LLMs like ChatGPT", url: "https://youtu.be/7xTGNNLPyMI", note: "General-audience breakdown of how LLMs work" },
+      { title: "What runs ChatGPT? Inside Microsoft's AI supercomputer", url: "https://www.youtube.com/watch?v=Rk3nTUfRZmo", note: "On the infrastructure and hardware behind large-scale LLMs" },
+      { title: "The Insane Hardware Behind ChatGPT", url: "https://www.youtube.com/watch?v=uifoj9iuTDw", note: "GPU stacks, clusters, and why this stuff is expensive" },
+      { title: "A New Era of Hardware Prototyping with AI", url: "https://www.youtube.com/watch?v=4HpQWMkVnew", note: "Nice overlap of engineering, tooling, and practical AI workflows" },
+    ],
+  },
+  {
+    title: "books (systems, ml & a bit of philosophy)",
+    items: [
+      { title: "Designing Data-Intensive Applications", note: "Martin Kleppmann" },
+      { title: "Deep Learning", note: "Ian Goodfellow, Yoshua Bengio, Aaron Courville" },
+      { title: "Meditations", note: "Marcus Aurelius (Gregory Hays translation)" },
+      { title: "Show Your Work!", note: "Austin Kleon (for sharing projects & creative work)" },
+    ],
+  },
+  {
+    title: "articles",
+    items: [
+      {
+        title: "The Log: What Every Software Engineer Should Know About Real-Time Data's Unifying Abstraction",
+        url: "https://engineering.linkedin.com/distributed-systems/log-what-every-software-engineer-should-know-about-real-time-datas-unifying",
+        note: "Jay Kreps",
+      },
+      {
+        title: "Machine Learning: The High Interest Credit Card of Technical Debt",
+        url: "https://research.google/pubs/machine-learning-the-high-interest-credit-card-of-technical-debt/",
+        note: "D. Sculley et al.",
+      },
+      {
+        title: "Technical Debt in Machine Learning: Pay Off This High-Interest Credit Card Sooner",
+        url: "https://medium.com/data-science-at-microsoft/technical-debt-in-machine-learning-pay-off-this-high-interest-rate-credit-card-sooner-rather-34396d525dff",
+        note: "Microsoft Data Science team",
+      },
+      {
+        title: "What I Learned from Designing Data-Intensive Applications",
+        url: "https://newsletter.techworld-with-milan.com/p/what-i-learned-from-the-book-designing",
+        note: "Reflection on DDIA & practical system design",
+      },
+    ],
+  },
+];
+---
+
+<Base title={`Content Suggestions - ${site.header.name}`}>
+  <main class="container hero-section">
+    <p style="margin: 10px 0 26px;">
+      <a href="/?classic#blog" class="view-all-projects">← back to home</a>
+    </p>
+    <div class="ctitle">content suggestions</div>
+    {
+      sections.map((s) => (
+        <section class="suggest-section">
+          <div class="section-label">{s.title}</div>
+          <ul class="suggest-list">
+            {s.items.map((item) => (
+              <li>
+                {item.url ? (
+                  <a href={item.url} target="_blank" rel="noopener noreferrer">
+                    {item.title}
+                  </a>
+                ) : (
+                  <span class="suggest-title">{item.title}</span>
+                )}
+                <span class="suggest-note">{item.note}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+  </main>
+</Base>

@@ -1,0 +1,102 @@
+---
+// (2, 3) @ (3, 4) -> (2, 4), drawn with B above C so rows and columns line up:
+// C[0, 2] is row 0 of A dotted with column 2 of B.
+const cw = 30;
+const ch = 28;
+const A = { x: 50, y: 120, rows: 2, cols: 3 };
+const B = { x: 160, y: 24, rows: 3, cols: 4 };
+const C = { x: 160, y: 120, rows: 2, cols: 4 };
+const aRow = [1, 2, 3];
+const bCol = [1, 0, 2];
+const hlR = 0;
+const hlC = 2;
+const cVal = aRow.reduce((s, v, k) => s + v * bCol[k], 0);
+
+const cells = (g: typeof A, text: (r: number, c: number) => string | null, hl: (r: number, c: number) => boolean) =>
+  Array.from({ length: g.rows }, (_, r) => Array.from({ length: g.cols }, (_, c) => ({
+    x: g.x + c * cw, y: g.y + r * ch, t: text(r, c), hl: hl(r, c),
+  }))).flat();
+
+const all = [
+  ...cells(A, (r, c) => (r === hlR ? String(aRow[c]) : null), (r) => r === hlR),
+  ...cells(B, (r, c) => (c === hlC ? String(bCol[r]) : null), (_, c) => c === hlC),
+  ...cells(C, (r, c) => (r === hlR && c === hlC ? String(cVal) : null), (r, c) => r === hlR && c === hlC),
+];
+---
+
+<figure class="diagram">
+  <svg viewBox="0 0 400 250" role="img"
+    aria-label={`Matrix product of A with shape (2, 3) and B with shape (3, 4) giving C with shape (2, 4). C is drawn under B and to the right of A. The entry C[0, 2] is row 0 of A, which is 1, 2, 3, dotted with column 2 of B, which is 1, 0, 2: 1 times 1 plus 2 times 0 plus 3 times 2 equals ${cVal}. The inner sizes, 3 and 3, must match and disappear from the result.`}>
+    {all.map((cell) => (
+      <g>
+        <rect class={cell.hl ? "cell hl" : "cell"} x={cell.x} y={cell.y} width={cw} height={ch} />
+        {cell.t !== null && (
+          <text class="num" x={cell.x + cw / 2} y={cell.y + ch / 2 + 5} text-anchor="middle">{cell.t}</text>
+        )}
+      </g>
+    ))}
+    <text class="code" x={A.x + (A.cols * cw) / 2} y="198" text-anchor="middle">A (2, 3)</text>
+    <text class="code" x={B.x + B.cols * cw + 12} y={B.y + (B.rows * ch) / 2 + 5}>B (3, 4)</text>
+    <text class="code" x={C.x + (C.cols * cw) / 2} y="198" text-anchor="middle">C = A @ B (2, 4)</text>
+    <text class="rule" x="200" y="236" text-anchor="middle">(2, <tspan class="inner">3</tspan>) @ (<tspan class="inner">3</tspan>, 4) → (2, 4)</text>
+  </svg>
+  <figcaption>
+    <code>C[0, 2]</code> = row 0 of A · column 2 of B = 1·1 + 2·0 + 3·2 = {cVal}.
+    The inner sizes (the shaded 3s) must match, and they disappear from the result.
+  </figcaption>
+</figure>
+
+<style>
+  .diagram {
+    margin: 28px auto;
+    max-width: 480px;
+  }
+
+  svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .cell {
+    fill: var(--bg-secondary);
+    stroke: var(--border-medium);
+    stroke-width: 1;
+  }
+
+  .cell.hl {
+    fill: var(--hl-soft);
+    stroke: var(--hl);
+  }
+
+  .num {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    fill: var(--text-primary);
+  }
+
+  .code {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    fill: var(--text-primary);
+  }
+
+  .rule {
+    font-family: var(--font-mono);
+    font-size: 16px;
+    fill: var(--text-primary);
+  }
+
+  .inner {
+    fill: var(--hl);
+    font-weight: 700;
+  }
+
+  figcaption {
+    margin-top: 10px;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--text-muted);
+    text-align: center;
+  }
+</style>

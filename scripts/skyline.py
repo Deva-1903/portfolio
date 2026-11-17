@@ -1,6 +1,6 @@
-"""Generate assets/skyline.svg: a grainy flat footer skyline of UMass Amherst.
+"""Generate src/assets/skyline.svg: a grainy flat footer skyline of UMass Amherst.
 
-Usage (from the repo root): python3 scripts/skyline.py assets/skyline.svg
+Usage (from the repo root): python3 scripts/skyline.py src/assets/skyline.svg
 
 Tweak positions, sizes or the palette (STYLE) here and re-run; the seed keeps
 trees, stars and dark windows stable between runs.

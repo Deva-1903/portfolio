@@ -1,0 +1,310 @@
+---
+import Base from "../layouts/Base.astro";
+import FeatureRow from "../components/FeatureRow.astro";
+import FilterTabs from "../components/FilterTabs.astro";
+import PostRow from "../components/PostRow.astro";
+import PlainView from "../components/PlainView.astro";
+import Webring from "../components/Webring.astro";
+import Skyline from "../components/Skyline.astro";
+import site from "../data/site.json";
+import { getPosts } from "../lib/content";
+import {
+  coursesByLevel,
+  ext,
+  featuredProjects,
+  projectAreas,
+  social,
+  sortedProjects,
+  updateHTML,
+} from "../lib/site";
+
+const c = site;
+const resume = social("resume");
+const [first, ...rest] = c.header.name.split(" ");
+const headlineLines = c.hero.headline.split(/(?<=\.)\s+/);
+
+const work = c.history.entries.filter((e) => e.type !== "education");
+const education = c.history.entries.filter((e) => e.type === "education");
+
+const featured = featuredProjects();
+const allProjects = sortedProjects();
+const areas = projectAreas({ hide: ["archive"] });
+
+const posts = await getPosts();
+
+const orgHTML = (e: any) =>
+  e.org ? ` <span class="exp-org">· ${e.orgUrl ? ext(e.orgUrl, e.org) : e.org}</span>` : "";
+---
+
+<Base home>
+  <PlainView slot="before-nav" posts={posts} />
+
+  <!-- Switch to the plain version -->
+  <button class="theme-toggle style-toggle" id="styleToggle" aria-label="Switch to plain version" title="Plain version">
+    <svg class="theme-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <path d="M4 6h16M4 12h16M4 18h10"></path>
+    </svg>
+  </button>
+
+  <!-- Hero: who I am, what I do, and the next step, in one screen -->
+  <div id="hero" class="container hero-section">
+    <div class="hero-grid" id="about">
+      <div class="hero-left">
+        <h1 class="pronunciation-tooltip" id="userName" data-pronunciation={c.header.nameAudio}>
+          {first} <span class="name-accent">{rest.join(" ")}</span>
+        </h1>
+        <div id="userLocation">{c.header.location}</div>
+        <p class="hero-headline" id="heroHeadline">
+          {headlineLines.map((line) => <span class="headline-line">{line}</span>)}
+        </p>
+        <p class="hero-credentials" id="heroCredentials">{c.hero.credentials}</p>
+        <p class="hero-intro" id="heroIntro" set:html={c.hero.intro} />
+        <div class="cta-row" id="heroCtas">
+          <a href="#pet-projects" class="cta cta-primary">View projects</a>
+          {resume && <a href={resume.url} target="_blank" rel="noopener noreferrer" class="cta">Resume</a>}
+        </div>
+        <p class="hero-availability" id="heroAvailability">
+          <span class="availability-dot" aria-hidden="true"></span><Fragment set:html={c.hero.availability} />
+        </p>
+      </div>
+      <div class="hero-right">
+        <div id="dpic">
+          <img src={c.header.profileImage} class="ppic" id="profileImage" alt={`Photo of ${c.header.name}`} />
+        </div>
+        <div id="dico">
+          {
+            c.header.socialLinks
+              .filter((l) => l.platform !== "resume")
+              .map((l) => (
+                <a href={l.url} target="_blank" rel="noopener noreferrer" aria-label={l.platform} title={l.platform}>
+                  <i class={l.icon} aria-hidden="true" />
+                </a>
+              ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Experience (degrees live in the Education section further down) -->
+  <div id="history" class="container">
+    <div class="ctitle">experience</div>
+    {
+      work.map((entry: any) => (
+        <div class="entry row">
+          <div class="timespan">{entry.timespan}</div>
+          <div class="ico">
+            <div class="entry-dot" />
+            <img src={entry.logo} alt={`${entry.org || entry.role} logo`} />
+          </div>
+          <div class="desc">
+            <div class="exp-head">
+              <strong>{entry.role}</strong>
+              <Fragment set:html={orgHTML(entry)} />
+              {entry.note && <span class="exp-note">{entry.note}</span>}
+            </div>
+            <div class="exp-date-inline">{entry.timespan}</div>
+            {entry.summary && <div class="exp-summary" set:html={entry.summary} />}
+            {entry.skills?.length > 0 && (
+              <div class="exp-skills">
+                {entry.skills.map((s: string) => (
+                  <span class="skill-chip">{s}</span>
+                ))}
+              </div>
+            )}
+            {entry.bullets?.length > 0 && (
+              <details class="exp-more">
+                <summary>
+                  <span class="exp-more-closed">see more</span>
+                  <span class="exp-more-open">see less</span>
+                </summary>
+                <ul class="exp-bullets">
+                  {entry.bullets.map((b: string) => (
+                    <li set:html={b} />
+                  ))}
+                </ul>
+              </details>
+            )}
+          </div>
+        </div>
+      ))
+    }
+  </div>
+
+  <!-- Selected work: four featured projects up front, or every project in one area -->
+  <div id="pet-projects" class="container" data-tabs>
+    <div class="ctitle">selected work</div>
+    <FilterTabs
+      label="Filter projects by area"
+      active="featured"
+      tabs={[{ id: "featured", label: "featured", count: featured.length }, ...areas]}
+    />
+    <div class="feature-list" data-group="featured">
+      {featured.map((p) => <FeatureRow project={p} showArea />)}
+    </div>
+    {
+      areas.map((area) => (
+        <div class="feature-list" data-group={area.id} hidden>
+          {allProjects
+            .filter((p) => p.category === area.id)
+            .map((p) => (
+              <FeatureRow project={p} />
+            ))}
+        </div>
+      ))
+    }
+    <p class="view-all-row">
+      <a href="/projects/" class="view-all-projects" id="viewAllProjects">→ all {c.projects.items.length} projects, with details</a>
+    </p>
+  </div>
+
+  <!-- Research: interests + publications -->
+  <div id="research" class="container">
+    <div class="ctitle">{c.research.title}</div>
+    <p class="research-intro" set:html={c.research.intro} />
+    <div class="section-label">Interests</div>
+    <ul class="research-interests">{c.research.interests.map((i) => <li set:html={i} />)}</ul>
+    <div class="section-label">{c.publications.title}</div>
+    {
+      c.publications.items.map((item) => (
+        <div class="pub">
+          <div class="pub-title">
+            {item.url ? (
+              <a href={item.url} target="_blank" rel="noopener noreferrer">
+                {item.title}
+              </a>
+            ) : (
+              item.title
+            )}
+          </div>
+          <div class="pub-venue">{item.venue}</div>
+          <div class="pub-authors">{item.authors}</div>
+        </div>
+      ))
+    }
+  </div>
+
+  <!-- Blog: my own posts, and what I've written elsewhere -->
+  <div id="blog" class="container">
+    <div class="ctitle">{c.blog.title}</div>
+    <p class="blogs-intro">{c.blog.intro}</p>
+    <div class="blog-list">{posts.slice(0, 3).map((post) => <PostRow post={post} />)}</div>
+    <p class="blog-upcoming">{c.blog.upcoming}</p>
+    <p class="writing-more"><a href="/blog/">→ all posts</a></p>
+
+    <div class="section-label">Elsewhere</div>
+    <p class="home-sub">{c.writing.subtitle}.</p>
+    <ul class="nodot">
+      {
+        c.writing.articles.map((a) => (
+          <li>
+            {a.date}{" "}
+            <a href={a.url} target="_blank" rel="noopener noreferrer">
+              {a.title}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="writing-more"><a href={c.writing.contentLink.url}>{c.writing.contentLink.text}</a></p>
+  </div>
+
+  <!-- Updates -->
+  <div class="container" id="miscContainer">
+    <div class="ctitle">{c.misc.title}</div>
+    {
+      c.misc.items.map((item) => (
+        <div class="misc-item">
+          <strong>{item.date}</strong> - <Fragment set:html={updateHTML(item)} />
+        </div>
+      ))
+    }
+  </div>
+
+  <!-- Education: compact, near the bottom -->
+  <div id="education" class="container">
+    <div class="ctitle">education</div>
+    {
+      education.map((entry: any) => {
+        const groups = coursesByLevel(entry);
+        const anyCurrent = groups.some((g) => g.courses.some((course) => course.current));
+        return (
+          <div class="edu-item">
+            <img class="edu-logo" src={entry.logo} alt={`${entry.org} logo`} loading="lazy" />
+            <div class="edu-body">
+              <div class="edu-top">
+                <div class="exp-head">
+                  <strong>{entry.role}</strong>
+                  <Fragment set:html={orgHTML(entry)} />
+                  {entry.note && <span class="exp-note">{entry.note}</span>}
+                </div>
+                <div class="edu-date">{entry.timespan}</div>
+              </div>
+              {entry.summary && <div class="exp-summary" set:html={entry.summary} />}
+              {groups.length > 0 && (
+                <div class="edu-courses">
+                  {groups.map((g) => (
+                    <div class="edu-sem">
+                      <div class="edu-sem-label">{g.label}</div>
+                      <ul class="edu-course-list">
+                        {g.courses.map((course) => (
+                          <li>
+                            <span class="edu-course-name">
+                              {course.name}
+                              {course.current && (
+                                <span class="edu-current" title="currently taking">
+                                  *
+                                </span>
+                              )}
+                            </span>
+                            <span class="edu-course-code">{course.code}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                  {anyCurrent && <div class="edu-footnote">* currently taking</div>}
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      })
+    }
+  </div>
+
+  <!-- Contact: a clear closing call to action -->
+  <div id="contact" class="container">
+    <div class="ctitle">{c.contact.title}</div>
+    <p class="contact-text">{c.contact.text}</p>
+    <div class="cta-row">
+      <a href={`mailto:${c.contact.email}`} class="cta cta-primary">{c.contact.email}</a>
+      {
+        ["linkedin", "github", "resume"].map((p) => {
+          const s = social(p);
+          return s ? (
+            <a href={s.url} target="_blank" rel="noopener noreferrer" class="cta">
+              {p === "linkedin" ? "LinkedIn" : p === "github" ? "GitHub" : "Resume"}
+            </a>
+          ) : null;
+        })
+      }
+    </div>
+    <p class="contact-updated">Last updated {c.info.lastUpdated}</p>
+  </div>
+
+  <br /><br /><br /><br />
+
+  <Webring />
+  <Skyline />
+</Base>
+
+<script>
+  // "view all" follows the selected area
+  const projects = document.getElementById("pet-projects");
+  projects?.addEventListener("tabchange", (e) => {
+    const id = (e as CustomEvent<string>).detail;
+    const link = document.getElementById("viewAllProjects") as HTMLAnchorElement | null;
+    if (link) link.href = id === "featured" ? "/projects/" : `/projects/#${id}`;
+  });
+</script>
