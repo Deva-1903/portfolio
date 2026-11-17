@@ -21,7 +21,7 @@ const presets = [
 
 <div class="sp" data-shape-playground data-op={op}>
   <p class="sp-title">Shape playground</p>
-  <p class="sp-hint">Type shapes as numbers separated by commas. Leave a box empty for a scalar.</p>
+  <p class="sp-hint">Type shapes as numbers separated by commas. Leave a box empty for a single number (a scalar).</p>
   <div class="sp-controls">
     <label class="sp-field">
       <span>A</span>
@@ -104,7 +104,7 @@ const presets = [
     steps.append(el("p", "sp-step", "1. Line the shapes up from the right; pad the shorter one with 1s on the left (in italics)."));
     steps.append(el("p", "sp-step", "2. In every column the sizes must be equal, or one of them must be 1 (that one gets stretched)."));
     if (n === 0) {
-      result.textContent = "Both are scalars: the result is a scalar, shape ().";
+      result.textContent = "Both are single numbers (scalars), so the result is one too: shape ().";
       setState(result, "ok");
       return;
     }
@@ -142,7 +142,7 @@ const presets = [
     const step = (text: string) => steps.append(el("p", "sp-step", text));
 
     if (a.length === 0 || b.length === 0) {
-      return fail("@ needs at least one axis on each side. To scale by a scalar, use * instead.");
+      return fail("@ needs at least one axis on each side. To multiply by a single number (a scalar), use * instead.");
     }
     // 1-D inputs are promoted to matrices, and the added axis is removed again at the end
     const A2 = a.length === 1 ? [1, a[0]] : a;
